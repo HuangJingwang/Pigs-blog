@@ -1,4 +1,4 @@
-# pigs-blog
+# web
 
 ## Project setup
 ```
