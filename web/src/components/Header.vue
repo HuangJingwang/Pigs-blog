@@ -65,17 +65,18 @@ export default {}
   justify-content: space-between;
   align-items: center;
   position: relative;
+  z-index: 1;
 }
-
-/* .nav .container::after {
+/* 导航栏添加半透明遮罩 */
+.nav::after {
   content: '';
   width: 100%;
-  height: 75px;
+  height: 100%;
   position: absolute;
   top: 0;
-  height: 0;
-  background-color: #fff;
-} */
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+}
 /* 左边logo及标题样式 */
 .nav .logo {
   font-size: 35px;
