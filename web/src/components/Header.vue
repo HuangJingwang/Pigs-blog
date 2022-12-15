@@ -9,7 +9,7 @@
 
       <!-- 导航按键 -->
       <div class="navigation">
-        <div class="home">
+        <div class="home" @click="$router.push('/index')">
           <span class="icon iconfont icon-zhuye1"></span>
           <span>Home</span>
         </div>
@@ -21,7 +21,7 @@
           <span class="icon iconfont icon-a-Frame174"></span>
           <span>Archives</span>
         </div>
-        <div class="category">
+        <div class="category" @click="$router.push('/category')">
           <span class="icon iconfont icon-yingyong"></span>
           <span>Category</span>
         </div>
@@ -46,9 +46,13 @@
 export default {}
 </script>
 
-<style scope>
+scope
+<style scoped>
 /* 导航栏基础样式 */
 .nav {
+  z-index: 100;
+  /* transform: translateZ(100); */
+
   width: 100%;
   height: 80px;
   color: #fff;
