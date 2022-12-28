@@ -58,14 +58,11 @@
   }
   body {
     color: #555;
-    font-size: 14px;
     font-family: 'Arial', 'Microsoft YaHei', '黑体', '宋体', sans-serif;
   }
   td,
   th,
-  caption {
-    font-size: 14px;
-  }
+
   /* h1,
   h2,
   h3,

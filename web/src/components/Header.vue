@@ -17,7 +17,7 @@
           <span class="icon iconfont icon-yongyan"></span>
           <span>Write</span>
         </div>
-        <div class="archives">
+        <div class="archives" @click="$router.push('/archives')">
           <span class="icon iconfont icon-a-Frame174"></span>
           <span>Archives</span>
         </div>
@@ -43,6 +43,8 @@
 </template>
 
 <script>
+
+
 export default {}
 </script>
 

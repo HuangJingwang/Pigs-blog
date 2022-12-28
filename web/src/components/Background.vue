@@ -17,7 +17,7 @@ export default {
 .background {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 1010px;
   background-position: center center;
   background-size: cover;
 

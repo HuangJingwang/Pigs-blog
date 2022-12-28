@@ -19,6 +19,11 @@ const routes = [
     name: 'category',
     component: () => import('@/pages/Category'),
   },
+  {
+    path: '/archives',
+    name: 'archives',
+    component: () => import('@/pages/Archives'),
+  },
 ]
 
 const router = createRouter({

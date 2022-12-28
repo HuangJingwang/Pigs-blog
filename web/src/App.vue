@@ -1,12 +1,11 @@
 <template>
+
   <Header></Header>
   <router-view></router-view>
-  <div class="basic-box "></div>
   <Footer></Footer>
 </template>
 
 <script>
-import Background from './components/Background.vue'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 export default {
@@ -14,7 +13,6 @@ export default {
   components: {
     Header,
     Footer,
-    Background,
   },
 }
 </script>
@@ -24,6 +22,5 @@ export default {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 12px 35px 0 rgba(0, 0, 0, 0.19);
-  text-align: center;
 }
 </style>

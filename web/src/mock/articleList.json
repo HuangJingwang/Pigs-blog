@@ -1,93 +1,106 @@
 [
-
-    {
-        "id": "ID",
-        "imgUrl":"/src/static/img/articleImg1.jpg",
-        "author": "用户名 ",
-        "title": "css学习笔记",
-        "date": "当前时间戳",
-        "category": "分类",
-        "tags": ["tag1", "tag2"],
-        "detail":
-          "图片裁剪处clip-path 可以把图片自己的需要裁剪出各种形状 ,溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号,"
-    },   
-     {
-      "id": "ID",
-       "imgUrl":"/src/static/img/articleImg1.jpg",
-      "author": "用户名 ",
-      "title": "css学习笔记",
-      "date": "当前时间戳",
-      "category": "分类",
-      "tags": ["tag1", "tag2"],
-      "detail":
-        "文章描述信息"
-  },
   {
     "id": "ID",
-     "imgUrl":"/src/static/img/articleImg1.jpg",
+    "imgUrl": "/src/static/img/articleImg1.jpg",
     "author": "用户名 ",
     "title": "css学习笔记",
     "date": "当前时间戳",
     "category": "分类",
-    "tags": ["tag1", "tag2"],
-    "detail":
-      "文章描述信息"
-},
-{
-  "id": "ID", 
-  "imgUrl":"/src/static/img/articleImg1.jpg",
-  "author": "用户名 ",
-  "title": "css学习笔记",
-  "date": "当前时间戳",
-  "category": "分类",
-  "tags": ["tag1", "tag2"],
-  "detail":
-    "文章描述信息"
-},
-{
-  "id": "ID", 
-  "imgUrl":"/src/static/img/articleImg1.jpg",
-  "author": "用户名 ",
-  "title": "css学习笔记",
-  "date": "当前时间戳",
-  "category": "分类",
-  "tags": ["tag1", "tag2"],
-  "detail":
-    "文章描述信息"
-},
-{
-  "id": "ID", 
-  "imgUrl":"/src/static/img/articleImg1.jpg",
-  "author": "用户名 ",
-  "title": "css学习笔记",
-  "date": "当前时间戳",
-  "category": "分类",
-  "tags": ["tag1", "tag2"],
-  "detail":
-    "文章描述信息"
-},
-{
-  "id": "ID",
-   "imgUrl":"/src/static/img/articleImg1.jpg",
-  "author": "用户名 ",
-  "title": "css学习笔记",
-  "date": "当前时间戳",
-  "category": "分类",
-  "tags": ["tag1", "tag2"],
-  "detail":
-    "文章描述信息"
-},
-{
-  "id": "ID", 
-  "imgUrl":"/src/static/img/articleImg1.jpg",
-  "author": "用户名 ",
-  "title": "css学习笔记",
-  "date": "当前时间戳",
-  "category": "分类",
-  "tags": ["tag1", "tag2"],
-  "detail":
-    "文章描述信息"
-}
-
-    
+    "tags": [
+      "tag1",
+      "tag2"
+    ],
+    "detail": "图片裁剪处clip-path 可以把图片自己的需要裁剪出各种形状 ,溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号溢出显示省略号,"
+  },
+  {
+    "id": "ID",
+    "imgUrl": "/src/static/img/articleImg1.jpg",
+    "author": "用户名 ",
+    "title": "css学习笔记",
+    "date": "当前时间戳",
+    "category": "分类",
+    "tags": [
+      "tag1",
+      "tag2"
+    ],
+    "detail": "文章描述信息"
+  },
+  {
+    "id": "ID",
+    "imgUrl": "/src/static/img/articleImg1.jpg",
+    "author": "用户名 ",
+    "title": "css学习笔记",
+    "date": "当前时间戳",
+    "category": "分类",
+    "tags": [
+      "tag1",
+      "tag2"
+    ],
+    "detail": "文章描述信息"
+  },
+  {
+    "id": "ID",
+    "imgUrl": "/src/static/img/articleImg1.jpg",
+    "author": "用户名 ",
+    "title": "css学习笔记",
+    "date": "当前时间戳",
+    "category": "分类",
+    "tags": [
+      "tag1",
+      "tag2"
+    ],
+    "detail": "文章描述信息"
+  },
+  {
+    "id": "ID",
+    "imgUrl": "/src/static/img/articleImg1.jpg",
+    "author": "用户名 ",
+    "title": "css学习笔记",
+    "date": "当前时间戳",
+    "category": "分类",
+    "tags": [
+      "tag1",
+      "tag2"
+    ],
+    "detail": "文章描述信息"
+  },
+  {
+    "id": "ID",
+    "imgUrl": "/src/static/img/articleImg1.jpg",
+    "author": "用户名 ",
+    "title": "css学习笔记",
+    "date": "当前时间戳",
+    "category": "分类",
+    "tags": [
+      "tag1",
+      "tag2"
+    ],
+    "detail": "文章描述信息"
+  },
+  {
+    "id": "ID",
+    "imgUrl": "/src/static/img/articleImg1.jpg",
+    "author": "用户名 ",
+    "title": "css学习笔记",
+    "date": "当前时间戳",
+    "category": "分类",
+    "tags": [
+      "tag1",
+      "tag2"
+    ],
+    "detail": "文章描述信息"
+  },
+  {
+    "id": "ID",
+    "imgUrl": "/src/static/img/articleImg1.jpg",
+    "author": "用户名 ",
+    "title": "css学习笔记",
+    "date": "当前时间戳",
+    "category": "分类",
+    "tags": [
+      "tag1",
+      "tag2"
+    ],
+    "detail": "文章描述信息"
+  }
 ]

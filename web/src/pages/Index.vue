@@ -1,5 +1,5 @@
 <template>
-  <!-- <Background></Background> -->
+  <Background></Background>
   <div class="container">
     <!-- 展示文章卡片 -->
     <div
@@ -26,7 +26,7 @@
         </div>
         <div class="detail">
           图片裁剪处clip-path 可以把图片自己的需要裁剪出各种形状
-          ,图片裁剪处clip-path 可以把图片自己的需要裁剪出各种形状 ,,溢出显示省
+          ,图片裁剪处clip-path 可以把图片自己的需要裁剪出各种形状
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 // 引入请求数据方法
 // import { getArticleList } from '@/api/index.js'
 import Background from '@/components/Background'
@@ -43,15 +43,12 @@ export default {
   components: { Background },
   setup() {
     // let articleImgUrl = require('@/static/img/articleImg1.jpg')    :style="{ backgroundImage: `url(${articleImgUrl})` }"
-    let arr = [1, 2, 3, 4, 5, 6, 7, 8]
+    let arr = ref([1, 2, 3, 4, 5, 6, 7, 8])
     let articleInfoList = []
 
-    onMounted(() => {
-      axios({
-        URL: 'http://localhost:8080/mock/articleList',
-        methods: 'GET',
-      })
-    })
+    // onMounted(async () => {
+    //   // await getTestData()
+    // })
     return {
       // articleImgUrl,
       arr,
@@ -77,7 +74,7 @@ export default {
 }
 /* 梯形图片 */
 .articleImg {
-  /* 使用边框画出梯形图案    没用，无法为边框平铺背景图片 */
+  /* 使用边框画出梯形图案    无法为边框平铺背景图片 */
   /* border-bottom: 240px solid pink;
   border-right: 100px solid transparent;
   border-image-source: url('@/static/img/articleImg1.jpg');
@@ -131,7 +128,6 @@ export default {
 .articleInfo {
   width: 580px;
   height: 240px;
-  background: aquamarine;
   padding: 40px;
   display: flex;
   flex-direction: column;
