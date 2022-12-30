@@ -287,37 +287,4 @@
       update_at = #{updateAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
-
-
-
-
-
-
-
-
-
-
-
-            <sql id="selectList">
-                where
-                <if test="criteria.author != ''">
-                    author = #{criteria.author}
-                </if>
-            </sql>
-
-            <select id="selectArticlesList" resultMap="BaseResultMap">
-                select
-                <include refid="Base_Column_List"/>
-                from articles
-                <include refid="selectList"/>
-                limit #{criteria.start}, #{criteria.offset}
-            </select>
-
-            <select id="countArticlesList" resultType="java.lang.Long">
-                select
-                count(*)
-                from articles
-                <include refid="selectList"/>
-            </select>
 </mapper>

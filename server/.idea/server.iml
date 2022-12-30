@@ -13,6 +13,18 @@
         </sourceRoots>
       </configuration>
     </facet>
+    <facet type="Spring" name="Spring">
+      <configuration />
+    </facet>
+    <facet type="web" name="Web">
+      <configuration>
+        <webroots />
+        <sourceRoots>
+          <root url="file://$MODULE_DIR$/src/main/java" />
+          <root url="file://$MODULE_DIR$/src/main/resources" />
+        </sourceRoots>
+      </configuration>
+    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
@@ -54,8 +66,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.3.9" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:5.3.9" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.3.9" level="project" />
-    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.18" level="project" />
-    <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.6.1" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.41" level="project" />
     <orderEntry type="library" name="Maven: org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-jdbc:2.4.0" level="project" />
     <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:3.4.5" level="project" />

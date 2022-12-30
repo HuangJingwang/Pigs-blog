@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
+@MapperScan("com.pigs.blog.mapper")
 @EnableCaching  //开启缓存注解功能
 public class Application {
 

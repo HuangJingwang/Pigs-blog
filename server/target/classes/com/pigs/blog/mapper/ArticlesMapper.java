@@ -31,6 +31,4 @@ public interface ArticlesMapper {
     int updateByPrimaryKeySelective(Articles row);
 
     int updateByPrimaryKey(Articles row);
-
-
 }
