@@ -2,8 +2,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/pigs_blog?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-    username: 'root'
+    url: jdbc:mysql://49.233.45.84:3306/pigs_blog?useUnicode=true&characterEncoding=UTF-8&serverTimeZone=UTC
+    username: pigs_blog
     password: '123456'
 #  redis:
 #    host: 101.43.47.172

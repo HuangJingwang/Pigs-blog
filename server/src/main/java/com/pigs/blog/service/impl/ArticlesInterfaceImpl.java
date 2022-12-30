@@ -19,6 +19,8 @@ import springfox.documentation.schema.Example;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+@Component
 @Service
 public class ArticlesInterfaceImpl implements ArticlesInterface {
     @Autowired
@@ -29,12 +31,12 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     public PageData<ArticlesListResponse> getPageData(ArticlesListRequest request) {
         PageData<ArticlesListResponse> result = new PageData<>();
         ArticlesListCriteria criteria = createCriteria(request.getPageNo(), request.getPageSize(), request);
-       Long count = mapperExt.countArticlesList(criteria);
+        //Long count = mapperExt.countArticlesList(criteria);
 
         ArticlesExample example = new ArticlesExample();
         ArticlesExample.Criteria criteria1 = example.createCriteria();
         criteria1.andAuthorEqualTo(request.getAuthor());
-//        long count = mapper.countByExample(example);
+        long count = mapper.countByExample(example);
         if(count == 0){
             result.setHasNext(false);
             result.setResultList(Collections.emptyList());

@@ -4,6 +4,8 @@ import com.pigs.blog.model.Articles;
 import com.pigs.blog.model.criteria.ArticlesListCriteria;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
 @Mapper
