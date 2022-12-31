@@ -17,9 +17,9 @@
         <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
     </resultMap>
     <sql id="selectList">
-        where
-        <if test="#{criteria.author} != ''">
-            author = #{criteria.author}
+        where 1 = 1
+        <if test="criteria.author != null and criteria.author != ''">
+          and author = #{criteria.author}
         </if>
     </sql>
 

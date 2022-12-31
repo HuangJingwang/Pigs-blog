@@ -1,6 +1,8 @@
 package com.pigs.blog.service.impl;
 
 import com.pigs.blog.common.PageData;
+import com.pigs.blog.common.ResultResponse;
+import com.pigs.blog.contract.request.ArticlesSaveRequest;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.model.Articles;
 import com.pigs.blog.model.ArticlesExample;
@@ -44,6 +46,14 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         result.setResultList(resultList);
         result.setHasNext( ((count + request.getPageSize() - 1) / request.getPageSize()) >  request.getPageNo());
         return result;
+    }
+
+    @Override
+    public void saveArticles(ArticlesSaveRequest request) {
+        Articles articles = new Articles();
+        BeanUtils.copyProperties(request,articles);
+        mapper.insertSelective(articles);
+        return;
     }
 
     private List<ArticlesListResponse> copyList(List<Articles> list){
