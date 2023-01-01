@@ -1,11 +1,12 @@
 <template>
-
-  <Header></Header>
+  <Header v-if="$route.meta.showComponent"></Header>
   <router-view></router-view>
-  <Footer></Footer>
+  <Footer v-if="$route.meta.showComponent"></Footer>
 </template>
 
 <script>
+import { toRef, computed } from 'vue'
+// import { useRoute, useRouter } from 'vue-router'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 export default {

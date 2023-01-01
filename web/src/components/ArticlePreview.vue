@@ -10,7 +10,6 @@
       class=""
       :editor-id="state.id"
       :scroll-element="scrollElement"
-      :offsetTop="offsetTop"
       :scrollElementOffsetTop="state.scrollElementOffsetTop" />
   </div>
 </template>
@@ -24,10 +23,9 @@ const scrollElement = document.documentElement
 
 const state = reactive({
   theme: 'dark',
-  text: '# 标题\n## 123\n ### 123\n# 234\n## 234\n### 234\n# 345\naerkhbnkfdml;amrgbfkz\n123\n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456\naerkhbnkfdml;amrgbfkz\n123\n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456\naerkhbnkfdml;amrgbfkz\n123\n# qqqq \n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456\naerkhbnkfdml;amrgbfkz\n123\n# qqqq \n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456\naerkhbnkfdml;amrgbfkz\n123\n# qqqq \n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456',
+  text: '# 标题\n## 123\n ### 123\n# 234\n## 234\n### 234\n# 345\naerkhbnkfdml;amrgbfkz\n123\n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456\naerkhbnkfdml、amrgbfkz\n123\n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456\naerkhbnkfdml;amrgbfkz\n123\n# qqqq \n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456\naerkhbnkfdml;amrgbfkz\n123\n# qqqq \n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456\naerkhbnkfdml;amrgbfkz\n123\n# qqqq \n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456',
   id: 'my-editor',
   scrollElementOffsetTop: 300,
-  offsetTop: 300,
 })
 const previewBox = ref(null)
 onMounted(() => {})

@@ -10,6 +10,7 @@ import ArticlePreview from '@/components/ArticlePreview.vue'
 export default {
   components: { ArticlePreview },
   setup() {
+    
     return {}
   },
 }

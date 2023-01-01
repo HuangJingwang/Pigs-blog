@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <div class="fenyeqi">分页器</div>
+      <div class="pagenation">分页器</div>
     </div>
   </div>
 </template>

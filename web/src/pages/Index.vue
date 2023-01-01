@@ -1,5 +1,5 @@
 <template>
-  <Background></Background>
+  <IndexBackground></IndexBackground>
   <div class="container">
     <!-- 展示文章卡片 -->
     <div
@@ -37,10 +37,10 @@
 // import axios from 'axios'
 // 引入请求数据方法
 // import { getArticleList } from '@/api/index.js'
-import Background from '@/components/Background'
+import IndexBackground from '@/components/IndexBackground'
 import { ref, onMounted } from 'vue'
 export default {
-  components: { Background },
+  components: { IndexBackground },
   setup() {
     // let articleImgUrl = require('@/static/img/articleImg1.jpg')    :style="{ backgroundImage: `url(${articleImgUrl})` }"
     let arr = ref([1, 2, 3, 4, 5, 6, 7, 8])

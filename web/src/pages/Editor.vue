@@ -8,6 +8,7 @@
 import { reactive, toRefs } from 'vue'
 
 export default {
+  name:'Editor',
   setup() {
     const state = reactive({})
 
