@@ -23,8 +23,8 @@ public class ArticlesSaveRequest {
     private String title;//标题
 
     @ApiModelProperty("分类")
-    @NotBlank(message = "category cannot be blank")
-    private String category;//分类
+    @NotBlank(message = "groupName cannot be blank")
+    private String groupName;//分类
 
     @ApiModelProperty("状态 状态 draft-草稿, published-已发布, deleted-被删除")
     @NotBlank(message = "status cannot be blank")

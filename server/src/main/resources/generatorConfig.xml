@@ -4,7 +4,7 @@
                 "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <!-- 数据库的驱动包路径 -->
-    <classPathEntry location="C:\Users\Cookie\.m2\repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar" />
+    <classPathEntry location="C:\Users\Cookie\.m2\repository\mysql\mysql-connector-java\5.1.41\mysql-connector-java-5.1.41.jar" />
         <context id="DB2Tables" targetRuntime="MyBatis3">
             <!-- 去掉生成文件中的注释 -->
             <commentGenerator>
@@ -12,7 +12,7 @@
             </commentGenerator>
             <!-- 数据库链接URL、用户名、密码 -->
             <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                    connectionURL="jdbc:mysql://localhost:3306/pigs_blog?characterEncoding=utf-8&amp;serverTimezone=UTC"
+                    connectionURL="jdbc:mysql://localhost:3306/pigs_blog?characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=false"
                     userId="root"
                     password="123456">
                 <property name="nullCatalogMeansCurrent" value="true" />
@@ -39,6 +39,15 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.pigs.blog.mapper" targetProject="./src/main/java">
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
-        <table tableName="articles" domainObjectName="Articles" />
+        <table tableName="articles_group" domainObjectName="ArticlesGroup"
+               enableCountByExample="true"
+               enableDeleteByExample="true"
+               enableSelectByExample="true"
+               enableUpdateByExample="true"
+        enableInsert="true"
+        enableDeleteByPrimaryKey="true"
+        enableSelectByPrimaryKey="true"
+        enableUpdateByPrimaryKey="true"/>
+<!--            <table tableName="articles_group" domainObjectName="ArticlesGroup" />-->
     </context>
 </generatorConfiguration>

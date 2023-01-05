@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.pigs.blog.mapper.ArticlesMapper">
-  <resultMap id="BaseResultMap" type="com.pigs.blog.model.Articles">
+<mapper namespace="com.pigs.blog.mapper.ArticlesGroupMapper">
+  <resultMap id="BaseResultMap" type="com.pigs.blog.model.ArticlesGroup">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="author" jdbcType="VARCHAR" property="author" />
-    <result column="tags" jdbcType="VARCHAR" property="tags" />
-    <result column="detail" jdbcType="VARCHAR" property="detail" />
-    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
-    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+    <result column="is_delete" jdbcType="SMALLINT" property="isDelete" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,15 +69,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, author, tags, detail, img_url, group_name, status, create_at, update_at
+    id, group_name, parent_id, create_at, update_at, is_delete, author
   </sql>
-  <select id="selectByExample" parameterType="com.pigs.blog.model.ArticlesExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.pigs.blog.model.ArticlesGroupExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from articles
+    from articles_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -91,55 +88,38 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from articles
+    from articles_group
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from articles
+    delete from articles_group
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.pigs.blog.model.ArticlesExample">
-    delete from articles
+  <delete id="deleteByExample" parameterType="com.pigs.blog.model.ArticlesGroupExample">
+    delete from articles_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.pigs.blog.model.Articles">
-    insert into articles (id, title, author, 
-      tags, detail, img_url, 
-      group_name, status, create_at, 
-      update_at)
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
-      #{tags,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
-      #{groupName,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
-      #{updateAt,jdbcType=TIMESTAMP})
+  <insert id="insert" parameterType="com.pigs.blog.model.ArticlesGroup">
+    insert into articles_group (id, group_name, parent_id, 
+      create_at, update_at, is_delete, 
+      author)
+    values (#{id,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, 
+      #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=SMALLINT}, 
+      #{author,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.pigs.blog.model.Articles">
-    insert into articles
+  <insert id="insertSelective" parameterType="com.pigs.blog.model.ArticlesGroup">
+    insert into articles_group
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="title != null">
-        title,
-      </if>
-      <if test="author != null">
-        author,
-      </if>
-      <if test="tags != null">
-        tags,
-      </if>
-      <if test="detail != null">
-        detail,
-      </if>
-      <if test="imgUrl != null">
-        img_url,
-      </if>
       <if test="groupName != null">
         group_name,
       </if>
-      <if test="status != null">
-        status,
+      <if test="parentId != null">
+        parent_id,
       </if>
       <if test="createAt != null">
         create_at,
@@ -147,31 +127,22 @@
       <if test="updateAt != null">
         update_at,
       </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="author != null">
+        author,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="author != null">
-        #{author,jdbcType=VARCHAR},
-      </if>
-      <if test="tags != null">
-        #{tags,jdbcType=VARCHAR},
-      </if>
-      <if test="detail != null">
-        #{detail,jdbcType=VARCHAR},
-      </if>
-      <if test="imgUrl != null">
-        #{imgUrl,jdbcType=VARCHAR},
-      </if>
       <if test="groupName != null">
         #{groupName,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        #{status,jdbcType=VARCHAR},
+      <if test="parentId != null">
+        #{parentId,jdbcType=INTEGER},
       </if>
       <if test="createAt != null">
         #{createAt,jdbcType=TIMESTAMP},
@@ -179,40 +150,31 @@
       <if test="updateAt != null">
         #{updateAt,jdbcType=TIMESTAMP},
       </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=SMALLINT},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.pigs.blog.model.ArticlesExample" resultType="java.lang.Long">
-    select count(*) from articles
+  <select id="countByExample" parameterType="com.pigs.blog.model.ArticlesGroupExample" resultType="java.lang.Long">
+    select count(*) from articles_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update articles
+    update articles_group
     <set>
       <if test="row.id != null">
         id = #{row.id,jdbcType=INTEGER},
       </if>
-      <if test="row.title != null">
-        title = #{row.title,jdbcType=VARCHAR},
-      </if>
-      <if test="row.author != null">
-        author = #{row.author,jdbcType=VARCHAR},
-      </if>
-      <if test="row.tags != null">
-        tags = #{row.tags,jdbcType=VARCHAR},
-      </if>
-      <if test="row.detail != null">
-        detail = #{row.detail,jdbcType=VARCHAR},
-      </if>
-      <if test="row.imgUrl != null">
-        img_url = #{row.imgUrl,jdbcType=VARCHAR},
-      </if>
       <if test="row.groupName != null">
         group_name = #{row.groupName,jdbcType=VARCHAR},
       </if>
-      <if test="row.status != null">
-        status = #{row.status,jdbcType=VARCHAR},
+      <if test="row.parentId != null">
+        parent_id = #{row.parentId,jdbcType=INTEGER},
       </if>
       <if test="row.createAt != null">
         create_at = #{row.createAt,jdbcType=TIMESTAMP},
@@ -220,50 +182,38 @@
       <if test="row.updateAt != null">
         update_at = #{row.updateAt,jdbcType=TIMESTAMP},
       </if>
+      <if test="row.isDelete != null">
+        is_delete = #{row.isDelete,jdbcType=SMALLINT},
+      </if>
+      <if test="row.author != null">
+        author = #{row.author,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update articles
+    update articles_group
     set id = #{row.id,jdbcType=INTEGER},
-      title = #{row.title,jdbcType=VARCHAR},
-      author = #{row.author,jdbcType=VARCHAR},
-      tags = #{row.tags,jdbcType=VARCHAR},
-      detail = #{row.detail,jdbcType=VARCHAR},
-      img_url = #{row.imgUrl,jdbcType=VARCHAR},
       group_name = #{row.groupName,jdbcType=VARCHAR},
-      status = #{row.status,jdbcType=VARCHAR},
+      parent_id = #{row.parentId,jdbcType=INTEGER},
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
-      update_at = #{row.updateAt,jdbcType=TIMESTAMP}
+      update_at = #{row.updateAt,jdbcType=TIMESTAMP},
+      is_delete = #{row.isDelete,jdbcType=SMALLINT},
+      author = #{row.author,jdbcType=VARCHAR}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.pigs.blog.model.Articles">
-    update articles
+  <update id="updateByPrimaryKeySelective" parameterType="com.pigs.blog.model.ArticlesGroup">
+    update articles_group
     <set>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="author != null">
-        author = #{author,jdbcType=VARCHAR},
-      </if>
-      <if test="tags != null">
-        tags = #{tags,jdbcType=VARCHAR},
-      </if>
-      <if test="detail != null">
-        detail = #{detail,jdbcType=VARCHAR},
-      </if>
-      <if test="imgUrl != null">
-        img_url = #{imgUrl,jdbcType=VARCHAR},
-      </if>
       <if test="groupName != null">
         group_name = #{groupName,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        status = #{status,jdbcType=VARCHAR},
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=INTEGER},
       </if>
       <if test="createAt != null">
         create_at = #{createAt,jdbcType=TIMESTAMP},
@@ -271,20 +221,23 @@
       <if test="updateAt != null">
         update_at = #{updateAt,jdbcType=TIMESTAMP},
       </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=SMALLINT},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.pigs.blog.model.Articles">
-    update articles
-    set title = #{title,jdbcType=VARCHAR},
-      author = #{author,jdbcType=VARCHAR},
-      tags = #{tags,jdbcType=VARCHAR},
-      detail = #{detail,jdbcType=VARCHAR},
-      img_url = #{imgUrl,jdbcType=VARCHAR},
-      group_name = #{groupName,jdbcType=VARCHAR},
-      status = #{status,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="com.pigs.blog.model.ArticlesGroup">
+    update articles_group
+    set group_name = #{groupName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
       create_at = #{createAt,jdbcType=TIMESTAMP},
-      update_at = #{updateAt,jdbcType=TIMESTAMP}
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=SMALLINT},
+      author = #{author,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

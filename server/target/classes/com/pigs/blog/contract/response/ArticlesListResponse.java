@@ -33,7 +33,7 @@ public class ArticlesListResponse {
     private String imgUrl;//封面图片路径
 
     @ApiModelProperty("分类")
-    private String category;//分类
+    private String groupName;//分类
 
     @ApiModelProperty("状态 draft-草稿, published-已发布, deleted-被删除")
     private String status;//状态 draft-草稿, published-已发布, deleted-被删除

@@ -15,7 +15,7 @@ public class Articles {
 
     private String imgUrl;
 
-    private String category;
+    private String groupName;
 
     private String status;
 
@@ -71,12 +71,12 @@ public class Articles {
         this.imgUrl = imgUrl == null ? null : imgUrl.trim();
     }
 
-    public String getCategory() {
-        return category;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setCategory(String category) {
-        this.category = category == null ? null : category.trim();
+    public void setGroupName(String groupName) {
+        this.groupName = groupName == null ? null : groupName.trim();
     }
 
     public String getStatus() {

@@ -3,12 +3,8 @@ package com.pigs.blog.mapper;
 import com.pigs.blog.model.Articles;
 import com.pigs.blog.model.ArticlesExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 
-@Mapper
 public interface ArticlesMapper {
     long countByExample(ArticlesExample example);
 

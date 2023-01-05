@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Api("pigs-blog/articles")
+@Api(value = "pigs-blog/articles",tags = "文章接口")
 @RestController
 @RequestMapping("pigs-blog/articles")
 public class ArticlesController {
@@ -24,8 +24,8 @@ public class ArticlesController {
     private ArticlesInterface articlesInterface;
 
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageNo", value = ""),
-            @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageSize", value = ""),
+            @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageNo", value = "", example = "0"),
+            @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageSize", value = "", example = "10"),
             @ApiImplicitParam(paramType = "query", dataType = "string", name = "author", value = "")
     })
     @ApiOperation(value = "文章列表", notes = "", httpMethod = "GET")

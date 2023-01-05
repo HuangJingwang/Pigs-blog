@@ -1,11 +1,9 @@
 package com.pigs.blog.service.impl;
 
 import com.pigs.blog.common.PageData;
-import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.request.ArticlesSaveRequest;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.model.Articles;
-import com.pigs.blog.model.ArticlesExample;
 import com.pigs.blog.model.criteria.ArticlesListCriteria;
 import com.pigs.blog.contract.request.ArticlesListRequest;
 import com.pigs.blog.contract.response.ArticlesListResponse;
@@ -16,7 +14,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import springfox.documentation.schema.Example;
 
 import java.util.ArrayList;
 import java.util.Collections;

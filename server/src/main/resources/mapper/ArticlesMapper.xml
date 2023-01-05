@@ -8,7 +8,7 @@
     <result column="tags" jdbcType="VARCHAR" property="tags" />
     <result column="detail" jdbcType="VARCHAR" property="detail" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
-    <result column="category" jdbcType="VARCHAR" property="category" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
@@ -72,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, author, tags, detail, img_url, category, status, create_at, update_at
+    id, title, author, tags, detail, img_url, group_name, status, create_at, update_at
   </sql>
   <select id="selectByExample" parameterType="com.pigs.blog.model.ArticlesExample" resultMap="BaseResultMap">
     select
@@ -107,11 +107,11 @@
   <insert id="insert" parameterType="com.pigs.blog.model.Articles">
     insert into articles (id, title, author, 
       tags, detail, img_url, 
-      category, status, create_at, 
+      group_name, status, create_at, 
       update_at)
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
       #{tags,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
-      #{category,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
+      #{groupName,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
       #{updateAt,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.pigs.blog.model.Articles">
@@ -135,8 +135,8 @@
       <if test="imgUrl != null">
         img_url,
       </if>
-      <if test="category != null">
-        category,
+      <if test="groupName != null">
+        group_name,
       </if>
       <if test="status != null">
         status,
@@ -167,8 +167,8 @@
       <if test="imgUrl != null">
         #{imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="category != null">
-        #{category,jdbcType=VARCHAR},
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         #{status,jdbcType=VARCHAR},
@@ -208,8 +208,8 @@
       <if test="row.imgUrl != null">
         img_url = #{row.imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="row.category != null">
-        category = #{row.category,jdbcType=VARCHAR},
+      <if test="row.groupName != null">
+        group_name = #{row.groupName,jdbcType=VARCHAR},
       </if>
       <if test="row.status != null">
         status = #{row.status,jdbcType=VARCHAR},
@@ -233,7 +233,7 @@
       tags = #{row.tags,jdbcType=VARCHAR},
       detail = #{row.detail,jdbcType=VARCHAR},
       img_url = #{row.imgUrl,jdbcType=VARCHAR},
-      category = #{row.category,jdbcType=VARCHAR},
+      group_name = #{row.groupName,jdbcType=VARCHAR},
       status = #{row.status,jdbcType=VARCHAR},
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
       update_at = #{row.updateAt,jdbcType=TIMESTAMP}
@@ -259,8 +259,8 @@
       <if test="imgUrl != null">
         img_url = #{imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="category != null">
-        category = #{category,jdbcType=VARCHAR},
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=VARCHAR},
@@ -281,7 +281,7 @@
       tags = #{tags,jdbcType=VARCHAR},
       detail = #{detail,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
-      category = #{category,jdbcType=VARCHAR},
+      group_name = #{groupName,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP}
