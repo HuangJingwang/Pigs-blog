@@ -23,6 +23,8 @@ public class Articles {
 
     private Date updateAt;
 
+    private String articlesText;
+
     public Integer getId() {
         return id;
     }
@@ -101,5 +103,13 @@ public class Articles {
 
     public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
+    }
+
+    public String getArticlesText() {
+        return articlesText;
+    }
+
+    public void setArticlesText(String articlesText) {
+        this.articlesText = articlesText == null ? null : articlesText.trim();
     }
 }

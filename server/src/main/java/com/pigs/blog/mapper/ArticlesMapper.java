@@ -16,15 +16,21 @@ public interface ArticlesMapper {
 
     int insertSelective(Articles row);
 
+    List<Articles> selectByExampleWithBLOBs(ArticlesExample example);
+
     List<Articles> selectByExample(ArticlesExample example);
 
     Articles selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("row") Articles row, @Param("example") ArticlesExample example);
 
+    int updateByExampleWithBLOBs(@Param("row") Articles row, @Param("example") ArticlesExample example);
+
     int updateByExample(@Param("row") Articles row, @Param("example") ArticlesExample example);
 
     int updateByPrimaryKeySelective(Articles row);
+
+    int updateByPrimaryKeyWithBLOBs(Articles row);
 
     int updateByPrimaryKey(Articles row);
 }

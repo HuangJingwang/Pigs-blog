@@ -12,17 +12,21 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
-@ApiModel(description = "private Integer parentId;//父组id，没有父组就是0")
+@ApiModel
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ArticlesGroupSaveRequest {
+public class ArticlesGroupCreateRequest {
+    @ApiModelProperty("id不为空，就是修改接口，否则就是添加接口")
     private Integer id;//id不为空，就是修改接口，否则就是添加接口
+
     @ApiModelProperty("分组名称")
     @NotBlank(message = "groupName cannot be blank")
     private String groupName;//分组名称
 
-    @JsonIgnore
+
+    @ApiModelProperty("父组id，没有父组就是0")
+    @NotBlank
     private Integer parentId;//父组id，没有父组就是0
 
     @ApiModelProperty("创作者")

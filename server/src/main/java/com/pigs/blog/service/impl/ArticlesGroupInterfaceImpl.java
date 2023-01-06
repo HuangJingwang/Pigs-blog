@@ -1,14 +1,14 @@
 package com.pigs.blog.service.impl;
 
+import com.pigs.blog.contract.request.ArticlesGroupCreateRequest;
 import com.pigs.blog.contract.request.ArticlesGroupListRequest;
-import com.pigs.blog.contract.request.ArticlesGroupSaveRequest;
+import com.pigs.blog.contract.request.ArticlesGroupUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesGroupListResponse;
 import com.pigs.blog.mapper.ArticlesGroupMapper;
 import com.pigs.blog.mapper.ext.ArticlesGroupMapperExt;
 import com.pigs.blog.model.ArticlesGroup;
 import com.pigs.blog.model.ArticlesGroupExample;
 import com.pigs.blog.service.ArticlesGroupInterface;
-import com.pigs.blog.utils.CollectionUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,7 @@ public class ArticlesGroupInterfaceImpl implements ArticlesGroupInterface {
 
     @Autowired
     ArticlesGroupMapperExt groupMapperExt;
+
     @Override
     public List<ArticlesGroupListResponse> list(ArticlesGroupListRequest request) {
 
@@ -33,32 +34,35 @@ public class ArticlesGroupInterfaceImpl implements ArticlesGroupInterface {
         if (Strings.isNotBlank(request.getAuthor())) {
             criteria.andAuthorEqualTo(request.getAuthor());
         }
+        example.setOrderByClause("id desc");
         List<ArticlesGroup> articlesGroups = groupMapper.selectByExample(example);
         List<ArticlesGroupListResponse> result = copyList(articlesGroups);
         return result;
     }
 
     @Override
-    public void save(ArticlesGroupSaveRequest request) {
+    public void create(ArticlesGroupCreateRequest request) {
         ArticlesGroup group = new ArticlesGroup();
         BeanUtils.copyProperties(request, group);
-        if (request.getId() == null) {
-            groupMapper.insertSelective(group);
-        } else {
-            groupMapper.updateByPrimaryKeySelective(group);
-        }
+        groupMapper.insertSelective(group);
+    }
 
+    public void update(ArticlesGroupUpdateRequest request) {
+        ArticlesGroup group = new ArticlesGroup();
+        BeanUtils.copyProperties(request, group);
+        groupMapper.updateByPrimaryKeySelective(group);
     }
 
     /**
      * 逻辑删除
+     *
      * @param id
      */
     @Override
     public void deleteById(Integer id) {
         List<Integer> ids = selectSubId(id);
 
-        ids.forEach(s->{
+        ids.forEach(s -> {
             ArticlesGroup articlesGroup = new ArticlesGroup();
             articlesGroup.setId(s);
             articlesGroup.setIsDelete((short) 1);
@@ -69,14 +73,15 @@ public class ArticlesGroupInterfaceImpl implements ArticlesGroupInterface {
 
     /**
      * 根据id找到所有子组id
+     *
      * @param id
      * @return
      */
-    private List<Integer> selectSubId(Integer id){
+    private List<Integer> selectSubId(Integer id) {
         List<Integer> parentIds = new ArrayList<>();
         List<Integer> result = new ArrayList<>();
         parentIds.add(id);
-        while(!parentIds.isEmpty()) {
+        while (!parentIds.isEmpty()) {
             result.addAll(parentIds);
             ArticlesGroupExample example = new ArticlesGroupExample();
             ArticlesGroupExample.Criteria criteria = example.createCriteria();

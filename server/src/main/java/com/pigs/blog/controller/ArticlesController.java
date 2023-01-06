@@ -2,8 +2,10 @@ package com.pigs.blog.controller;
 
 import com.pigs.blog.common.PageData;
 import com.pigs.blog.common.ResultResponse;
+import com.pigs.blog.contract.request.ArticlesCreateRequest;
 import com.pigs.blog.contract.request.ArticlesListRequest;
-import com.pigs.blog.contract.request.ArticlesSaveRequest;
+import com.pigs.blog.contract.request.ArticlesUpdateRequest;
+import com.pigs.blog.contract.response.ArticlesDetailResponse;
 import com.pigs.blog.contract.response.ArticlesListResponse;
 import com.pigs.blog.service.ArticlesInterface;
 import io.swagger.annotations.Api;
@@ -24,11 +26,11 @@ public class ArticlesController {
     private ArticlesInterface articlesInterface;
 
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageNo", value = "", example = "0"),
-            @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageSize", value = "", example = "10"),
+            @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageNo", value = ""),
+            @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageSize", value = ""),
             @ApiImplicitParam(paramType = "query", dataType = "string", name = "author", value = "")
     })
-    @ApiOperation(value = "文章列表", notes = "", httpMethod = "GET")
+    @ApiOperation(value = "列表", notes = "", httpMethod = "GET")
     @RequestMapping(value = "/getArticles", method = RequestMethod.GET, produces="application/json")
     public ResultResponse<PageData<ArticlesListResponse>> getArticlesPageData(
             @RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
@@ -43,12 +45,34 @@ public class ArticlesController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "body", dataType = "ArticlesSaveRequest", name = "request", value = "", required = true)
+            @ApiImplicitParam(paramType = "body", dataType = "ArticlesCreateRequest", name = "request", value = "", required = true)
     })
-    @ApiOperation(value = "文章保存", notes = "", httpMethod = "POST")
+    @ApiOperation(value = "保存", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces="application/json")
-    public ResultResponse saveArticles(@RequestBody @Valid ArticlesSaveRequest request){
+    public ResultResponse saveArticles(@RequestBody @Valid ArticlesCreateRequest request){
         articlesInterface.saveArticles(request);
         return ResultResponse.success(null);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "body", dataType = "ArticlesUpdateRequest", name = "request", value = "", required = true)
+    })
+    @ApiOperation(value = "更新", notes = "", httpMethod = "POST")
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json")
+    public ResultResponse updateArticles(@RequestBody @Valid ArticlesUpdateRequest request){
+        articlesInterface.updateArticles(request);
+        return ResultResponse.success(null);
+    }
+
+    @RequestMapping(value = "delete/{id}", method = RequestMethod.POST, produces = "application/json")
+    public ResultResponse deleteArticles(@PathVariable Integer id){
+        articlesInterface.deleteArticles(id);
+        return ResultResponse.success(null);
+    }
+
+    @RequestMapping(value = "detail/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResultResponse<ArticlesDetailResponse> detail(@PathVariable Integer id){
+        ArticlesDetailResponse response = articlesInterface.getDetailArticles(id);
+        return ResultResponse.success(response);
     }
 }

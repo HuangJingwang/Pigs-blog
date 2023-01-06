@@ -39,7 +39,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.pigs.blog.mapper" targetProject="./src/main/java">
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
-        <table tableName="articles_group" domainObjectName="ArticlesGroup"
+        <table tableName="articles" domainObjectName="Articles"
                enableCountByExample="true"
                enableDeleteByExample="true"
                enableSelectByExample="true"

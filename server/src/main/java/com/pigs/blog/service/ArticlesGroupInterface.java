@@ -1,9 +1,9 @@
 package com.pigs.blog.service;
 
+import com.pigs.blog.contract.request.ArticlesGroupCreateRequest;
 import com.pigs.blog.contract.request.ArticlesGroupListRequest;
-import com.pigs.blog.contract.request.ArticlesGroupSaveRequest;
+import com.pigs.blog.contract.request.ArticlesGroupUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesGroupListResponse;
-import com.pigs.blog.model.ArticlesGroup;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +12,9 @@ import java.util.List;
 public interface ArticlesGroupInterface {
     List<ArticlesGroupListResponse> list(ArticlesGroupListRequest request);
 
-    void save(ArticlesGroupSaveRequest request);
+    void create(ArticlesGroupCreateRequest request);
 
     void deleteById(Integer id);
+
+    void update(ArticlesGroupUpdateRequest request);
 }

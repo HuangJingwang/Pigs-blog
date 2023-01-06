@@ -1,23 +1,22 @@
 package com.pigs.blog.controller;
 
 import com.pigs.blog.common.ResultResponse;
+import com.pigs.blog.contract.request.ArticlesGroupCreateRequest;
 import com.pigs.blog.contract.request.ArticlesGroupListRequest;
-import com.pigs.blog.contract.request.ArticlesGroupSaveRequest;
+import com.pigs.blog.contract.request.ArticlesGroupUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesGroupListResponse;
-import com.pigs.blog.model.ArticlesGroup;
 import com.pigs.blog.service.ArticlesGroupInterface;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@Api(value = "pigs-blog/articles",tags = "文章分类接口")
+@Api(value = "pigs-blog/articles-group", tags = "文章分类接口")
 @RestController
 @RequestMapping("pigs-blog/articles-group")
 public class ArticlesGroupController {
@@ -37,15 +36,22 @@ public class ArticlesGroupController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "path", dataType = "int", name = "parentId", value = "", required = true),
-            @ApiImplicitParam(paramType = "body", dataType = "ArticlesGroupSaveRequest", name = "request", value = "", required = true)
+            @ApiImplicitParam(paramType = "body", dataType = "ArticlesGroupCreateRequest", name = "request", value = "", required = true)
     })
-    @ApiOperation(value = "保存或者编辑", notes = "", httpMethod = "POST")
-    @RequestMapping(value = "save/{parentId}", method = RequestMethod.POST, produces = "application/json")
-    public ResultResponse saveArticlesGroup(@PathVariable("parentId") Integer parentId,
-                                            @RequestBody @Valid ArticlesGroupSaveRequest request){
-        request.setParentId(parentId);
-        groupInterface.save(request);
+    @ApiOperation(value = "创建", notes = "", httpMethod = "POST")
+    @RequestMapping(value = "create", method = RequestMethod.POST, produces = "application/json")
+    public ResultResponse createArticlesGroup(@RequestBody @Valid ArticlesGroupCreateRequest request){
+        groupInterface.create(request);
+        return ResultResponse.success(null);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "body", dataType = "ArticlesGroupUpdateRequest", name = "request", value = "", required = true)
+    })
+    @ApiOperation(value = "编辑", notes = "", httpMethod = "POST")
+    @RequestMapping(value = "update/{id}", method = RequestMethod.POST, produces = "application/json")
+    public ResultResponse updateArticlesGroup(@RequestBody @Valid ArticlesGroupUpdateRequest request){
+        groupInterface.update(request);
         return ResultResponse.success(null);
     }
 

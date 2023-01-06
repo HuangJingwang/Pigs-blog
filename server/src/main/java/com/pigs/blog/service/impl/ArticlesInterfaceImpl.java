@@ -1,7 +1,9 @@
 package com.pigs.blog.service.impl;
 
 import com.pigs.blog.common.PageData;
-import com.pigs.blog.contract.request.ArticlesSaveRequest;
+import com.pigs.blog.contract.request.ArticlesCreateRequest;
+import com.pigs.blog.contract.request.ArticlesUpdateRequest;
+import com.pigs.blog.contract.response.ArticlesDetailResponse;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.model.Articles;
 import com.pigs.blog.model.criteria.ArticlesListCriteria;
@@ -26,12 +28,13 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     private ArticlesMapperExt mapperExt;
     @Autowired
     private ArticlesMapper mapper;
+
     @Override
     public PageData<ArticlesListResponse> getPageData(ArticlesListRequest request) {
         PageData<ArticlesListResponse> result = new PageData<>();
         ArticlesListCriteria criteria = createCriteria(request.getPageNo(), request.getPageSize(), request);
         Long count = mapperExt.countArticlesList(criteria);
-        if(count == 0){
+        if (count == 0) {
             result.setHasNext(false);
             result.setResultList(Collections.emptyList());
             result.setTotalResult(0L);
@@ -41,30 +44,52 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         List<ArticlesListResponse> resultList = copyList(list);
         result.setTotalResult(count);
         result.setResultList(resultList);
-        result.setHasNext( ((count + request.getPageSize() - 1) / request.getPageSize()) >  request.getPageNo());
+        result.setHasNext(((count + request.getPageSize() - 1) / request.getPageSize()) > request.getPageNo());
         return result;
     }
 
     @Override
-    public void saveArticles(ArticlesSaveRequest request) {
+    public void updateArticles(ArticlesUpdateRequest request) {
         Articles articles = new Articles();
-        BeanUtils.copyProperties(request,articles);
-        mapper.insertSelective(articles);
-        return;
+        BeanUtils.copyProperties(request, articles);
+        mapper.updateByPrimaryKeySelective(articles);
     }
 
-    private List<ArticlesListResponse> copyList(List<Articles> list){
+    @Override
+    public void deleteArticles(Integer id) {
+        Articles articles = new Articles();
+        articles.setStatus("deleted");
+        mapper.updateByPrimaryKeySelective(articles);
+    }
+
+    @Override
+    public ArticlesDetailResponse getDetailArticles(Integer id) {
+        Articles articles = mapper.selectByPrimaryKey(id);
+        ArticlesDetailResponse result = new ArticlesDetailResponse();
+        BeanUtils.copyProperties(articles,result);
+        return result;
+    }
+
+    @Override
+    public void saveArticles(ArticlesCreateRequest request) {
+        Articles articles = new Articles();
+        BeanUtils.copyProperties(request, articles);
+        mapper.insertSelective(articles);
+    }
+
+    private List<ArticlesListResponse> copyList(List<Articles> list) {
         List<ArticlesListResponse> responses = new ArrayList<>();
-        list.forEach(s ->{
+        list.forEach(s -> {
             ArticlesListResponse response = new ArticlesListResponse();
-            BeanUtils.copyProperties(s,response);
+            BeanUtils.copyProperties(s, response);
             responses.add(response);
         });
         return responses;
     }
-    private ArticlesListCriteria createCriteria(Integer pageNo, Integer pageSize, ArticlesListRequest request){
+
+    private ArticlesListCriteria createCriteria(Integer pageNo, Integer pageSize, ArticlesListRequest request) {
         ArticlesListCriteria result = new ArticlesListCriteria();
-        if(Strings.isNotBlank(request.getAuthor())){
+        if (Strings.isNotBlank(request.getAuthor())) {
             result.setAuthor(request.getAuthor());
         }
 

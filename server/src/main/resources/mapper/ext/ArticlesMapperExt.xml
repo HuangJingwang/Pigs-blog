@@ -29,6 +29,7 @@
         from articles
         <include refid="selectList"/>
         limit #{criteria.start}, #{criteria.offset}
+        order by desc
     </select>
 
     <select id="countArticlesList" resultType="java.lang.Long">

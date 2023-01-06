@@ -13,6 +13,9 @@
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
   </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.pigs.blog.model.Articles">
+    <result column="articles_text" jdbcType="LONGVARCHAR" property="articlesText" />
+  </resultMap>
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -74,6 +77,25 @@
   <sql id="Base_Column_List">
     id, title, author, tags, detail, img_url, group_name, status, create_at, update_at
   </sql>
+  <sql id="Blob_Column_List">
+    articles_text
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.pigs.blog.model.ArticlesExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from articles
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
   <select id="selectByExample" parameterType="com.pigs.blog.model.ArticlesExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -88,9 +110,11 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from articles
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -108,11 +132,11 @@
     insert into articles (id, title, author, 
       tags, detail, img_url, 
       group_name, status, create_at, 
-      update_at)
+      update_at, articles_text)
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
       #{tags,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
       #{groupName,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
-      #{updateAt,jdbcType=TIMESTAMP})
+      #{updateAt,jdbcType=TIMESTAMP}, #{articlesText,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.pigs.blog.model.Articles">
     insert into articles
@@ -147,6 +171,9 @@
       <if test="updateAt != null">
         update_at,
       </if>
+      <if test="articlesText != null">
+        articles_text,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -178,6 +205,9 @@
       </if>
       <if test="updateAt != null">
         #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articlesText != null">
+        #{articlesText,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -220,7 +250,27 @@
       <if test="row.updateAt != null">
         update_at = #{row.updateAt,jdbcType=TIMESTAMP},
       </if>
+      <if test="row.articlesText != null">
+        articles_text = #{row.articlesText,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    <if test="example != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update articles
+    set id = #{row.id,jdbcType=INTEGER},
+      title = #{row.title,jdbcType=VARCHAR},
+      author = #{row.author,jdbcType=VARCHAR},
+      tags = #{row.tags,jdbcType=VARCHAR},
+      detail = #{row.detail,jdbcType=VARCHAR},
+      img_url = #{row.imgUrl,jdbcType=VARCHAR},
+      group_name = #{row.groupName,jdbcType=VARCHAR},
+      status = #{row.status,jdbcType=VARCHAR},
+      create_at = #{row.createAt,jdbcType=TIMESTAMP},
+      update_at = #{row.updateAt,jdbcType=TIMESTAMP},
+      articles_text = #{row.articlesText,jdbcType=LONGVARCHAR}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -271,7 +321,24 @@
       <if test="updateAt != null">
         update_at = #{updateAt,jdbcType=TIMESTAMP},
       </if>
+      <if test="articlesText != null">
+        articles_text = #{articlesText,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.pigs.blog.model.Articles">
+    update articles
+    set title = #{title,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      tags = #{tags,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR},
+      img_url = #{imgUrl,jdbcType=VARCHAR},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      articles_text = #{articlesText,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.pigs.blog.model.Articles">
