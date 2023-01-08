@@ -24,7 +24,7 @@
           <span class="icon iconfont icon-yingyong"></span>
           <span>Category</span>
         </div>
-        <div class="about">
+        <div class="about"  @click="$router.push('/about')">
           <span class="icon iconfont icon-guanyu"></span>
           <span>About</span>
         </div>

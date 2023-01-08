@@ -44,6 +44,14 @@ const routes = [
     },
     component: () => import('@/pages/Write'),
   },
+  {
+    path: '/about',
+    name: 'about',
+    meta: {
+      showComponent: true,
+    },
+    component: () => import('@/pages/About'),
+  },
 ]
 
 const router = createRouter({

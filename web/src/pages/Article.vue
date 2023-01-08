@@ -1,6 +1,6 @@
 <template>
   <div class="header-box"></div>
-  <div class="wrapper basic-box">
+  <div class="wrapper">
     <ArticlePreview />
   </div>
 </template>
@@ -10,7 +10,6 @@ import ArticlePreview from '@/components/ArticlePreview.vue'
 export default {
   components: { ArticlePreview },
   setup() {
-    
     return {}
   },
 }
@@ -24,13 +23,10 @@ export default {
 }
 
 .wrapper {
-
   margin: auto;
   width: 1200px;
   position: relative;
   top: 100px;
   min-height: 600px;
-  overflow: hidden;
-  display: flex;
 }
 </style>
