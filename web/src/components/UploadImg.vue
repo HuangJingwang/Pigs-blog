@@ -45,14 +45,7 @@ import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 const dialogImageUrl = ref('')
 const dialogVisible = ref(false)
 const disabled = ref(false)
-// defineProps()
-const props = defineProps({
-  msg: {
-    default: '321',
-  },
-})
-console.log(props)
-console.log()
+
 const handleRemove = file => {
   console.log(file)
 }

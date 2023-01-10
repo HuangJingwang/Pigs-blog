@@ -10,9 +10,11 @@ import store from './store'
 import ElementPlus from 'element-plus'
 // 引入element-plus样式
 import 'element-plus/dist/index.css'
-// 引入mock文件
-import '@/mock/mockSever'
-// 引入markdown 编辑器 样式
 const app = createApp(App)
-app.component('Background', Background).use(ElementPlus).use(router).use(store).mount('#app')
+app
+  .component('Background', Background)
+  .use(ElementPlus)
+  .use(router)
+  .use(store)
+  .mount('#app')
 // script 引入

@@ -5,7 +5,7 @@
         type="text"
         class="title"
         placeholder="请输入标题..."
-        v-model="state.title" />
+        v-model="data.title" />
       <!-- <div class="route">{{ $route.meta.showComponent }}</div> -->
       <div class="right">
         <div class="saveInfo">文章将保存至草稿箱</div>
@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <MdEditor v-model="state.text" class="editor"></MdEditor>
+    <MdEditor v-model="data.articles_text" class="editor"></MdEditor>
     <!-- <MdCatalog></MdCatalog> -->
     <div class="configBox">
       <div class="header">发布文章</div>
@@ -29,104 +29,134 @@
             <div class="group_name">
               <el-cascader
                 size="default"
-                v-model="group_name"
+                v-model="group_id"
                 :options="groupOptions"
                 :props="props"
-                @change="addGroupName" />
-                <button class="addNewGroup">+</button>
+                @change="addGroupId" />
+              <!-- <button class="addNewGroup" @click="addGroupId">+</button> -->
             </div>
           </div>
         </div>
         <!-- 添加标签 -->
         <div class="addTags">
           <div class="left tagDirectory">添加标签：</div>
+          <!-- 点击添加文章标签 -->
           <div class="right tagOptions" @click="addTags">
             <!-- <el-button type="info">Info</el-button>
                -->
-            <button
-              class="tag"
-              v-for="(tag, index) in tags"
-              :key="index"
-              :data-tag="tag">
-              {{ tag }}
-            </button>
+            <div class="tagNode" v-for="(tag, index) in tagList" :key="index">
+              <button class="tag" :data-tag="tag.tag_name">
+                {{ tag.tag_name }}
+              </button>
+              <span class="deleteTag" @click.stop="deleteTag(tag.id)"> x </span>
+            </div>
+            <!-- 新建标签 -->
+
+            <input
+              class="createTag"
+              @keydown.enter="createTag"
+              type="text"
+              v-model="newTag.tag_name" />
           </div>
         </div>
+
         <!-- 添加封面 -->
         <div class="addCoverImg">
           <div class="left coverImgDirectory">文章封面：</div>
           <div class="right coverImgOptions">
-            <UploadImg :msg="msg"></UploadImg>
+            <UploadImg></UploadImg>
           </div>
         </div>
+      </div>
+      <div class="sub">
+        <div class="save" @click="handleSaveArticle">保存</div>
+        <div class="cancel">取消</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, onMounted, ref } from 'vue'
+import { useStore } from 'vuex'
+import { reactive, onMounted, ref, watch, computed } from 'vue'
+import { createNewTag, deleteTags, saveArticle } from '@/api'
 import MdEditor from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import UploadImg from '@/components/UploadImg.vue'
 const MdCatalog = MdEditor.MdCatalog
 const scrollElement = document.documentElement
+const { state, dispatch } = useStore()
 
-let msg= ref('')
-msg = '123'
-const state = reactive({
+// 文章数据
+let data = reactive({
+  articles_text: '',
+  author: 'test',
+  group_id: 0,
+  status: 'published',
+  tags: '',
   title: '',
-  text: '# 标题\n## 123\n ### 123\n# 234',
-  time: 123,
 })
-
-// 选择group_name
-const group_name = ref([])
+// 选择group_id
+const group_id = ref([])
+// 配置联级选择器
 const props = {
   expandTrigger: 'hover',
 }
-const groupOptions = [
-  {
-    value: '前端',
-    label: '前端',
-    children: [
-      {
-        value: '123',
-        label: 'Css',
-      },
-      {
-        value: 'html',
-        label: 'Html',
-      },
-      {
-        value: 'javascript',
-        label: 'Javascript',
-      },
-    ],
-  },
-]
-const addGroupName = value => {
-  console.log(value)
-}
+const groupOptions = computed(() => {
+  return state.groupList
+})
 
-// 添加自定义分类
+const addGroupId = () => {
+  data.group_id = group_id.value[group_id.value.length - 1]
+}
+// 获取获取分类数据
+onMounted(() => {
+  dispatch('reqGroupList')
+})
 
 // 选择tags
-const tags = [
-  '日常',
-  'bug',
-  '随笔',
-  '资源库',
-  '学习笔记',
-  'git',
-  '原理',
-  '转载',
-  '原创',
-]
+let tagList = computed(() => {
+  return state.tagList
+})
+let tags = []
 const addTags = e => {
-  let tag = e.target.dataset.tag
+  tags.push(e.target.dataset.tag)
+  data.tags = tags.join(',')
 }
-onMounted(() => {})
+onMounted(() => {
+  dispatch('reqTagList')
+})
+
+// 新建tag
+let newTag = reactive({
+  tag_name: '',
+  create_by: 'test',
+})
+const createTag = async () => {
+  if (newTag.tag_name) {
+    let result = await createNewTag(newTag)
+    newTag.tag_name = ''
+    console.log(tags)
+    dispatch('reqTagList')
+  }
+}
+
+// 删除tag
+const deleteTag = async id => {
+  let result = await deleteTags(id)
+  console.log(result)
+  if (result.success) {
+    dispatch('reqTagList')
+  }
+}
+// 保存文章
+const handleSaveArticle = async () => {
+  console.log(data)
+  if (data.articles_text) {
+    let result = await saveArticle(data)
+    console.log(result)
+  }
+}
 </script>
 
 <style scoped>
@@ -249,7 +279,40 @@ onMounted(() => {})
 .tagOptions .tag:active {
   background-color: rgb(166, 169, 173);
 }
-.addCategories .isMust {
+.tagOptions .tagNode {
+  position: relative;
+}
+.tagNode .deleteTag {
+  background-color: red;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  line-height: 16px;
+  text-align: center;
+  top: -5px;
+  right: 4px;
+}
+.configBox .sub {
+  border-top: 1px solid rgb(221, 221, 221);
+  /* padding: 25px; */
+  width: 100%;
+  height: 60px;
+  padding: 15px 20px;
+}
+.sub .cancel,
+.save {
+  color: #fff;
+  border-radius: 5px;
+  text-align: center;
+  margin-left: 40px;
+  width: 50px;
+  height: 30px;
+  line-height: 30px;
+  background-color: blue;
+  float: right;
+}
+.isMust {
   color: rgb(224, 8, 8);
 }
 </style>

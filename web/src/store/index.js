@@ -1,12 +1,11 @@
 import { createStore } from 'vuex'
+import { getGroupListData, getTagList } from '@/api'
 export default createStore({
   state: {
-    count: 0,
-
     // 归档页面数据
     archivesList: [],
     archiveData: {
-      total:50,
+      total: 50,
       page: 1,
       data: [
         { time: 1667089448000, title: 'css学习笔记', id: 564 },
@@ -21,18 +20,36 @@ export default createStore({
         { time: 1535311448000, title: 'css学习笔记', id: 358 },
       ],
     },
+    // 分类列表
+    groupList: [],
+    tagList: [],
   },
+
   getter: {},
+
   actions: {
+    // 发起请求获取分类列表数据
+
     handleArchiveData({ commit, state }) {
       // 暂时没有获取数据的函数
       let result = []
       commit('GETARCHIVESLIST', result)
     },
+
+    // 请求分类列表数据
+    async reqGroupList({ commit }) {
+      let result = await getGroupListData()
+      commit('HANDLEGROUPLIST', result)
+    },
+    // 请求标签列表数据
+    async reqTagList({ commit }) {
+      let result = await getTagList()
+      commit('HANDLETAGLIST', result)
+    },
   },
   mutations: {
+    // 处理归档数据
     GETARCHIVESLIST(state, result) {
-      console.log(123)
       state.archiveData.data.forEach(item => {
         // 处理日期数据
         const date = new Date(item.time)
@@ -43,7 +60,6 @@ export default createStore({
             : date.getMonth() + 1
         item.date = date.getDate() + ''
         item.year_month = item.year + '年' + item.month + '月'
-      
       })
       // 数组升维
       let obj = {}
@@ -68,6 +84,36 @@ export default createStore({
         }
       })
       state.archivesList = newArr
+    },
+
+    // 处理分类数据
+    HANDLEGROUPLIST(state, result) {
+      let groupListData = result.data
+
+      // 第一次遍历，取得  根节点
+      function getTree(rootList, parent, list) {
+        rootList.forEach(item => {
+          item.value = item.id
+          item.label = item.group_name
+          if (item.parent_id == parent) {
+            list.push(item)
+          }
+        })
+        list.forEach(item2 => {
+          item2.children = [] //定义空数组，存储子元素
+          getTree(rootList, item2.id, item2.children)
+          if (item2.children.length == 0) {
+            delete item2.children
+          }
+        })
+        return list
+      }
+      state.groupList = getTree(groupListData, 0, [])
+    },
+    // 处理标签数据
+    HANDLETAGLIST(state, result) {
+      console.log(result)
+      state.tagList = result.data
     },
   },
 })

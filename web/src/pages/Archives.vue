@@ -28,9 +28,11 @@ export default {
   setup() {
     // 页面中展示归档数据
     const { state, dispatch } = useStore()
-    dispatch('handleArchiveData')
+    onMounted(() => {
+      // 请求归档数据
+      dispatch('handleArchiveData')
+    })
     let archivesList = state.archivesList
-
     return { archivesList }
   },
 }
