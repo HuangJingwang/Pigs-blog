@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pigs.blog.mapper.ext.ArticlesMapperExt">
+    <sql id="Base_Column_List">
+    id, title, author, tags, detail, img_url, group_name, status, create_at, update_at
+    </sql>
+    <resultMap id="BaseResultMap" type="com.pigs.blog.model.Articles">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="author" jdbcType="VARCHAR" property="author" />
+        <result column="tags" jdbcType="VARCHAR" property="tags" />
+        <result column="detail" jdbcType="VARCHAR" property="detail" />
+        <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+        <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+        <result column="status" jdbcType="VARCHAR" property="status" />
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+    </resultMap>
+    <sql id="selectList">
+        where 1 = 1
+        <if test="criteria.author != null and criteria.author != ''">
+          and author = #{criteria.author}
+        </if>
+    </sql>
+
+    <select id="selectArticlesList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from articles
+        <include refid="selectList"/>
+        limit #{criteria.start}, #{criteria.offset}
+        order by desc
+    </select>
+
+    <select id="countArticlesList" resultType="java.lang.Long">
+        select
+        count(*)
+        from articles
+        <include refid="selectList"/>
+    </select>
+</mapper>
