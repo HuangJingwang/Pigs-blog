@@ -3,7 +3,7 @@ package com.pigs.blog.model;
 import java.util.Date;
 
 public class ArticlesTags {
-    private Integer id;
+    private Long id;
 
     private String tagName;
 
@@ -13,11 +13,11 @@ public class ArticlesTags {
 
     private Date updateAt;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

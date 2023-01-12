@@ -3,11 +3,11 @@ package com.pigs.blog.model;
 import java.util.Date;
 
 public class ArticlesGroup {
-    private Integer id;
+    private Long id;
 
     private String groupName;
 
-    private Integer parentId;
+    private Long parentId;
 
     private Date createAt;
 
@@ -17,11 +17,11 @@ public class ArticlesGroup {
 
     private String author;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -33,11 +33,11 @@ public class ArticlesGroup {
         this.groupName = groupName == null ? null : groupName.trim();
     }
 
-    public Integer getParentId() {
+    public Long getParentId() {
         return parentId;
     }
 
-    public void setParentId(Integer parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
     }
 

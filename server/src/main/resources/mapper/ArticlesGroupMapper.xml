@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pigs.blog.mapper.ArticlesGroupMapper">
   <resultMap id="BaseResultMap" type="com.pigs.blog.model.ArticlesGroup">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="group_name" jdbcType="VARCHAR" property="groupName" />
-    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
     <result column="is_delete" jdbcType="SMALLINT" property="isDelete" />
@@ -85,15 +85,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from articles_group
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from articles_group
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.pigs.blog.model.ArticlesGroupExample">
     delete from articles_group
@@ -105,7 +105,7 @@
     insert into articles_group (id, group_name, parent_id, 
       create_at, update_at, is_delete, 
       author)
-    values (#{id,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, #{parentId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
       #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=SMALLINT}, 
       #{author,jdbcType=VARCHAR})
   </insert>
@@ -136,13 +136,13 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=BIGINT},
       </if>
       <if test="groupName != null">
         #{groupName,jdbcType=VARCHAR},
       </if>
       <if test="parentId != null">
-        #{parentId,jdbcType=INTEGER},
+        #{parentId,jdbcType=BIGINT},
       </if>
       <if test="createAt != null">
         #{createAt,jdbcType=TIMESTAMP},
@@ -168,13 +168,13 @@
     update articles_group
     <set>
       <if test="row.id != null">
-        id = #{row.id,jdbcType=INTEGER},
+        id = #{row.id,jdbcType=BIGINT},
       </if>
       <if test="row.groupName != null">
         group_name = #{row.groupName,jdbcType=VARCHAR},
       </if>
       <if test="row.parentId != null">
-        parent_id = #{row.parentId,jdbcType=INTEGER},
+        parent_id = #{row.parentId,jdbcType=BIGINT},
       </if>
       <if test="row.createAt != null">
         create_at = #{row.createAt,jdbcType=TIMESTAMP},
@@ -195,9 +195,9 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update articles_group
-    set id = #{row.id,jdbcType=INTEGER},
+    set id = #{row.id,jdbcType=BIGINT},
       group_name = #{row.groupName,jdbcType=VARCHAR},
-      parent_id = #{row.parentId,jdbcType=INTEGER},
+      parent_id = #{row.parentId,jdbcType=BIGINT},
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
       update_at = #{row.updateAt,jdbcType=TIMESTAMP},
       is_delete = #{row.isDelete,jdbcType=SMALLINT},
@@ -213,7 +213,7 @@
         group_name = #{groupName,jdbcType=VARCHAR},
       </if>
       <if test="parentId != null">
-        parent_id = #{parentId,jdbcType=INTEGER},
+        parent_id = #{parentId,jdbcType=BIGINT},
       </if>
       <if test="createAt != null">
         create_at = #{createAt,jdbcType=TIMESTAMP},
@@ -228,16 +228,16 @@
         author = #{author,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.pigs.blog.model.ArticlesGroup">
     update articles_group
     set group_name = #{groupName,jdbcType=VARCHAR},
-      parent_id = #{parentId,jdbcType=INTEGER},
+      parent_id = #{parentId,jdbcType=BIGINT},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=SMALLINT},
       author = #{author,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

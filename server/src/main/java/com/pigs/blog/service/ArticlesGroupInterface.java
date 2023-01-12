@@ -14,7 +14,7 @@ public interface ArticlesGroupInterface {
 
     void create(ArticlesGroupCreateRequest request);
 
-    void deleteById(Integer id);
+    void deleteById(Long id);
 
     void update(ArticlesGroupUpdateRequest request);
 }

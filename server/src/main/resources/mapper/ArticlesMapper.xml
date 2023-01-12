@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pigs.blog.mapper.ArticlesMapper">
   <resultMap id="BaseResultMap" type="com.pigs.blog.model.Articles">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="group_id" jdbcType="BIGINT" property="groupId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="author" jdbcType="VARCHAR" property="author" />
     <result column="tags" jdbcType="VARCHAR" property="tags" />
     <result column="detail" jdbcType="VARCHAR" property="detail" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
-    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
@@ -75,7 +75,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, author, tags, detail, img_url, group_name, status, create_at, update_at
+    id, group_id, title, author, tags, detail, img_url, status, create_at, update_at
   </sql>
   <sql id="Blob_Column_List">
     articles_text
@@ -110,17 +110,17 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from articles
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from articles
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.pigs.blog.model.ArticlesExample">
     delete from articles
@@ -129,13 +129,13 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.pigs.blog.model.Articles">
-    insert into articles (id, title, author, 
-      tags, detail, img_url, 
-      group_name, status, create_at, 
+    insert into articles (id, group_id, title, 
+      author, tags, detail, 
+      img_url, status, create_at, 
       update_at, articles_text)
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
-      #{tags,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
-      #{groupName,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
+      #{author,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, 
+      #{imgUrl,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
       #{updateAt,jdbcType=TIMESTAMP}, #{articlesText,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.pigs.blog.model.Articles">
@@ -143,6 +143,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="groupId != null">
+        group_id,
       </if>
       <if test="title != null">
         title,
@@ -159,9 +162,6 @@
       <if test="imgUrl != null">
         img_url,
       </if>
-      <if test="groupName != null">
-        group_name,
-      </if>
       <if test="status != null">
         status,
       </if>
@@ -177,7 +177,10 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=BIGINT},
       </if>
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
@@ -193,9 +196,6 @@
       </if>
       <if test="imgUrl != null">
         #{imgUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="groupName != null">
-        #{groupName,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         #{status,jdbcType=VARCHAR},
@@ -221,7 +221,10 @@
     update articles
     <set>
       <if test="row.id != null">
-        id = #{row.id,jdbcType=INTEGER},
+        id = #{row.id,jdbcType=BIGINT},
+      </if>
+      <if test="row.groupId != null">
+        group_id = #{row.groupId,jdbcType=BIGINT},
       </if>
       <if test="row.title != null">
         title = #{row.title,jdbcType=VARCHAR},
@@ -237,9 +240,6 @@
       </if>
       <if test="row.imgUrl != null">
         img_url = #{row.imgUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="row.groupName != null">
-        group_name = #{row.groupName,jdbcType=VARCHAR},
       </if>
       <if test="row.status != null">
         status = #{row.status,jdbcType=VARCHAR},
@@ -260,13 +260,13 @@
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update articles
-    set id = #{row.id,jdbcType=INTEGER},
+    set id = #{row.id,jdbcType=BIGINT},
+      group_id = #{row.groupId,jdbcType=BIGINT},
       title = #{row.title,jdbcType=VARCHAR},
       author = #{row.author,jdbcType=VARCHAR},
       tags = #{row.tags,jdbcType=VARCHAR},
       detail = #{row.detail,jdbcType=VARCHAR},
       img_url = #{row.imgUrl,jdbcType=VARCHAR},
-      group_name = #{row.groupName,jdbcType=VARCHAR},
       status = #{row.status,jdbcType=VARCHAR},
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
       update_at = #{row.updateAt,jdbcType=TIMESTAMP},
@@ -277,13 +277,13 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update articles
-    set id = #{row.id,jdbcType=INTEGER},
+    set id = #{row.id,jdbcType=BIGINT},
+      group_id = #{row.groupId,jdbcType=BIGINT},
       title = #{row.title,jdbcType=VARCHAR},
       author = #{row.author,jdbcType=VARCHAR},
       tags = #{row.tags,jdbcType=VARCHAR},
       detail = #{row.detail,jdbcType=VARCHAR},
       img_url = #{row.imgUrl,jdbcType=VARCHAR},
-      group_name = #{row.groupName,jdbcType=VARCHAR},
       status = #{row.status,jdbcType=VARCHAR},
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
       update_at = #{row.updateAt,jdbcType=TIMESTAMP}
@@ -294,6 +294,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.pigs.blog.model.Articles">
     update articles
     <set>
+      <if test="groupId != null">
+        group_id = #{groupId,jdbcType=BIGINT},
+      </if>
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
       </if>
@@ -309,9 +312,6 @@
       <if test="imgUrl != null">
         img_url = #{imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="groupName != null">
-        group_name = #{groupName,jdbcType=VARCHAR},
-      </if>
       <if test="status != null">
         status = #{status,jdbcType=VARCHAR},
       </if>
@@ -325,33 +325,33 @@
         articles_text = #{articlesText,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.pigs.blog.model.Articles">
     update articles
-    set title = #{title,jdbcType=VARCHAR},
+    set group_id = #{groupId,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
       author = #{author,jdbcType=VARCHAR},
       tags = #{tags,jdbcType=VARCHAR},
       detail = #{detail,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
-      group_name = #{groupName,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP},
       articles_text = #{articlesText,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.pigs.blog.model.Articles">
     update articles
-    set title = #{title,jdbcType=VARCHAR},
+    set group_id = #{groupId,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
       author = #{author,jdbcType=VARCHAR},
       tags = #{tags,jdbcType=VARCHAR},
       detail = #{detail,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
-      group_name = #{groupName,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

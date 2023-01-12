@@ -10,7 +10,7 @@ public interface ArticlesMapper {
 
     int deleteByExample(ArticlesExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(Articles row);
 
@@ -20,7 +20,7 @@ public interface ArticlesMapper {
 
     List<Articles> selectByExample(ArticlesExample example);
 
-    Articles selectByPrimaryKey(Integer id);
+    Articles selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("row") Articles row, @Param("example") ArticlesExample example);
 

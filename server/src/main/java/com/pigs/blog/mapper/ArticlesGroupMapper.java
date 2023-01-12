@@ -10,7 +10,7 @@ public interface ArticlesGroupMapper {
 
     int deleteByExample(ArticlesGroupExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(ArticlesGroup row);
 
@@ -18,7 +18,7 @@ public interface ArticlesGroupMapper {
 
     List<ArticlesGroup> selectByExample(ArticlesGroupExample example);
 
-    ArticlesGroup selectByPrimaryKey(Integer id);
+    ArticlesGroup selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("row") ArticlesGroup row, @Param("example") ArticlesGroupExample example);
 

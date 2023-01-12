@@ -3,16 +3,14 @@ package com.pigs.blog.mapper;
 import com.pigs.blog.model.ArticlesTags;
 import com.pigs.blog.model.ArticlesTagsExample;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-@Mapper
+
 public interface ArticlesTagsMapper {
     long countByExample(ArticlesTagsExample example);
 
     int deleteByExample(ArticlesTagsExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(ArticlesTags row);
 
@@ -20,7 +18,7 @@ public interface ArticlesTagsMapper {
 
     List<ArticlesTags> selectByExample(ArticlesTagsExample example);
 
-    ArticlesTags selectByPrimaryKey(Integer id);
+    ArticlesTags selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("row") ArticlesTags row, @Param("example") ArticlesTagsExample example);
 

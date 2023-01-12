@@ -32,12 +32,12 @@ public class ArticlesTagsInterfaceImpl implements ArticlesTagsInterface {
     @Override
     public void create(ArticlesTagsCreateRequest request) {
         ArticlesTags articlesTags = new ArticlesTags();
-        BeanUtils.copyProperties(articlesTags,request);
+        BeanUtils.copyProperties(request,articlesTags);
         tagsMapper.insertSelective(articlesTags);
     }
 
     @Override
-    public void update(Integer id, ArticlesTagsUpdateRequest request) {
+    public void update(Long id, ArticlesTagsUpdateRequest request) {
         ArticlesTags articlesTags = new ArticlesTags();
         BeanUtils.copyProperties(articlesTags,request);
         articlesTags.setId(id);
@@ -45,7 +45,7 @@ public class ArticlesTagsInterfaceImpl implements ArticlesTagsInterface {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         tagsMapper.deleteByPrimaryKey(id);
     }
 

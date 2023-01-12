@@ -2,14 +2,15 @@ package com.pigs.blog.mapper.ext;
 
 import com.pigs.blog.model.Articles;
 import com.pigs.blog.model.criteria.ArticlesListCriteria;
+import com.pigs.blog.model.criteria.ArticlesPageCriteria;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Mapper
 public interface ArticlesMapperExt {
-    List<Articles> selectArticlesList(@Param("criteria") ArticlesListCriteria criteria);
-    Long countArticlesList(@Param("criteria") ArticlesListCriteria criteria);
+    List<Articles> selectArticlesList(@Param("criteria") ArticlesPageCriteria criteria);
+    Long countArticlesList(@Param("criteria") ArticlesPageCriteria criteria);
+
+    List<Articles> selectArticlesListByCriteria(@Param("criteria")ArticlesListCriteria criteria);
 }

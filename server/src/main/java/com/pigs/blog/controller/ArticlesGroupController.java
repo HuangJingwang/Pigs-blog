@@ -5,7 +5,9 @@ import com.pigs.blog.contract.request.ArticlesGroupCreateRequest;
 import com.pigs.blog.contract.request.ArticlesGroupListRequest;
 import com.pigs.blog.contract.request.ArticlesGroupUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesGroupListResponse;
+import com.pigs.blog.contract.response.ArticlesListResponse;
 import com.pigs.blog.service.ArticlesGroupInterface;
+import com.pigs.blog.service.ArticlesInterface;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -60,7 +62,7 @@ public class ArticlesGroupController {
     })
     @ApiOperation(value = "逻辑删除", notes = "", httpMethod = "POST")
     @RequestMapping(value = "delete/{id}", method = RequestMethod.POST, produces = "application/json")
-    public ResultResponse deleteArticlesGroup(@PathVariable("id") Integer id){
+    public ResultResponse deleteArticlesGroup(@PathVariable("id") Long id){
         groupInterface.deleteById(id);
         return ResultResponse.success(null);
     }

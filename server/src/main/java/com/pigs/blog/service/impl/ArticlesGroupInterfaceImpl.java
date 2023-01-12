@@ -59,8 +59,8 @@ public class ArticlesGroupInterfaceImpl implements ArticlesGroupInterface {
      * @param id
      */
     @Override
-    public void deleteById(Integer id) {
-        List<Integer> ids = selectSubId(id);
+    public void deleteById(Long id) {
+        List<Long> ids = selectSubId(id);
 
         ids.forEach(s -> {
             ArticlesGroup articlesGroup = new ArticlesGroup();
@@ -77,9 +77,9 @@ public class ArticlesGroupInterfaceImpl implements ArticlesGroupInterface {
      * @param id
      * @return
      */
-    private List<Integer> selectSubId(Integer id) {
-        List<Integer> parentIds = new ArrayList<>();
-        List<Integer> result = new ArrayList<>();
+    private List<Long> selectSubId(Long id) {
+        List<Long> parentIds = new ArrayList<>();
+        List<Long> result = new ArrayList<>();
         parentIds.add(id);
         while (!parentIds.isEmpty()) {
             result.addAll(parentIds);
@@ -87,7 +87,7 @@ public class ArticlesGroupInterfaceImpl implements ArticlesGroupInterface {
             ArticlesGroupExample.Criteria criteria = example.createCriteria();
             criteria.andParentIdIn(parentIds);
             List<ArticlesGroup> articlesGroups = groupMapper.selectByExample(example);
-            List<Integer> subIds = articlesGroups.stream().map(ArticlesGroup::getId).collect(Collectors.toList());
+            List<Long> subIds = articlesGroups.stream().map(ArticlesGroup::getId).collect(Collectors.toList());
 
             parentIds.removeAll(result);
             parentIds.addAll(subIds);

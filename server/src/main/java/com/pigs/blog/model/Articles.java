@@ -1,9 +1,13 @@
 package com.pigs.blog.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Articles {
-    private Integer id;
+public class Articles implements Serializable {
+    private static final long serialVersionUID = -40356785423868312L;
+    private Long id;
+
+    private Long groupId;
 
     private String title;
 
@@ -15,8 +19,6 @@ public class Articles {
 
     private String imgUrl;
 
-    private String groupName;
-
     private String status;
 
     private Date createAt;
@@ -25,12 +27,20 @@ public class Articles {
 
     private String articlesText;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     public String getTitle() {
@@ -71,14 +81,6 @@ public class Articles {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl == null ? null : imgUrl.trim();
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName == null ? null : groupName.trim();
     }
 
     public String getStatus() {

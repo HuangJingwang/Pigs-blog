@@ -23,7 +23,11 @@ public class ResultResponse<T> implements Serializable {
     private T data; //返回的数据
 
     public static <T> ResultResponse<T> success(T data) {
-        return new ResultResponse<T>(true, 201, "success", data);
+        return new ResultResponse<T>(true, 200, "success", data);
+    }
+
+    public static <T> ResultResponse<T> success(T data, String msg) {
+        return new ResultResponse<T>(true, 200, msg, data);
     }
 
     public static <T> ResultResponse<T> fail(int code, String msg) {

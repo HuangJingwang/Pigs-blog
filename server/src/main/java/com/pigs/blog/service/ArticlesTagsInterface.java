@@ -13,7 +13,7 @@ public interface ArticlesTagsInterface {
 
     void create(ArticlesTagsCreateRequest request);
 
-    void update(Integer id, ArticlesTagsUpdateRequest request);
+    void update(Long id, ArticlesTagsUpdateRequest request);
 
-    void delete(Integer id);
+    void delete(Long id);
 }

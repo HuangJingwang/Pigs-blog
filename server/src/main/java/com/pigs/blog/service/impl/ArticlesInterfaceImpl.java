@@ -2,14 +2,17 @@ package com.pigs.blog.service.impl;
 
 import com.pigs.blog.common.PageData;
 import com.pigs.blog.contract.request.ArticlesCreateRequest;
+import com.pigs.blog.contract.request.ArticlesListPageRequest;
+import com.pigs.blog.contract.request.ArticlesListRequest;
 import com.pigs.blog.contract.request.ArticlesUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesDetailResponse;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.model.Articles;
+import com.pigs.blog.model.ArticlesExample;
 import com.pigs.blog.model.criteria.ArticlesListCriteria;
-import com.pigs.blog.contract.request.ArticlesListRequest;
 import com.pigs.blog.contract.response.ArticlesListResponse;
 import com.pigs.blog.mapper.ext.ArticlesMapperExt;
+import com.pigs.blog.model.criteria.ArticlesPageCriteria;
 import com.pigs.blog.service.ArticlesInterface;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
@@ -28,11 +31,10 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     private ArticlesMapperExt mapperExt;
     @Autowired
     private ArticlesMapper mapper;
-
     @Override
-    public PageData<ArticlesListResponse> getPageData(ArticlesListRequest request) {
+    public PageData<ArticlesListResponse> getPageData(ArticlesListPageRequest request) {
         PageData<ArticlesListResponse> result = new PageData<>();
-        ArticlesListCriteria criteria = createCriteria(request.getPageNo(), request.getPageSize(), request);
+        ArticlesPageCriteria criteria = createCriteria(request.getPageNo(), request.getPageSize(), request);
         Long count = mapperExt.countArticlesList(criteria);
         if (count == 0) {
             result.setHasNext(false);
@@ -49,25 +51,55 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     }
 
     @Override
-    public void updateArticles(ArticlesUpdateRequest request) {
+    public void updateArticles(Long id, ArticlesUpdateRequest request) {
         Articles articles = new Articles();
+        articles.setId(id);
         BeanUtils.copyProperties(request, articles);
         mapper.updateByPrimaryKeySelective(articles);
     }
 
     @Override
-    public void deleteArticles(Integer id) {
+    public void deleteArticles(Long id) {
         Articles articles = new Articles();
         articles.setStatus("deleted");
         mapper.updateByPrimaryKeySelective(articles);
     }
 
     @Override
-    public ArticlesDetailResponse getDetailArticles(Integer id) {
+    public ArticlesDetailResponse getDetailArticles(Long id) {
         Articles articles = mapper.selectByPrimaryKey(id);
         ArticlesDetailResponse result = new ArticlesDetailResponse();
         BeanUtils.copyProperties(articles,result);
         return result;
+    }
+
+    @Override
+    public List<ArticlesListResponse> listArticlesByGroupId(Long groupId) {
+        ArticlesExample example = new ArticlesExample();
+        ArticlesExample.Criteria criteria = example.createCriteria();
+        criteria.andGroupIdEqualTo(groupId);
+        List<Articles> articles = mapper.selectByExample(example);
+        List<ArticlesListResponse> articlesListResponses = copyList(articles);
+        return articlesListResponses;
+    }
+
+    @Override
+    public List<ArticlesListResponse> listArticlesByCriteria(ArticlesListRequest request) {
+        ArticlesListCriteria criteria = createCriteria(request);
+        List<Articles> list = mapperExt.selectArticlesListByCriteria(criteria);
+        List<ArticlesListResponse> responseList = copyList(list);
+        return responseList;
+    }
+
+    public ArticlesListCriteria createCriteria(ArticlesListRequest request){
+        ArticlesListCriteria criteria = new ArticlesListCriteria();
+        if(Strings.isNotBlank(request.getTags())){
+            criteria.setTags(request.getTags().split(","));
+        }
+        if(request.getGroupId() != null){
+            criteria.setGroupId(request.getGroupId());
+        }
+        return criteria;
     }
 
     @Override
@@ -87,12 +119,14 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         return responses;
     }
 
-    private ArticlesListCriteria createCriteria(Integer pageNo, Integer pageSize, ArticlesListRequest request) {
-        ArticlesListCriteria result = new ArticlesListCriteria();
+    private ArticlesPageCriteria createCriteria(Integer pageNo, Integer pageSize, ArticlesListPageRequest request) {
+        ArticlesPageCriteria result = new ArticlesPageCriteria();
         if (Strings.isNotBlank(request.getAuthor())) {
             result.setAuthor(request.getAuthor());
         }
-
+        if(Strings.isNotBlank(request.getStatus())){
+            result.setStatus(request.getStatus());
+        }
         result.setStart(pageNo * pageSize);
         result.setOffset(pageSize);
         return result;

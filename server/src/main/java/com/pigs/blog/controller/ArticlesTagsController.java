@@ -44,7 +44,7 @@ public class ArticlesTagsController {
     })
     @ApiOperation(value = "更新", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST, produces = "application/json")
-    public ResultResponse updateArticlesTags(@PathVariable Integer id,
+    public ResultResponse updateArticlesTags(@PathVariable("id") Long id,
                                              @RequestBody @Valid ArticlesTagsUpdateRequest request){
         tagsInterface.update(id, request);
         return ResultResponse.success(null);
@@ -55,7 +55,7 @@ public class ArticlesTagsController {
     })
     @ApiOperation(value = "删除", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = "application/json")
-    public ResultResponse deleteArticlesTags(@PathVariable Integer id){
+    public ResultResponse deleteArticlesTags(@PathVariable("id") Long id){
         tagsInterface.delete(id);
         return ResultResponse.success(null);
     }
