@@ -1,23 +1,22 @@
 <template>
-  <div class="container">
+  <div class="container" @click="hideConfig">
     <div class="pubConfig">
       <input
         type="text"
         class="title"
         placeholder="请输入标题..."
         v-model="data.title" />
-      <!-- <div class="route">{{ $route.meta.showComponent }}</div> -->
       <div class="right">
         <div class="saveInfo">文章将保存至草稿箱</div>
         <button class="draft">草稿箱</button>
-        <button class="public" @click="config">发布</button>
+        <button class="public" @click="showConfigBox" ref="pubBtn">发布</button>
         <div class="user">头像</div>
       </div>
     </div>
 
     <MdEditor v-model="data.articles_text" class="editor"></MdEditor>
-    <!-- <MdCatalog></MdCatalog> -->
-    <div class="configBox">
+    <!-- 配置发布文章相关属性 -->
+    <div class="configBox" v-show="isShowConfig" ref="configBox">
       <div class="header">发布文章</div>
       <div class="addConfig">
         <!-- 添加分类 -->
@@ -33,33 +32,48 @@
                 :options="groupOptions"
                 :props="props"
                 @change="addGroupId" />
-              <!-- <button class="addNewGroup" @click="addGroupId">+</button> -->
             </div>
           </div>
         </div>
+
         <!-- 添加标签 -->
         <div class="addTags">
-          <div class="left tagDirectory">添加标签：</div>
+          <div class="left">添加标签：</div>
           <!-- 点击添加文章标签 -->
-          <div class="right tagOptions" @click="addTags">
-            <!-- <el-button type="info">Info</el-button>
-               -->
-            <div class="tagNode" v-for="(tag, index) in tagList" :key="index">
-              <button class="tag" :data-tag="tag.tag_name">
-                {{ tag.tag_name }}
-              </button>
-              <span class="deleteTag" @click.stop="deleteTag(tag.id)"> x </span>
+          <div class="right tag_box">
+            <div class="tagOptions" @click="addTags" @dblclick="removeTags">
+              <div class="tagNode" v-for="tag in tagList" :key="tag.id">
+                <button
+                  :disabled="tagDisabled"
+                  class="tag"
+                  data-selected="unselected"
+                  :data-tag="tag.tag_name">
+                  {{ tag.tag_name }}
+                </button>
+                <span
+                  :data-tag="tag.tag_name"
+                  class="deleteTag"
+                  @click="deleteTag(tag.id)"
+                  v-show="editorTag">
+                  x
+                </span>
+              </div>
+              <!-- 新建标签 -->
             </div>
-            <!-- 新建标签 -->
-
-            <input
-              class="createTag"
-              @keydown.enter="createTag"
-              type="text"
-              v-model="newTag.tag_name" />
+            <div class="editorTags">
+              <input
+                v-show="editorTag"
+                class="createTag"
+                @keydown.enter="createTag"
+                type="text"
+                v-model="newTag.tag_name"
+                placeholder="createTag" />
+              <span
+                class="editor iconfont icon-yongyan"
+                @click="editorTags"></span>
+            </div>
           </div>
         </div>
-
         <!-- 添加封面 -->
         <div class="addCoverImg">
           <div class="left coverImgDirectory">文章封面：</div>
@@ -77,16 +91,33 @@
 </template>
 
 <script setup>
+// 引入消息提示框组件
+import { ElMessage } from 'element-plus'
+
 import { useStore } from 'vuex'
 import { reactive, onMounted, ref, watch, computed } from 'vue'
 import { createNewTag, deleteTags, saveArticle } from '@/api'
 import MdEditor from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import UploadImg from '@/components/UploadImg.vue'
+import { SelectProps } from 'element-plus/es/components/select-v2/src/defaults'
 const MdCatalog = MdEditor.MdCatalog
 const scrollElement = document.documentElement
 const { state, dispatch } = useStore()
 
+// 控制文章模块显示与隐藏
+let configBox = ref(null)
+let pubBtn = ref(null)
+let isShowConfig = ref(false) //默认隐藏
+const showConfigBox = () => {
+  isShowConfig.value = true
+}
+// 点击configBox外时隐藏
+const hideConfig = e => {
+  if (!configBox.value.contains(e.target) && e.target != pubBtn.value) {
+    isShowConfig.value = false
+  }
+}
 // 文章数据
 let data = reactive({
   articles_text: '',
@@ -114,20 +145,42 @@ onMounted(() => {
   dispatch('reqGroupList')
 })
 
+// 判断是否选中此tag
+
 // 选择tags
 let tagList = computed(() => {
   return state.tagList
 })
-let tags = []
+let tags = [] // 标签数组
 const addTags = e => {
-  tags.push(e.target.dataset.tag)
-  data.tags = tags.join(',')
+  // 若未选中，则更改为选中状态
+  if (e.target.dataset.selected == 'unselected') {
+    // 更改目标状态，将对应tag推入数组
+    tags.push(e.target.dataset.tag)
+    e.target.classList = ['selectedTag']
+    e.target.dataset.selected = 'selected'
+  }
 }
+// 移除已选中tag
+const removeTags = e => {
+  // console.log()
+  if (e.target.dataset.selected == 'selected') {
+    // 在tags中移除目标tag
+
+    tags = tags.filter(item => item != e.target.dataset.tag)
+    e.target.classList = ['tag']
+    e.target.dataset.selected = 'unselected'
+  }
+}
+
+// 获取tag列表数据
 onMounted(() => {
   dispatch('reqTagList')
 })
 
+// 编辑tag
 // 新建tag
+let tagDisabled = ref(false)
 let newTag = reactive({
   tag_name: '',
   create_by: 'test',
@@ -140,21 +193,53 @@ const createTag = async () => {
     dispatch('reqTagList')
   }
 }
-
 // 删除tag
 const deleteTag = async id => {
+  // 若目标tag已被选中，则从tags中清除此tag
+  tags = tags.filter(item => item != event.currentTarget.dataset.tag)
   let result = await deleteTags(id)
-  console.log(result)
   if (result.success) {
     dispatch('reqTagList')
   }
 }
+// 默认隐藏编辑tag输入框及delete
+let editorTag = ref(false)
+
+const editorTags = () => {
+  editorTag.value = !editorTag.value
+  tagDisabled.value = !tagDisabled.value
+}
 // 保存文章
 const handleSaveArticle = async () => {
-  console.log(data)
-  if (data.articles_text) {
+  data.tags = tags.join(',')
+  if (data.articles_text && data.group_id && data.title) {
     let result = await saveArticle(data)
-    console.log(result)
+    if (result.success) {
+      ElMessage({
+        message: '保存成功.',
+        type: 'success',
+      })
+      data.articles_text = ''
+      data.group_id = ''
+      data.title = ''
+      data.tags = ''
+    }
+    // console.log(result)
+  } else if (!data.articles_text) {
+    ElMessage({
+      message: '请输入内容.',
+      type: 'warning',
+    })
+  } else if (!data.title) {
+    ElMessage({
+      message: '请输入标题.',
+      type: 'warning',
+    })
+  } else if (!data.group_id) {
+    ElMessage({
+      message: '请添加分类.',
+      type: 'warning',
+    })
   }
 }
 </script>
@@ -166,7 +251,7 @@ const handleSaveArticle = async () => {
   display: flex;
   flex-direction: column;
 }
-
+/* 头部信息及标题输入 */
 .container .pubConfig {
   padding: 12px 50px;
   height: 80px;
@@ -175,9 +260,11 @@ const handleSaveArticle = async () => {
   align-items: center;
 }
 .container .title {
+  outline: none;
   background: #eee;
   height: 100%;
-  width: 1000px;
+  /* flex: 50%; */
+  width: 875px;
   border: 0px solid #000;
   font-weight: 900;
   font-size: 32px;
@@ -187,32 +274,36 @@ const handleSaveArticle = async () => {
   display: flex;
   align-items: center;
 }
+/* 用户头像 */
 .container .user {
   width: 45px;
   height: 45px;
   line-height: 45px;
   text-align: center;
   border-radius: 50%;
-  background-color: pink;
+  /* background-color: pink; */
+  background-color: #fff;
   margin-left: 20px;
 }
+/* 发布按钮 */
 .container .public {
   padding: 0 20px;
   height: 42px;
   color: #fff;
   font-size: 16px;
-  background: rgb(38, 38, 188);
-  border: 1px solid rgb(38, 38, 188);
+  background: rgb(70, 70, 171);
+  border: 1px solid rgb(70, 70, 171);
   border-radius: 5px;
   margin-left: 20px;
 }
+/* 草稿箱 */
 .container .draft {
   padding: 0 20px;
   height: 42px;
   color: #fff;
   font-size: 16px;
-  background: rgb(38, 38, 188);
-  border: 1px solid rgb(38, 38, 188);
+  background: rgb(70, 70, 171);
+  border: 1px solid rgb(70, 70, 171);
   border-radius: 5px;
   margin-left: 20px;
 }
@@ -220,15 +311,38 @@ const handleSaveArticle = async () => {
   flex: 1;
 }
 /* 发布文章设置 */
+
 .configBox {
-  /* z-index: 1; */
+  /* display: none; */
   width: 550px;
   position: absolute;
-  top: 95px;
-  right: 80px;
+  top: 90px;
+  right: 50px;
   background-color: #fff;
   border: 1px solid rgb(221, 221, 221);
-  border-radius: 2px;
+  border-radius: 3px;
+}
+.configBox::before {
+  content: '';
+  /* width: 25px;
+  height: 25px; */
+  border-bottom: 16px solid rgb(221, 221, 221);
+  border-right: 14px solid transparent;
+  border-left: 14px solid transparent;
+  border-top: 14px solid transparent;
+  position: absolute;
+  top: -29px;
+  right: 85px;
+}
+.configBox::after {
+  content: '';
+  border-bottom: 15px solid #fff;
+  border-right: 13px solid transparent;
+  border-left: 13px solid transparent;
+  border-top: 13px solid transparent;
+  position: absolute;
+  top: -27px;
+  right: 86px;
 }
 .configBox .header {
   padding: 18px;
@@ -244,24 +358,41 @@ const handleSaveArticle = async () => {
   display: flex;
   margin-bottom: 20px;
 }
+
 .addConfig .left {
   line-height: 30px;
   text-align: right;
   width: 90px;
   height: 30px;
-  background-color: pink;
 }
 .addConfig .right {
-  padding-left: 20px;
+  padding-left: 15px;
   width: 400px;
 }
 
+.addTags .tag_box {
+  display: flex;
+  flex-direction: column;
+}
+.addTags {
+  position: relative;
+}
+.addTags .editor {
+  position: absolute;
+  right: -30px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
 .tagOptions {
   display: flex;
   flex-wrap: wrap;
+  /* height: 110px;
+  overflow: scroll; */
 }
 
-.tagOptions .tag {
+.tagOptions .tag,
+.tagOptions .selectedTag {
   font-size: 14px;
   height: 25px;
   padding: 0 15px;
@@ -270,17 +401,36 @@ const handleSaveArticle = async () => {
   margin-bottom: 15px;
   margin-right: 10px;
   color: #fff;
-  background-color: rgb(144, 147, 153);
 }
 
+.tagOptions .tag {
+  background-color: rgb(144, 147, 153);
+}
+.tagOptions .selectedTag {
+  background-color: rgb(229, 134, 134);
+}
 .tagOptions .tag:hover {
   background-color: rgb(107, 109, 113);
 }
 .tagOptions .tag:active {
   background-color: rgb(166, 169, 173);
 }
+
 .tagOptions .tagNode {
   position: relative;
+}
+.editorTags .createTag {
+  outline: rgb(64, 158, 255);
+  padding: 0 10px;
+  color: rgb(96, 98, 102);
+  font-size: 12px;
+  width: 215px;
+  height: 30px;
+  border-radius: 3px;
+  border: 1px solid rgb(220, 223, 230);
+}
+.editorTags .createTag::placeholder {
+  color: rgb(176, 171, 185);
 }
 .tagNode .deleteTag {
   background-color: red;
@@ -293,6 +443,8 @@ const handleSaveArticle = async () => {
   top: -5px;
   right: 4px;
 }
+
+/* 底部栏 */
 .configBox .sub {
   border-top: 1px solid rgb(221, 221, 221);
   /* padding: 25px; */

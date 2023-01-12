@@ -18,7 +18,7 @@ export default {
 <style scoped>
 .header-box {
   width: 100%;
-  height: 200px;
+  height: 300px;
   background-color: #eee;
 }
 
@@ -26,7 +26,7 @@ export default {
   margin: auto;
   width: 1200px;
   position: relative;
-  top: 100px;
+  /* top: 100px; */
   min-height: 600px;
 }
 </style>

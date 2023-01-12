@@ -4,8 +4,8 @@ import nprogress from 'nprogress'
 //引入相关进度条的样式
 import 'nprogress/nprogress.css'
 let requests = axios.create({
-  //基础路径,发请求URL携带api【发现:真实服务器接口都携带/api】
-  baseURL: '/pigs-blog',
+
+  baseURL: 'http://49.233.45.84:6533/pigs-blog',
   //超时的设置
   timeout: 5000,
 })
@@ -26,8 +26,8 @@ requests.interceptors.response.use(
   },
   err => {
     //温馨提示:某一天发请求,请求失败,请求失败的信息打印出来
-    // alert(err.message);
-    console.log(err.message)
+    nprogress.done()
+    // console.log(err.message)
     //终止Promise链
     return new Promise()
   }

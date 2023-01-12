@@ -5,7 +5,7 @@
 <script>
 export default {
   setup() {
-    let imgUrl = require('@/static/img/bgi1.jpg')
+    let imgUrl = require('@/assets/img/bgi1.jpg')
     return {
       imgUrl,
     }

@@ -11,12 +11,15 @@
       <!-- 切换主题 -->
       <div class="theme basic-box" @click="testLog" ref="theme"></div>
       <!-- 目录 -->
-      <md-catalog
-        ref="catalog"
-        class="md-catalog basic-box"
-        :editor-id="state.id"
-        :scroll-element="scrollElement"
-        :scrollElementOffsetTop="state.scrollElementOffsetTop" />
+      <!-- <teleport to="body"> -->
+        <div class="catalog" ref="catalog">
+          <md-catalog
+            class="md-catalog basic-box"
+            :editor-id="state.id"
+            :scroll-element="scrollElement"
+            :scrollElementOffsetTop="state.scrollElementOffsetTop" />
+        </div>
+      <!-- </teleport> -->
     </div>
     <!-- 热门文章 -->
     <div class="hot"></div>
@@ -30,7 +33,7 @@ const MdCatalog = MdEditor.MdCatalog
 const scrollElement = document.documentElement
 const state = reactive({
   theme: 'dark',
-  text: '# 标题\n## 123\n ### 123\n# 234\n## 234\n### 234\n# 345\naerkhbnkfdml;amrgbfkz\n123\n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456\naerkhbnkfdml、amrgbfkz\n123\n12\n1\n1\n1\n1\n1\n1\n1\n1\n1\n123456\naerkhbnkfdml;amrgbfkz',
+  text: '# 1\n123\n## 2\n### 3\n#### 4\n##### 5\n###### 6',
   id: 'my-editor',
   scrollElementOffsetTop: 300,
 })
@@ -39,18 +42,15 @@ const state = reactive({
 const catalog = ref(null)
 
 onMounted(() => {
-  console.log(catalog.value)
+  // console.log(catalog.value)
 })
 // 测试
-const theme = ref(null)
-let offset = computed(() => {
-  // return catalog.value.offsetTop
-})
+// const theme = ref(null)
+
 const testLog = () => {
-  theme.value.offset = 200
-  console.log(theme.value.scrollTop)
-  // console.log(catalog.value)
-  // console.log(offset)
+  // console.log(123)
+  console.log(catalog.value.offsetTop)
+  console.log(window.scrollY)
 }
 
 onMounted(() => {})
