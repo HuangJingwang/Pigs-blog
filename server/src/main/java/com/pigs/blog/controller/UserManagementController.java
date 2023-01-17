@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api("pigs-blog/user")
+@Api(value = "pigs-blog/user", tags = "用户接口")
 @RestController
 @RequestMapping("pigs-blog/user")
 public class UserManagementController {
@@ -24,12 +24,19 @@ public class UserManagementController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "LoginRequest", name = "loginRequest", value = "", required = true)
     })
-    @ApiOperation(value = "", notes = "", httpMethod = "POST")
+    @ApiOperation(value = "登录", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse login(@RequestBody LoginRequest loginRequest){
         User user = new User();
         BeanUtils.copyProperties(loginRequest, user);
         ResultResponse login = loginService.login(user);
         return login;
+    }
+
+    @ApiOperation(value = "登出", notes = "", httpMethod = "POST")
+    @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = "application/json")
+    public ResultResponse logout(){
+        ResultResponse logout = loginService.logout();
+        return logout;
     }
 }

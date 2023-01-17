@@ -15,7 +15,7 @@ import java.util.Date;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArticlesTagsListResponse {
     @ApiModelProperty("id")
-    private Integer id;//id
+    private Long id;//id
 
     @ApiModelProperty("标签名称")
     private String tagName;//标签名称

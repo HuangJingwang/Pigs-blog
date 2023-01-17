@@ -13,4 +13,8 @@ public interface ArticlesMapperExt {
     Long countArticlesList(@Param("criteria") ArticlesPageCriteria criteria);
 
     List<Articles> selectArticlesListByCriteria(@Param("criteria")ArticlesListCriteria criteria);
+
+    List<Articles> selectPreArticle(@Param("start") long start);
+
+    List<Articles> selectNextArticle(@Param("start")long start);
 }

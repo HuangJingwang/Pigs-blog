@@ -8,11 +8,13 @@ import com.pigs.blog.contract.request.ArticlesListRequest;
 import com.pigs.blog.contract.request.ArticlesUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesDetailResponse;
 import com.pigs.blog.contract.response.ArticlesListResponse;
+import com.pigs.blog.contract.response.ArticlesPreOrNextResponse;
 import com.pigs.blog.service.ArticlesInterface;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +37,7 @@ public class ArticlesController {
     @ApiOperation(value = "分页接口", notes = "", httpMethod = "GET")
     @RequestMapping(value = "/getArticlesPageData", method = RequestMethod.GET, produces = "application/json")
     public ResultResponse<PageData<ArticlesListResponse>> getArticlesPageData(
-            @RequestParam(name = "pageNo", required = false, defaultValue = "0") Integer pageNo,
+            @RequestParam(name = "pageNo", required = false, defaultValue = "1") Integer pageNo,
             @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize,
             @RequestParam(name = "author", required = false, defaultValue = "") String author,
             @RequestParam(name = "status", required = false, defaultValue = "") String status) {
@@ -59,6 +61,7 @@ public class ArticlesController {
     }
 
     @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", dataType = "long", name = "id", value = "", required = true),
             @ApiImplicitParam(paramType = "body", dataType = "ArticlesUpdateRequest", name = "request", value = "", required = true)
     })
     @ApiOperation(value = "更新", notes = "", httpMethod = "POST")
@@ -70,7 +73,7 @@ public class ArticlesController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "path", dataType = "int", name = "id", value = "", required = true)
+            @ApiImplicitParam(paramType = "path", dataType = "long", name = "id", value = "", required = true)
     })
     @ApiOperation(value = "逻辑删除", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = "application/json")
@@ -80,7 +83,7 @@ public class ArticlesController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "path", dataType = "int", name = "id", value = "", required = true)
+            @ApiImplicitParam(paramType = "path", dataType = "long", name = "id", value = "", required = true)
     })
     @ApiOperation(value = "文章详情", notes = "", httpMethod = "GET")
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -104,5 +107,25 @@ public class ArticlesController {
         request.setGroupId(groupId);
         List<ArticlesListResponse> list = articlesInterface.listArticlesByCriteria(request);
         return ResultResponse.success(list);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", dataType = "long", name = "id", value = "", required = true)
+    })
+    @ApiOperation(value = "上一篇文章", notes = "", httpMethod = "GET")
+    @RequestMapping(value = "/getPreArticle/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResultResponse<ArticlesPreOrNextResponse> getPreArticle(@PathVariable("id") Long id){
+        ArticlesPreOrNextResponse result = articlesInterface.findPreArticle(id);
+        return ResultResponse.success(result);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", dataType = "long", name = "id", value = "", required = true)
+    })
+    @ApiOperation(value = "下一篇文章", notes = "", httpMethod = "GET")
+    @RequestMapping(value = "/getNextArticle/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResultResponse<ArticlesPreOrNextResponse> getNextArticle(@PathVariable("id") Long id){
+        ArticlesPreOrNextResponse result = articlesInterface.findNextArticle(id);
+        return ResultResponse.success(result);
     }
 }

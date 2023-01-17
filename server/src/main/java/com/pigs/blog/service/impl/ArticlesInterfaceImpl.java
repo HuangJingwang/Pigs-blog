@@ -1,11 +1,13 @@
 package com.pigs.blog.service.impl;
 
+import com.pigs.blog.common.ArticlesStatusEnum;
 import com.pigs.blog.common.PageData;
 import com.pigs.blog.contract.request.ArticlesCreateRequest;
 import com.pigs.blog.contract.request.ArticlesListPageRequest;
 import com.pigs.blog.contract.request.ArticlesListRequest;
 import com.pigs.blog.contract.request.ArticlesUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesDetailResponse;
+import com.pigs.blog.contract.response.ArticlesPreOrNextResponse;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.model.Articles;
 import com.pigs.blog.model.ArticlesExample;
@@ -19,6 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +34,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     private ArticlesMapperExt mapperExt;
     @Autowired
     private ArticlesMapper mapper;
+
     @Override
     public PageData<ArticlesListResponse> getPageData(ArticlesListPageRequest request) {
         PageData<ArticlesListResponse> result = new PageData<>();
@@ -40,6 +44,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
             result.setHasNext(false);
             result.setResultList(Collections.emptyList());
             result.setTotalResult(0L);
+            return result;
         }
 
         List<Articles> list = mapperExt.selectArticlesList(criteria);
@@ -61,7 +66,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     @Override
     public void deleteArticles(Long id) {
         Articles articles = new Articles();
-        articles.setStatus("deleted");
+        articles.setStatus(ArticlesStatusEnum.DELETED.getStatus());
         mapper.updateByPrimaryKeySelective(articles);
     }
 
@@ -69,7 +74,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     public ArticlesDetailResponse getDetailArticles(Long id) {
         Articles articles = mapper.selectByPrimaryKey(id);
         ArticlesDetailResponse result = new ArticlesDetailResponse();
-        BeanUtils.copyProperties(articles,result);
+        BeanUtils.copyProperties(articles, result);
         return result;
     }
 
@@ -79,8 +84,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         ArticlesExample.Criteria criteria = example.createCriteria();
         criteria.andGroupIdEqualTo(groupId);
         List<Articles> articles = mapper.selectByExample(example);
-        List<ArticlesListResponse> articlesListResponses = copyList(articles);
-        return articlesListResponses;
+        return copyList(articles);
     }
 
     @Override
@@ -91,12 +95,46 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         return responseList;
     }
 
-    public ArticlesListCriteria createCriteria(ArticlesListRequest request){
+    @Override
+    public ArticlesPreOrNextResponse findPreArticle(Long curId) {
+        ArticlesPreOrNextResponse result = new ArticlesPreOrNextResponse();
+
+        ArticlesExample example = new ArticlesExample();
+        ArticlesExample.Criteria criteria = example.createCriteria();
+        criteria.andIdLessThan(curId);
+        long count = mapper.countByExample(example);
+        if (count == 0) {
+            return result;
+        }
+        long start = count - 1;
+        List<Articles> articles = mapperExt.selectPreArticle(start);
+        if (!CollectionUtils.isEmpty(articles)) {
+            BeanUtils.copyProperties(CollectionUtils.firstElement(articles), result);
+        }
+        return result;
+    }
+
+    @Override
+    public ArticlesPreOrNextResponse findNextArticle(Long id) {
+        ArticlesPreOrNextResponse result = new ArticlesPreOrNextResponse();
+
+        ArticlesExample example = new ArticlesExample();
+        ArticlesExample.Criteria criteria = example.createCriteria();
+        criteria.andIdLessThanOrEqualTo(id);
+        long count = mapper.countByExample(example);
+        List<Articles> articles = mapperExt.selectNextArticle(count);
+        if (!CollectionUtils.isEmpty(articles)) {
+            BeanUtils.copyProperties(CollectionUtils.firstElement(articles), result);
+        }
+        return result;
+    }
+
+    public ArticlesListCriteria createCriteria(ArticlesListRequest request) {
         ArticlesListCriteria criteria = new ArticlesListCriteria();
-        if(Strings.isNotBlank(request.getTags())){
+        if (Strings.isNotBlank(request.getTags())) {
             criteria.setTags(request.getTags().split(","));
         }
-        if(request.getGroupId() != null){
+        if (request.getGroupId() != null) {
             criteria.setGroupId(request.getGroupId());
         }
         return criteria;
@@ -124,10 +162,12 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         if (Strings.isNotBlank(request.getAuthor())) {
             result.setAuthor(request.getAuthor());
         }
-        if(Strings.isNotBlank(request.getStatus())){
+        if (Strings.isNotBlank(request.getStatus())) {
             result.setStatus(request.getStatus());
+        } else {
+            result.setStatus(ArticlesStatusEnum.PUBLISHED.getStatus());
         }
-        result.setStart(pageNo * pageSize);
+        result.setStart((pageNo - 1) * pageSize);
         result.setOffset(pageSize);
         return result;
     }

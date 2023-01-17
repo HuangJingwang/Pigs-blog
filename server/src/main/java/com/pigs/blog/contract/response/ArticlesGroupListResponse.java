@@ -15,13 +15,13 @@ import java.util.Date;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArticlesGroupListResponse {
     @ApiModelProperty(hidden = true)
-    private Integer id;
+    private Long id;
 
     @ApiModelProperty("分类名称")
     private String groupName;//分类名称
 
     @ApiModelProperty("父组id")
-    private Integer parentId;//父组id
+    private Long parentId;//父组id
 
     @ApiModelProperty("创建于")
     private Date createAt;//创建于

@@ -15,7 +15,7 @@ import java.util.Date;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArticlesListResponse {
     @ApiModelProperty("主键id")
-    private Integer id;//主键id
+    private Long id;//主键id
 
     @ApiModelProperty("标题")
     private String title;//标题
@@ -33,7 +33,7 @@ public class ArticlesListResponse {
     private String imgUrl;//封面图片路径
 
     @ApiModelProperty("分类Id")
-    private Integer groupId;//分类
+    private Long groupId;//分类
 
     @ApiModelProperty("状态 draft-草稿, published-已发布, deleted-被删除")
     private String status;//状态 draft-草稿, published-已发布, deleted-被删除

@@ -1,11 +1,11 @@
 package com.pigs.blog.common;
 
-public enum ErrorCode {
+public enum ErrorCodeEnum {
     SERVER_ERROR(500, "there is a error in server"),
     PARAMETER_IS_ILLEGAL(10001, "parameter is illegal");
     private Integer code;
     private String msg;
-    ErrorCode(Integer code, String msg){
+    ErrorCodeEnum(Integer code, String msg){
         this.code = code;
         this.msg = msg;
     }
