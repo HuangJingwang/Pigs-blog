@@ -84,7 +84,7 @@
       </div>
       <div class="sub">
         <div class="save" @click="handleSaveArticle">保存</div>
-        <div class="cancel">取消</div>
+        <div class="cancel" @click="cancelPub">取消</div>
       </div>
     </div>
   </div>
@@ -117,6 +117,12 @@ const hideConfig = e => {
   if (!configBox.value.contains(e.target) && e.target != pubBtn.value) {
     isShowConfig.value = false
   }
+}
+
+// 点击取消按钮隐藏盒子
+const cancelPub = () => {
+  isShowConfig.value = false
+  
 }
 // 文章数据
 let data = reactive({
@@ -204,7 +210,6 @@ const deleteTag = async id => {
 }
 // 默认隐藏编辑tag输入框及delete
 let editorTag = ref(false)
-
 const editorTags = () => {
   editorTag.value = !editorTag.value
   tagDisabled.value = !tagDisabled.value
@@ -336,12 +341,12 @@ const handleSaveArticle = async () => {
 }
 .configBox::after {
   content: '';
-  border-bottom: 15px solid #fff;
-  border-right: 13px solid transparent;
-  border-left: 13px solid transparent;
-  border-top: 13px solid transparent;
+  border-bottom: 14px solid #fff;
+  border-right: 12px solid transparent;
+  border-left: 12px solid transparent;
+  border-top: 12px solid transparent;
   position: absolute;
-  top: -27px;
+  top: -25px;
   right: 86px;
 }
 .configBox .header {
@@ -443,7 +448,6 @@ const handleSaveArticle = async () => {
   top: -5px;
   right: 4px;
 }
-
 /* 底部栏 */
 .configBox .sub {
   border-top: 1px solid rgb(221, 221, 221);

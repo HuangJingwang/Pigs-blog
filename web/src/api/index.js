@@ -1,4 +1,32 @@
 import requests from './requests'
+
+// 获取首页文章列表数据
+export const getArticleList = (pageNo = 0 ,author) => {
+  return requests({
+    method: 'GET',
+    url:`/articles/getArticlesPageData?pageNo=${pageNo}`
+  })
+}
+
+// 归档数据
+export const getArchives = (author) => {
+  // if (author !=='') {
+  // return requests({
+  //     method: 'GET',
+  //     url: `/articles/listArticles?author=${author}`
+  // })
+  // } else {
+  //   return requests({
+  //     method: 'GET',
+  //     url: '/articles/listArticles'
+  // })
+  // }
+
+    return requests({
+        method: 'GET',
+        url: '/articles/listArticles'
+    })
+}
 // 获取分类列表数据
 export const getGroupListData = () => {
   return requests({
@@ -18,7 +46,7 @@ export const getTagList = () => {
 export const createNewTag = data => {
   return requests({
     method: 'POST',
-    url: '/articles-tags/create/',
+    url: '/articles-tags/create',
     data: data,
   })
 }

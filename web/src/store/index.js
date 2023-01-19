@@ -1,39 +1,54 @@
 import { createStore } from 'vuex'
-import { getGroupListData, getTagList } from '@/api'
+import {
+  getGroupListData,
+  getTagList,
+  getArticleList,
+  getArchives,
+} from '@/api'
 export default createStore({
   state: {
+    // 首页文章列表数据
+    // articleList: [],
+    articleData: {
+      totalArticle: 0,
+      hasNext: 'true',
+      articleList: [],
+    },
+    // 当前页数
+    currentPageNo: 1,
     // 归档页面数据
-    archivesList: [],
-    archiveData: {
+    //归档排序依据
+    basis: 'create_at',
+
+    archivesData: {
       total: 50,
-      page: 1,
-      data: [
-        { time: 1667089448000, title: 'css学习笔记', id: 564 },
-        { time: 1667078648000, title: 'css学习笔记', id: 564 },
-        { time: 1667071448000, title: 'css学习笔记', id: 685 },
-        { time: 1603999448000, title: 'css学习笔记', id: 358 },
-        { time: 1603913048000, title: 'css学习笔记', id: 358 },
-        { time: 1603826648000, title: 'css学习笔记', id: 358 },
-        { time: 1601234648000, title: 'css学习笔记', id: 358 },
-        { time: 1538076248000, title: 'css学习笔记', id: 358 },
-        { time: 1537989848000, title: 'css学习笔记', id: 358 },
-        { time: 1535311448000, title: 'css学习笔记', id: 358 },
-      ],
+      archivesList: [],
     },
     // 分类列表
     groupList: [],
+    // 标签列表
     tagList: [],
+    // 页面高度
+    innerHeight: 0,
   },
 
   getter: {},
 
   actions: {
-    // 发起请求获取分类列表数据
+    // 发起请求获取首页文章列表数据
+    async reqArticleData({ commit, state }) {
+      let pageNo = state.currentPageNo
+      if (state.articleData.hasNext) {
+        let result = await getArticleList(pageNo)
+        commit('HANDLEARTICLEDATA', result)
+      }
+    },
+    // 发起获取归档列表数据
 
-    handleArchiveData({ commit, state }) {
-      // 暂时没有获取数据的函数
-      let result = []
-      commit('GETARCHIVESLIST', result)
+    async reqArchiveData({ commit, state }) {
+      let result = await getArchives()
+      // console.log(author)
+      commit('HANDLEARCHIVESDATA', result)
     },
 
     // 请求分类列表数据
@@ -49,57 +64,80 @@ export default createStore({
   },
   mutations: {
     // 处理归档数据
-    GETARCHIVESLIST(state, result) {
-      state.archiveData.data.forEach(item => {
-        // 处理日期数据
-        const date = new Date(item.time)
-        item.year = date.getFullYear()
-        item.month =
-          date.getMonth() + 1 < 10
-            ? '0' + (date.getMonth() + 1)
-            : date.getMonth() + 1
-        item.date = date.getDate() + ''
-        item.year_month = item.year + '年' + item.month + '月'
-      })
-      // 数组升维
+    HANDLEARCHIVESDATA(state, result) {
+      // let basis = state.basis
+      // state.Basis = 'update_at'
+      state.archivesData.total = result.data.length
       let obj = {}
-      let newArr = []
-      state.archiveData.data.forEach(item => {
-        if (obj[item.year_month] == undefined) {
-          //第 一次出现这个产品类型
-          obj[item.year_month] = 1
-          //把当前遍历出来的这个数据存进archivesList中
-          newArr.push({
-            year_month: item.year_month,
-            data: [item],
+      // 存储数据
+      let archivesList = []
+      result.data.forEach((item1, index) => {
+        // const date = item1[state.basis]
+        // 处理时间数据
+        const date = item1.create_at
+        item1.year = date.substring(0, 4)
+        item1.month = date.substring(5, 7)
+        item1.day = date.substring(8, 10)
+        item1.year_month = item1.year + '-' + item1.month
+        // 判断此元素第一次出现
+        if (obj[item1.year_month] == undefined) {
+          obj[item1.year_month] = 1
+          // 将此数据存进list
+          archivesList.push({
+            date: item1.create_at,
+            year_month: item1.year_month,
+            year: item1.year,
+            month: item1.month,
+            data: [item1],
+            id: index,
           })
         } else {
-          //说明这个产品的类型不是第一次出现.
-          //判断当前这个item是属于newArr中的哪一类产品。然后加进这-类产品的da
-          newArr.forEach((item2, index) => {
-            if (item.year_month == item2.year_month) {
-              newArr[index].data.push(item)
+          // 若非第一次出现，则推入data中
+          archivesList.forEach((item2, index) => {
+            if (item1.year_month == item2.year_month) {
+              archivesList[index].data.push(item1)
             }
           })
         }
       })
-      state.archivesList = newArr
+      // console.log(archivesList)
+      state.archivesData.archivesList = archivesList
+      // let obj = {}
+      // let newArr = []
+      // state.archiveData.data.forEach((item) => {
+      //   if (obj[item.year_month] == undefined) {
+      //     obj[item.year_month] = 1
+      //     //把当前遍历出来的这个数据存进archivesList中
+      //     newArr.push({
+      //       year_month: item.year_month,
+      //       data: [item],
+      //     })
+      //   } else {
+      //     //说明这个产品的类型不是第一次出现.
+      //     //判断当前这个item是属于newArr中的哪一类产品。然后加进这-类产品的da
+      //     newArr.forEach((item2, index) => {
+      //       if (item.year_month == item2.year_month) {
+      //         newArr[index].data.push(item)
+      //       }
+      //     })
+      //   }
+      // })
+      // // state.archivesList = newArr
     },
 
     // 处理分类数据
     HANDLEGROUPLIST(state, result) {
       let groupListData = result.data
-
-      // 第一次遍历，取得  根节点
+      // 第一次遍历，取得根节点
       function getTree(rootList, parent, list) {
-        rootList.forEach(item => {
+        rootList.forEach((item) => {
           item.value = item.id
           item.label = item.group_name
           if (item.parent_id == parent) {
             list.push(item)
           }
         })
-        list.forEach(item2 => {
+        list.forEach((item2) => {
           item2.children = [] //定义空数组，存储子元素
           getTree(rootList, item2.id, item2.children)
           if (item2.children.length == 0) {
@@ -109,11 +147,19 @@ export default createStore({
         return list
       }
       state.groupList = getTree(groupListData, 0, [])
+      // console.log(state.groupList)
     },
     // 处理标签数据
     HANDLETAGLIST(state, result) {
-      console.log(result)
       state.tagList = result.data
+    },
+    // 处理文章列表数据
+    HANDLEARTICLEDATA(state, result) {
+      state.articleData.totalArticle = result.data.totalResult
+      state.articleData.hasNext = result.data.hasNext
+      result.data.resultList.forEach((article) => {
+        state.articleData.articleList.push(article)
+      })
     },
   },
 })

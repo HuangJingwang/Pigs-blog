@@ -1,25 +1,21 @@
 <template>
-  <div class="header-box"></div>
+  <div class="cover_box" ></div>
   <div class="wrapper">
-    <ArticlePreview />
+  <div class="preview">
+    <ArticlePreview/>
+  </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import ArticlePreview from '@/components/ArticlePreview.vue'
-export default {
-  components: { ArticlePreview },
-  setup() {
-    return {}
-  },
-}
 </script>
 
 <style scoped>
-.header-box {
+.cover_box {
   width: 100%;
-  height: 300px;
-  background-color: #eee;
+  /* height: 450px; */
+  background-color: pink;
 }
 
 .wrapper {

@@ -17,12 +17,11 @@ export default {
 .background {
   position: relative;
   width: 100%;
-  /* height: 100%; */
-  height: 450px;
+  /* height: 30%; */
+  height: 400px;
   background-position: center center;
   background-size: cover;
 }
-
 .background::after {
   content: '';
   width: 100%;

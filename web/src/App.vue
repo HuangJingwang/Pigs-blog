@@ -4,18 +4,22 @@
   <Footer v-if="$route.meta.showComponent"></Footer>
 </template>
 
-<script>
-import { toRef, computed } from 'vue'
+<script setup>
+import { toRef, computed,onMounted ,ref,watch} from 'vue'
+import { useStore } from 'vuex';
 // import { useRoute, useRouter } from 'vue-router'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
-export default {
-  name: 'App',
-  components: {
-    Header,
-    Footer,
-  },
-}
+const {state}  = useStore()
+let innerHeight = ref(0)
+innerHeight.value  = window.innerHeight
+// watch(innerHeight, (newVal, oldVal) => {
+//       console.log({ newVal, oldVal })
+//     })
+
+window.onresize(() => {
+  console.log(123)
+})
 </script>
 
 <style>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="headerStyle" @click="toTop">
+  <div :class="headerStyle" >
     <div class="container">
       <!-- logo图标及标题 -->
       <h1 class="logo">
@@ -7,7 +7,12 @@
         <div class="text">Pigs blog</div>
       </h1>
       <!-- 导航按键 -->
+
       <div class="navigation">
+        <div class="search">
+          <span class="icon iconfont icon-sousuo"></span>
+          <span>Search</span>
+        </div>
         <div class="home" @click="$router.push('/index')">
           <span class="icon iconfont icon-zhuye1"></span>
           <span>Home</span>
@@ -32,29 +37,26 @@
           <span class="icon iconfont icon-yonghufill"></span>
           <span>Sign in</span>
         </div>
-        <div class="search">
-          <span class="icon iconfont icon-sousuo"></span>
-          <span>Search</span>
-        </div>
+      
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import { useRouter, useRoute } from 'vue-router'
-import debounce from '@/utils/debounce'
+// import debounce from '@/utils/debounce'
 import { ref, onMounted, reactive } from 'vue'
-export default {
-  name: 'Header',
-  setup() {
+// export default {
+  // name: 'Header',
+  // setup() {
     // 绑定页面滚动事件
+    
     let headerStyle = reactive(['nav'])
     window.addEventListener('scroll', () => {
-      if (document.documentElement.scrollTop > 1000) {
+      if (document.documentElement.scrollTop > 150) {
         if (headerStyle.indexOf('nav-active') == -1) {
           headerStyle.push('nav-active')
-          console.log(headerStyle.indexOf('nav-active'))
         }
       } else {
         if (headerStyle.indexOf('nav-active') !== -1) {
@@ -62,14 +64,6 @@ export default {
         }
       }
     })
-
-    const toTop = () => {
-      // document.documentElement.scrollTop = 0
-      console.log(123)
-    }
-
-    // const router = useRouter()
-    // console.log(router)
     const router = useRouter()
     // 导航到write 页面
     const toWrite = () => {
@@ -78,10 +72,12 @@ export default {
       })
       window.open(writePath.href, '_blank')
     }
-    const route = useRoute()
-    return { toTop, headerStyle, toWrite }
-  },
-}
+const route = useRoute()
+
+
+    // return { toTop, headerStyle, toWrite }
+  // },
+// }
 </script>
 
 scope
