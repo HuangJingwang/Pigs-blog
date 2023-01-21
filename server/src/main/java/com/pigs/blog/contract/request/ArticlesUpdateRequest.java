@@ -32,7 +32,7 @@ public class ArticlesUpdateRequest {
     @ApiModelProperty("文章内容")
     private String articlesText;//文章内容
 
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty("封面图片路径")
     //@NotBlank(message = "imgUrl cannot be blank")
     private String imgUrl;
 }

@@ -2,7 +2,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/pigs_blog?useUnicode=true&characterEncoding=UTF-8&serverTimeZone=UTC&useSSL=false
-    username: root
+    username: pigs_blog
     password: '123456'
   #  redis:
   #    host: 49.233.45.84
@@ -22,3 +22,7 @@ server:
   port: 8081
 mybatis:
   mapper-locations: classpath:mapper/*.xml,classpath:mapper/*/*.xml
+
+
+logging:
+  config: classpath:logback-spring.xml

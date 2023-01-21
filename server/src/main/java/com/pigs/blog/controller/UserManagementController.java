@@ -2,6 +2,7 @@ package com.pigs.blog.controller;
 
 import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.request.LoginRequest;
+import com.pigs.blog.contract.request.RegistryRequest;
 import com.pigs.blog.model.User;
 import com.pigs.blog.service.LoginService;
 import io.swagger.annotations.Api;
@@ -15,18 +16,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(value = "pigs-blog/user", tags = "用户接口")
-@RestController
+import javax.validation.Valid;
+
+@Api(value = "pigs-blog/user", tags = "用户接口")@RestController
 @RequestMapping("pigs-blog/user")
 public class UserManagementController {
     @Autowired
     private LoginService loginService;
+
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "LoginRequest", name = "loginRequest", value = "", required = true)
     })
     @ApiOperation(value = "登录", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
-    public ResultResponse login(@RequestBody LoginRequest loginRequest){
+    public ResultResponse login(@RequestBody @Valid LoginRequest loginRequest) {
         User user = new User();
         BeanUtils.copyProperties(loginRequest, user);
         ResultResponse login = loginService.login(user);
@@ -35,8 +38,17 @@ public class UserManagementController {
 
     @ApiOperation(value = "登出", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = "application/json")
-    public ResultResponse logout(){
+    public ResultResponse logout() {
         ResultResponse logout = loginService.logout();
         return logout;
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "body", dataType = "RegistryRequest", name = "request", value = "", required = true)
+    })
+    @ApiOperation(value = "注册", notes = "", httpMethod = "POST")
+    @RequestMapping(value = "/registry", method = RequestMethod.POST, produces = "application/json")
+    public ResultResponse registry(@RequestBody @Valid RegistryRequest request) {
+        return loginService.registry(request);
     }
 }

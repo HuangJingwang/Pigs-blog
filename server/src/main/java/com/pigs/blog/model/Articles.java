@@ -1,10 +1,8 @@
 package com.pigs.blog.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class Articles implements Serializable {
-    private static final long serialVersionUID = -40356785423868312L;
+public class Articles {
     private Long id;
 
     private Long groupId;
