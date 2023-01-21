@@ -3,20 +3,9 @@
     <h1>editor</h1>
   </div>
 </template>
-
-<script>
+<script setup>
 import { reactive, toRefs } from 'vue'
-
-export default {
-  name:'Editor',
-  setup() {
-    const state = reactive({})
-
-    return {
-      ...toRefs(state),
-    }
-  },
-}
+const state = reactive({})
 </script>
 
 <style lang="scss" scoped></style>
