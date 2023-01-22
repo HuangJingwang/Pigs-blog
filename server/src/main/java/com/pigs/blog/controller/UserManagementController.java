@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@Api(value = "pigs-blog/user", tags = "用户接口")@RestController
+@Api(value = "pigs-blog/user", tags = "用户接口")
+@RestController
 @RequestMapping("pigs-blog/user")
 public class UserManagementController {
     @Autowired
