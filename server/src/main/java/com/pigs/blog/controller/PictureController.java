@@ -31,7 +31,7 @@ public class PictureController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "form", dataType = "file", name = "file", value = "", required = true)
     })
-    @ApiOperation(value = "上传", notes = "", httpMethod = "POST")
+    @ApiOperation(value = "上传图片到云", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/upload", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse<String> uploadPicture(@RequestParam("file") MultipartFile file) {
         try {
@@ -46,13 +46,18 @@ public class PictureController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "PictureDeleteRequest", name = "request", value = "", required = true)
     })
-    @ApiOperation(value = "删除", notes = "", httpMethod = "POST")
+    @ApiOperation(value = "删除云上的图片", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse deletePicture(@RequestBody PictureDeleteRequest request){
         qiniuService.deleteImage(request);
         return ResultResponse.success(null);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "string", name = "position", value = "", required = true),
+            @ApiImplicitParam(paramType = "query", dataType = "string", name = "uploadBy", value = "", required = true)
+    })
+    @ApiOperation(value = "列出图库图片", notes = "", httpMethod = "GET")
     @RequestMapping(value = "/listPictureWarehouse", method = RequestMethod.GET, produces = "application/json")
     public ResultResponse<List<PicturesListResponse>> listPictureWarehouse(@RequestParam("position") String position,
                                                                            @RequestParam("upload_by") String uploadBy){
@@ -63,6 +68,10 @@ public class PictureController {
         return ResultResponse.success(response);
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "body", dataType = "AddPictureToWarehouseRequest", name = "request", value = "", required = true)
+    })
+    @ApiOperation(value = "添加图片到图库", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/addToPictureWareHouse", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse add(@RequestBody @Valid AddPictureToWarehouseRequest request){
         pictureService.addToPictureWareHouse(request);
