@@ -10,7 +10,12 @@
   "dependencies": {
     "axios": "^1.2.1",
     "core-js": "^3.8.3",
+    "easy-typer-js": "^2.1.0",
+    "element-plus": "^2.2.28",
+    "md-editor-v3": "^2.6.0",
     "mock": "^0.1.1",
+    "mockjs": "^1.1.0",
+    "nprogress": "^0.2.0",
     "vue": "^3.2.13",
     "vue-router": "^4.1.6",
     "vuex": "^4.1.0"
