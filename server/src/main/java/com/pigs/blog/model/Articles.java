@@ -13,7 +13,7 @@ public class Articles {
 
     private String tags;
 
-    private String detail;
+    private String introduction;
 
     private String imgUrl;
 
@@ -22,6 +22,8 @@ public class Articles {
     private Date createAt;
 
     private Date updateAt;
+
+    private Long pageView;
 
     private String articlesText;
 
@@ -65,12 +67,12 @@ public class Articles {
         this.tags = tags == null ? null : tags.trim();
     }
 
-    public String getDetail() {
-        return detail;
+    public String getIntroduction() {
+        return introduction;
     }
 
-    public void setDetail(String detail) {
-        this.detail = detail == null ? null : detail.trim();
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction == null ? null : introduction.trim();
     }
 
     public String getImgUrl() {
@@ -103,6 +105,14 @@ public class Articles {
 
     public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
+    }
+
+    public Long getPageView() {
+        return pageView;
+    }
+
+    public void setPageView(Long pageView) {
+        this.pageView = pageView;
     }
 
     public String getArticlesText() {

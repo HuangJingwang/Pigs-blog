@@ -39,16 +39,16 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.pigs.blog.mapper" targetProject="./src/main/java">
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
-        <table tableName="articles" domainObjectName="Articles"
-               enableCountByExample="true"
-               enableDeleteByExample="true"
-               enableSelectByExample="true"
-               enableUpdateByExample="true"
-        enableInsert="true"
-        enableDeleteByPrimaryKey="true"
-        enableSelectByPrimaryKey="true"
-        enableUpdateByPrimaryKey="true"/>
-<!--            <table tableName="articles" domainObjectName="Articles"-->
+<!--        <table tableName="user" domainObjectName="User"-->
+<!--               enableCountByExample="true"-->
+<!--               enableDeleteByExample="true"-->
+<!--               enableSelectByExample="true"-->
+<!--               enableUpdateByExample="true"-->
+<!--        enableInsert="true"-->
+<!--        enableDeleteByPrimaryKey="true"-->
+<!--        enableSelectByPrimaryKey="true"-->
+<!--        enableUpdateByPrimaryKey="true"/>-->
+<!--            <table tableName="user_info" domainObjectName="UserInfo"-->
 <!--                   enableCountByExample="true"-->
 <!--                   enableDeleteByExample="true"-->
 <!--                   enableSelectByExample="true"-->
@@ -57,6 +57,15 @@
 <!--                   enableDeleteByPrimaryKey="true"-->
 <!--                   enableSelectByPrimaryKey="true"-->
 <!--                   enableUpdateByPrimaryKey="true"/>-->
+            <table tableName="articles" domainObjectName="Articles"
+                   enableCountByExample="true"
+                   enableDeleteByExample="true"
+                   enableSelectByExample="true"
+                   enableUpdateByExample="true"
+                   enableInsert="true"
+                   enableDeleteByPrimaryKey="true"
+                   enableSelectByPrimaryKey="true"
+                   enableUpdateByPrimaryKey="true"/>
 <!--            <table tableName="articles_group" domainObjectName="ArticlesGroup"-->
 <!--                   enableCountByExample="true"-->
 <!--                   enableDeleteByExample="true"-->
@@ -75,15 +84,15 @@
 <!--                   enableDeleteByPrimaryKey="true"-->
 <!--                   enableSelectByPrimaryKey="true"-->
 <!--                   enableUpdateByPrimaryKey="true"/>-->
-            <table tableName="picture_warehouse" domainObjectName="Pictures"
-                   enableCountByExample="true"
-                   enableDeleteByExample="true"
-                   enableSelectByExample="true"
-                   enableUpdateByExample="true"
-                   enableInsert="true"
-                   enableDeleteByPrimaryKey="true"
-                   enableSelectByPrimaryKey="true"
-                   enableUpdateByPrimaryKey="true"/>
+<!--            <table tableName="picture_warehouse" domainObjectName="Pictures"-->
+<!--                   enableCountByExample="true"-->
+<!--                   enableDeleteByExample="true"-->
+<!--                   enableSelectByExample="true"-->
+<!--                   enableUpdateByExample="true"-->
+<!--                   enableInsert="true"-->
+<!--                   enableDeleteByPrimaryKey="true"-->
+<!--                   enableSelectByPrimaryKey="true"-->
+<!--                   enableUpdateByPrimaryKey="true"/>-->
 <!--            <table tableName="articles_group" domainObjectName="ArticlesGroup" />-->
     </context>
 </generatorConfiguration>

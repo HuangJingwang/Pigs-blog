@@ -34,7 +34,6 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     private ArticlesMapperExt mapperExt;
     @Autowired
     private ArticlesMapper mapper;
-
     @Override
     public PageData<ArticlesListResponse> getPageData(ArticlesListPageRequest request) {
         PageData<ArticlesListResponse> result = new PageData<>();
@@ -70,11 +69,24 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         mapper.updateByPrimaryKeySelective(articles);
     }
 
+    /**
+     * 查找文章详情
+     * 1. 查找文章的详细数据
+     * 2. 将阅读量++
+     * @param id
+     * @return
+     */
     @Override
     public ArticlesDetailResponse getDetailArticles(Long id) {
+        // 1
         Articles articles = mapper.selectByPrimaryKey(id);
         ArticlesDetailResponse result = new ArticlesDetailResponse();
         BeanUtils.copyProperties(articles, result);
+
+        // 2
+        articles.setPageView(articles.getPageView() + 1);
+        mapper.updateByPrimaryKey(articles);
+
         return result;
     }
 
@@ -166,6 +178,9 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
             result.setStatus(request.getStatus());
         } else {
             result.setStatus(ArticlesStatusEnum.PUBLISHED.getStatus());
+        }
+        if (request.getOrderByPV()){
+            result.setOrderByPV(1);
         }
         result.setStart((pageNo - 1) * pageSize);
         result.setOffset(pageSize);

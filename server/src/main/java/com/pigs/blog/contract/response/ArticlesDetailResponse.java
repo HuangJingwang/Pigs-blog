@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @ApiModel
@@ -26,8 +27,9 @@ public class ArticlesDetailResponse {
     @ApiModelProperty("标签,多个按照逗号分割")
     private String tags;//标签,多个按照逗号分割
 
-    @ApiModelProperty("详情")
-    private String detail;//详情
+    @ApiModelProperty("简介")
+    @NotBlank(message = "introduction cannot be blank")
+    private String introduction;//文章内容
 
     @ApiModelProperty("封面图片路径")
     private String imgUrl;//封面图片路径
@@ -46,4 +48,7 @@ public class ArticlesDetailResponse {
 
     @ApiModelProperty("文章内容")
     private String articlesText;//文章内容
+
+    @ApiModelProperty("文章浏览量")
+    private Long pageView;
 }

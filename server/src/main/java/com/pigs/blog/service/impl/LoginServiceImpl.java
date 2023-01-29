@@ -4,9 +4,11 @@ import com.pigs.blog.common.CommonValue;
 import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.entity.LoginUser;
 import com.pigs.blog.contract.request.RegistryRequest;
+import com.pigs.blog.mapper.UserInfoMapper;
 import com.pigs.blog.mapper.UserMapper;
 import com.pigs.blog.model.User;
 import com.pigs.blog.model.UserExample;
+import com.pigs.blog.model.UserInfo;
 import com.pigs.blog.service.LoginService;
 import com.pigs.blog.utils.JwtUtil;
 import com.pigs.blog.utils.RedisCache;
@@ -18,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +42,13 @@ public class LoginServiceImpl implements LoginService {
     private RedisCache redisCache;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserInfoMapper userInfoMapper;
 
     @Override
     public ResultResponse login(User user) {
@@ -97,12 +106,19 @@ public class LoginServiceImpl implements LoginService {
         List<User> users = userMapper.selectByExample(example);
         if (!CollectionUtils.isEmpty(users)) {
             logger.error("account:{" + request.getAccount() + "} is exist when registry");
-            return ResultResponse.fail(10003,"account:{" + request.getAccount() + "} is exist when registry");
+            return ResultResponse.fail(10003, "account:{" + request.getAccount() + "} is exist when registry");
         }
 
         User user = new User();
-        BeanUtils.copyProperties(request,user);
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        BeanUtils.copyProperties(request, user);
         userMapper.insertSelective(user);
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setNickname(request.getNickName());
+        userInfo.setAccount(request.getAccount());
+        userInfoMapper.insertSelective(userInfo);
+
         return ResultResponse.success(null);
     }
 

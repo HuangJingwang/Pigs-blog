@@ -2,14 +2,14 @@ package com.pigs.blog.model;
 
 import java.util.Date;
 
-public class User {
+public class UserInfo {
     private Long id;
 
     private String account;
 
-    private String password;
+    private String nickname;
 
-    private String role;
+    private String imgUrl;
 
     private Date createAt;
 
@@ -31,20 +31,20 @@ public class User {
         this.account = account == null ? null : account.trim();
     }
 
-    public String getPassword() {
-        return password;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
+    public void setNickname(String nickname) {
+        this.nickname = nickname == null ? null : nickname.trim();
     }
 
-    public String getRole() {
-        return role;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setRole(String role) {
-        this.role = role == null ? null : role.trim();
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl == null ? null : imgUrl.trim();
     }
 
     public Date getCreateAt() {

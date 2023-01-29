@@ -23,4 +23,5 @@ public class ArticlesListPageRequest {
     @ApiModelProperty(hidden = true)
     private Integer pageSize;
 
+    private Boolean orderByPV;
 }

@@ -37,7 +37,10 @@ public class ArticlesCreateRequest {
     @NotBlank(message = "articlesText cannot be blank")
     private String articlesText;//文章内容
 
-    @ApiModelProperty(hidden = true)
-    //@NotBlank(message = "imgUrl cannot be blank")
+    @ApiModelProperty("封面图片路径")
     private String imgUrl;
+
+    @ApiModelProperty("简介")
+    @NotBlank(message = "introduction cannot be blank")
+    private String introduction;//文章内容
 }

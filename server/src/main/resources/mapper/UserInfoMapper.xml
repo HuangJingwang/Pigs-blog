@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.pigs.blog.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="com.pigs.blog.model.User">
+<mapper namespace="com.pigs.blog.mapper.UserInfoMapper">
+  <resultMap id="BaseResultMap" type="com.pigs.blog.model.UserInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="account" jdbcType="VARCHAR" property="account" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
   </resultMap>
@@ -68,15 +68,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, account, password, role, create_at, update_at
+    id, account, nickname, img_url, create_at, update_at
   </sql>
-  <select id="selectByExample" parameterType="com.pigs.blog.model.UserExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.pigs.blog.model.UserInfoExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from user
+    from user_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -87,29 +87,29 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from user
+    from user_info
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from user
+    delete from user_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.pigs.blog.model.UserExample">
-    delete from user
+  <delete id="deleteByExample" parameterType="com.pigs.blog.model.UserInfoExample">
+    delete from user_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.pigs.blog.model.User">
-    insert into user (id, account, password, 
-      role, create_at, update_at
+  <insert id="insert" parameterType="com.pigs.blog.model.UserInfo">
+    insert into user_info (id, account, nickname, 
+      img_url, create_at, update_at
       )
-    values (#{id,jdbcType=BIGINT}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{role,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}
+    values (#{id,jdbcType=BIGINT}, #{account,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
+      #{imgUrl,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.pigs.blog.model.User">
-    insert into user
+  <insert id="insertSelective" parameterType="com.pigs.blog.model.UserInfo">
+    insert into user_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -117,11 +117,11 @@
       <if test="account != null">
         account,
       </if>
-      <if test="password != null">
-        password,
+      <if test="nickname != null">
+        nickname,
       </if>
-      <if test="role != null">
-        role,
+      <if test="imgUrl != null">
+        img_url,
       </if>
       <if test="createAt != null">
         create_at,
@@ -137,11 +137,11 @@
       <if test="account != null">
         #{account,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
       </if>
-      <if test="role != null">
-        #{role,jdbcType=VARCHAR},
+      <if test="imgUrl != null">
+        #{imgUrl,jdbcType=VARCHAR},
       </if>
       <if test="createAt != null">
         #{createAt,jdbcType=TIMESTAMP},
@@ -151,14 +151,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.pigs.blog.model.UserExample" resultType="java.lang.Long">
-    select count(*) from user
+  <select id="countByExample" parameterType="com.pigs.blog.model.UserInfoExample" resultType="java.lang.Long">
+    select count(*) from user_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update user
+    update user_info
     <set>
       <if test="row.id != null">
         id = #{row.id,jdbcType=BIGINT},
@@ -166,11 +166,11 @@
       <if test="row.account != null">
         account = #{row.account,jdbcType=VARCHAR},
       </if>
-      <if test="row.password != null">
-        password = #{row.password,jdbcType=VARCHAR},
+      <if test="row.nickname != null">
+        nickname = #{row.nickname,jdbcType=VARCHAR},
       </if>
-      <if test="row.role != null">
-        role = #{row.role,jdbcType=VARCHAR},
+      <if test="row.imgUrl != null">
+        img_url = #{row.imgUrl,jdbcType=VARCHAR},
       </if>
       <if test="row.createAt != null">
         create_at = #{row.createAt,jdbcType=TIMESTAMP},
@@ -184,28 +184,28 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update user
+    update user_info
     set id = #{row.id,jdbcType=BIGINT},
       account = #{row.account,jdbcType=VARCHAR},
-      password = #{row.password,jdbcType=VARCHAR},
-      role = #{row.role,jdbcType=VARCHAR},
+      nickname = #{row.nickname,jdbcType=VARCHAR},
+      img_url = #{row.imgUrl,jdbcType=VARCHAR},
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
       update_at = #{row.updateAt,jdbcType=TIMESTAMP}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.pigs.blog.model.User">
-    update user
+  <update id="updateByPrimaryKeySelective" parameterType="com.pigs.blog.model.UserInfo">
+    update user_info
     <set>
       <if test="account != null">
         account = #{account,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
       </if>
-      <if test="role != null">
-        role = #{role,jdbcType=VARCHAR},
+      <if test="imgUrl != null">
+        img_url = #{imgUrl,jdbcType=VARCHAR},
       </if>
       <if test="createAt != null">
         create_at = #{createAt,jdbcType=TIMESTAMP},
@@ -216,11 +216,11 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.pigs.blog.model.User">
-    update user
+  <update id="updateByPrimaryKey" parameterType="com.pigs.blog.model.UserInfo">
+    update user_info
     set account = #{account,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      role = #{role,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      img_url = #{imgUrl,jdbcType=VARCHAR},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
