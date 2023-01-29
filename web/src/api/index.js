@@ -66,3 +66,36 @@ export const saveArticle = data => {
     data:data
   })
 }
+// 更新文章
+export const updateArticle = (data,id )=> {
+  return requests({
+    method: 'POST',
+    url: `/articles/update/${id}`,
+    data:data
+  })
+}
+
+// 登录
+export const login = (data) => {
+  return requests({
+    method: 'POST',
+    url: '/user/login',
+    data:data
+  })
+}
+// 注册
+export const register = data => {
+  return requests({
+    method:'POST',
+    url: '/user/registry',
+    data:data
+  })
+}
+
+// 登出
+export const logout = () => {
+  return requests({
+    method: 'POST',
+    url:'/user/logout'
+  })
+}

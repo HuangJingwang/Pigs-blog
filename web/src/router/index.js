@@ -52,7 +52,31 @@ const routes = [
     },
     component: () => import('@/pages/About'),
   },
+  {
+    path: '/manage',
+    name: 'manage',
+    meta: {
+      showComponent: false,
+    },
+    component: () => import('@/pages/Manage'),
+    children: [
+      {
+        path: 'overview',
+        component: () => import('@/pages/Manage/OverView'),
+      },
+      {
+        path: 'draft',
+        component: () => import('@/pages/Manage/Draft'),
+      },
+      // 路由重定向，设置默认展示页面
+      {
+        path: '/manage',
+        redirect: '/manage/overview',
+      },
+    ],
+  },
 ]
+
 
 const router = createRouter({
   history: createWebHashHistory(),

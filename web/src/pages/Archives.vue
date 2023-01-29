@@ -26,25 +26,25 @@
       </div>
       <div class="body">
         <div class="articles" v-for="item in archivesList" :key="item.id">
-<div class="box">
-  <div class="list">
-            {{ item.year }}年{{ item.month }} 月
-            <span class="bigNode">
-              <div class="axis">
-                <span class="joint iconfont icon-jiedianguanli"></span>
-              </div>
-            </span>
-
+          <div class="box">
+            <div class="list">
+              {{ item.year }}年{{ item.month }} 月
+              <span class="bigNode">
+                <div class="axis">
+                  <span class="joint iconfont icon-jiedianguanli"></span>
+                </div>
+              </span>
+            </div>
+            <span class="articleNum">{{ item.data.length }} articles</span>
           </div>
-<span class="articleNum">{{ item.data.length }} articles</span></div>
           <div class="article" v-for="article in item.data" :key="article.id">
             <div class="date">{{ article.month }}-{{ article.day }}</div>
             <span class="node">
               <div class="axis">
-              <span class="dot1"></span>
-              <span class="dot2"></span>
-              <span class="dot3"></span>
-              </div> 
+                <span class="dot1"></span>
+                <span class="dot2"></span>
+                <span class="dot3"></span>
+              </div>
             </span>
             <div class="title">{{ article.title }}</div>
           </div>
@@ -129,10 +129,15 @@ let archivesList = computed(() => {
   padding-bottom: 30px;
   border-bottom: 1px solid #eee;
 }
+
+.body {
+  border-bottom: 1px solid #eee;
+}
 .body .foot {
   text-align: right;
   padding-top: 30px;
   border-top: 1px solid #eee;
+  margin-top: 30px;
 }
 .body .list {
   position: relative;
@@ -144,11 +149,6 @@ let archivesList = computed(() => {
   padding-right: 5px;
 }
 
-.body .articles{
-  border-bottom: 1px solid #eee;
-  margin-bottom: 30px
-  ;
-}
 .articles .article {
   display: flex;
 }
@@ -184,66 +184,70 @@ let archivesList = computed(() => {
 .node .axis {
   height: 100%;
   width: 5px;
-  background-color: rgb(164, 235, 164);
+  background-color: rgb(64,64,42);
   margin: auto;
 }
 
 .bigNode .joint {
   position: relative;
   right: 18px;
-  color: rgb(9, 82, 13);
+  color: rgb(49, 99, 148);
   font-size: 40px;
   text-align: center;
 }
-.dot1,.dot2,.dot3{
+.dot1,
+.dot2,
+.dot3 {
   display: inline-block;
-position: absolute;
-border-radius: 50%;
-top: 50%;
-left: 50%;
-transform: translate(-50%,-50%);
-transition: all .5s
-;
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.5s;
 }
-.node .dot1{
+.node .dot1 {
   width: 20px;
   height: 20px;
-  background-color: pink;
+  /* background-color: pink;
+   */
+   background-color: rgba(22,90,103);
 }
-.node .dot2{
+.node .dot2 {
   width: 10px;
   height: 10px;
-  background-color: green;
+  background-color: rgba(255,255,255);
 }
-.node .dot3{
+.node .dot3 {
   width: 0px;
   height: 0px;
-  background-color: yellow;
+  background-color: rgb(28,155,172);
 }
-.article .title:hover{
+.article .title:hover {
   background-color: #eee;
   color: rgb(5, 98, 67);
 }
-.article:hover .dot1{
-width: 28px;
-height: 28px;
+.article:hover .dot1 {
+  width: 28px;
+  height: 28px;
 }
-.article:hover .dot2{
-width: 22px;
-height: 22px;
+.article:hover .dot2 {
+  width: 22px;
+  height: 22px;
 }
-.article:hover .dot3{
-width: 10px;
-height: 10px;
+.article:hover .dot3 {
+  width: 10px;
+  height: 10px;
 }
 
-.articleNum{
-height: 80px;
-line-height: 80px;
- color: rgb(143, 141, 141);
-margin-left: 50px;
- font-size: 14px;
-
+.articleNum {
+  height: 80px;
+  line-height: 80px;
+  color: rgb(143, 141, 141);
+  margin-left: 50px;
+  font-size: 14px;
 }
-.box{display: flex;}
+.box {
+  display: flex;
+}
 </style>

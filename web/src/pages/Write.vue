@@ -5,7 +5,8 @@
         type="text"
         class="title"
         placeholder="请输入标题..."
-        v-model="data.title" />
+        v-model="articleTitle"
+      />
       <div class="right">
         <div class="saveInfo">文章将保存至草稿箱</div>
         <button class="draft">草稿箱</button>
@@ -14,7 +15,7 @@
       </div>
     </div>
 
-    <MdEditor v-model="data.articles_text" class="editor"></MdEditor>
+    <MdEditor v-model="articlesText" class="editor"></MdEditor>
     <!-- 配置发布文章相关属性 -->
     <div class="configBox" v-show="isShowConfig" ref="configBox">
       <div class="header">发布文章</div>
@@ -22,7 +23,8 @@
         <!-- 添加分类 -->
         <div class="addCategories">
           <div class="left categoryDirectory">
-            <span class="isMust">*</span> 分类：
+            <span class="isMust">*</span>
+            分 类：
           </div>
           <div class="right categoryOptions">
             <div class="group_name">
@@ -31,7 +33,8 @@
                 v-model="group_id"
                 :options="groupOptions"
                 :props="props"
-                @change="addGroupId" />
+                @change="addGroupId"
+              />
             </div>
           </div>
         </div>
@@ -47,14 +50,16 @@
                   :disabled="tagDisabled"
                   class="tag"
                   data-selected="unselected"
-                  :data-tag="tag.tag_name">
+                  :data-tag="tag.tag_name"
+                >
                   {{ tag.tag_name }}
                 </button>
                 <span
                   :data-tag="tag.tag_name"
                   class="deleteTag"
                   @click="deleteTag(tag.id)"
-                  v-show="editorTag">
+                  v-show="editorTag"
+                >
                   x
                 </span>
               </div>
@@ -67,11 +72,27 @@
                 @keydown.enter="createTag"
                 type="text"
                 v-model="newTag.tag_name"
-                placeholder="createTag" />
+                placeholder="createTag"
+              />
               <span
                 class="editor iconfont icon-yongyan"
-                @click="editorTags"></span>
+                @click="editorTags"
+              ></span>
             </div>
+          </div>
+        </div>
+        <!-- 添加摘要 -->
+        <div class="absrtact">
+          <div class="left">摘 要:</div>
+          <div class="right addAbsrtact">
+            <el-input
+              v-model="articleIntroduction"
+              :rows="3"
+              type="textarea"
+              placeholder="Please input"
+              maxlength="100"
+            />
+            <span class="number">{{ data.introduction.length }}/100</span>
           </div>
         </div>
         <!-- 添加封面 -->
@@ -96,12 +117,12 @@ import { ElMessage } from 'element-plus'
 
 import { useStore } from 'vuex'
 import { reactive, onMounted, ref, watch, computed } from 'vue'
-import { createNewTag, deleteTags, saveArticle } from '@/api'
+import { createNewTag, deleteTags, saveArticle, updateArticle } from '@/api'
 import MdEditor from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import UploadImg from '@/components/UploadImg.vue'
 import { SelectProps } from 'element-plus/es/components/select-v2/src/defaults'
-const MdCatalog = MdEditor.MdCatalog
+// const MdCatalog = MdEditor.MdCatalog
 const scrollElement = document.documentElement
 const { state, dispatch } = useStore()
 
@@ -113,7 +134,7 @@ const showConfigBox = () => {
   isShowConfig.value = true
 }
 // 点击configBox外时隐藏
-const hideConfig = e => {
+const hideConfig = (e) => {
   if (!configBox.value.contains(e.target) && e.target != pubBtn.value) {
     isShowConfig.value = false
   }
@@ -122,17 +143,27 @@ const hideConfig = e => {
 // 点击取消按钮隐藏盒子
 const cancelPub = () => {
   isShowConfig.value = false
-  
 }
+
+let articleTitle = ref('')
+let articleIntroduction = ref('')
+let articlesText = ref('')
 // 文章数据
 let data = reactive({
-  articles_text: '',
+  articles_text: 'null',
   author: 'test',
   group_id: 0,
-  status: 'published',
-  tags: '',
-  title: '',
+  status: 'draft',
+  introduction: 'null',
+  tags: 'null',
+  title: 'null',
 })
+
+onMounted(async () => {
+  let result = await saveArticle(data)
+  console.log(result)
+})
+
 // 选择group_id
 const group_id = ref([])
 // 配置联级选择器
@@ -146,10 +177,6 @@ const groupOptions = computed(() => {
 const addGroupId = () => {
   data.group_id = group_id.value[group_id.value.length - 1]
 }
-// 获取获取分类数据
-onMounted(() => {
-  dispatch('reqGroupList')
-})
 
 // 判断是否选中此tag
 
@@ -158,7 +185,7 @@ let tagList = computed(() => {
   return state.tagList
 })
 let tags = [] // 标签数组
-const addTags = e => {
+const addTags = (e) => {
   // 若未选中，则更改为选中状态
   if (e.target.dataset.selected == 'unselected') {
     // 更改目标状态，将对应tag推入数组
@@ -168,12 +195,12 @@ const addTags = e => {
   }
 }
 // 移除已选中tag
-const removeTags = e => {
+const removeTags = (e) => {
   // console.log()
   if (e.target.dataset.selected == 'selected') {
     // 在tags中移除目标tag
 
-    tags = tags.filter(item => item != e.target.dataset.tag)
+    tags = tags.filter((item) => item != e.target.dataset.tag)
     e.target.classList = ['tag']
     e.target.dataset.selected = 'unselected'
   }
@@ -200,9 +227,9 @@ const createTag = async () => {
   }
 }
 // 删除tag
-const deleteTag = async id => {
+const deleteTag = async (id) => {
   // 若目标tag已被选中，则从tags中清除此tag
-  tags = tags.filter(item => item != event.currentTarget.dataset.tag)
+  tags = tags.filter((item) => item != event.currentTarget.dataset.tag)
   let result = await deleteTags(id)
   if (result.success) {
     dispatch('reqTagList')
@@ -215,10 +242,17 @@ const editorTags = () => {
   tagDisabled.value = !tagDisabled.value
 }
 // 保存文章
+
 const handleSaveArticle = async () => {
+  data.status = 'published'
+  data.articles_text = articleTitle
+  data.introduction = articleIntroduction
+  data.title = articleTitle
   data.tags = tags.join(',')
-  if (data.articles_text && data.group_id && data.title) {
-    let result = await saveArticle(data)
+  console.log(data)
+  if (data.articles_text && data.group_id && data.title&&data.introduction) {
+    let result = await updateArticle(data)
+    console.log(result)
     if (result.success) {
       ElMessage({
         message: '保存成功.',
@@ -228,8 +262,8 @@ const handleSaveArticle = async () => {
       data.group_id = ''
       data.title = ''
       data.tags = ''
+      data.introduction = ''
     }
-    // console.log(result)
   } else if (!data.articles_text) {
     ElMessage({
       message: '请输入内容.',
@@ -243,6 +277,11 @@ const handleSaveArticle = async () => {
   } else if (!data.group_id) {
     ElMessage({
       message: '请添加分类.',
+      type: 'warning',
+    })
+  }else if (!data.introduction) {
+    ElMessage({
+      message: '请添输入摘要.',
       type: 'warning',
     })
   }
@@ -319,6 +358,7 @@ const handleSaveArticle = async () => {
 
 .configBox {
   /* display: none; */
+  z-index: 1000;
   width: 550px;
   position: absolute;
   top: 90px;
@@ -363,8 +403,17 @@ const handleSaveArticle = async () => {
   display: flex;
   margin-bottom: 20px;
 }
+.absrtact {
+  display: flex;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.absrtact .left {
+  padding-right: 10px;
+}
 
 .addConfig .left {
+  background: pink;
   line-height: 30px;
   text-align: right;
   width: 90px;
@@ -424,6 +473,7 @@ const handleSaveArticle = async () => {
 .tagOptions .tagNode {
   position: relative;
 }
+
 .editorTags .createTag {
   outline: rgb(64, 158, 255);
   padding: 0 10px;
@@ -470,5 +520,15 @@ const handleSaveArticle = async () => {
 }
 .isMust {
   color: rgb(224, 8, 8);
+}
+.addAbsrtact {
+  position: relative;
+}
+.number {
+  font-size: 8px;
+  color: rgb(179, 179, 179);
+  position: absolute;
+  right: 0;
+  bottom: -15px;
 }
 </style>

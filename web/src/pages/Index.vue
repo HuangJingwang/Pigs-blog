@@ -2,7 +2,11 @@
   <IndexBackground></IndexBackground>
   <div class="container">
     <!-- 展示文章卡片 -->
-    <div class="mainBody "  >
+    <div class="mainBody">
+      <!-- <div class="default"  >
+        没有文章
+      </div> -->
+
       <div class="articles">
         <div
           class="articleCard basic-box"
@@ -36,13 +40,13 @@
           </div>
         </div>
       </div>
-      <div class="aside" >
-      <!-- 漂浮组件 -->
+      <div class="aside">
+        <!-- 漂浮组件 -->
         <div class="components" ref="components">
           <div class="info basic-box">1234566666666666666666666</div>
           <div class="clock basic-box"></div>
         </div>
-          <!-- 非漂浮组件,随滚动移动 -->
+        <!-- 非漂浮组件,随滚动移动 -->
 
         <!-- <div class="hotArticle basic-box" @click="testFloat"></div> -->
       </div>
@@ -78,6 +82,7 @@ onMounted(() => {
 let hasNext = computed(() => {
   return state.articleData.hasNext
 })
+// 点击加载更多
 const loadMore = () => {
   // 是否有下一页
   if (hasNext) {
@@ -91,21 +96,20 @@ const loadMore = () => {
 let components = ref(null)
 onMounted(() => {
   window.addEventListener('scroll', () => {
-    if (window.scrollY > components.value.offsetTop - 30) {
-      components.value.style.top  = 90+'px'
-  }
+    if (components.value && window.scrollY > components.value.offsetTop - 30) {
+      components.value.style.top = 90 + 'px'
+    }
+  })
 })
-})
-
 </script>
 
 <style scoped>
 .container {
   padding-top: 30px;
-  width: 1250px; 
+  width: 1250px;
   margin: auto;
 }
-.container .articles{
+.container .articles {
   margin-right: 30px;
 }
 /* 文章卡片 */
@@ -201,18 +205,18 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.container .mainBody{
+.container .mainBody {
   /* background-color: red; */
   display: flex;
   /* justify-content: space-between; */
 }
-.mainBody .aside{
-  flex: 1;  
+.mainBody .aside {
+  flex: 1;
 }
-.aside .components{
+.aside .components {
   /* position: absolute;
    */
-   position: sticky;
+  position: sticky;
 }
 .aside .info {
   padding: 15px;
@@ -240,6 +244,4 @@ onMounted(() => {
 .loadMore a {
   font-size: 16px;
 }
-
-
 </style>

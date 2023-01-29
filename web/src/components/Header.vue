@@ -33,7 +33,7 @@
           <span class="icon iconfont icon-guanyu"></span>
           <span>About</span>
         </div>
-        <div class="singIn">
+        <div class="singIn" @click="login_register">
           <span class="icon iconfont icon-yonghufill"></span>
           <span>Sign in</span>
         </div>
@@ -46,12 +46,24 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
 // import debounce from '@/utils/debounce'
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, defineProps, computed } from 'vue'
+import { useStore } from 'vuex'
+const { state } = useStore()
+
+ const props = defineProps({
+  showUserModal:Boolean
+})
+onMounted(() => {
+  console.log(props)
+})
+
+const showUserModal = computed(() => {
+  return props.showUserModal
+})
 // export default {
   // name: 'Header',
   // setup() {
     // 绑定页面滚动事件
-    
     let headerStyle = reactive(['nav'])
     window.addEventListener('scroll', () => {
       if (document.documentElement.scrollTop > 150) {
@@ -71,13 +83,23 @@ import { ref, onMounted, reactive } from 'vue'
         path: '/write',
       })
       window.open(writePath.href, '_blank')
-    }
+}
+
+
 const route = useRoute()
 
+// 导航到后台管理界面
 
-    // return { toTop, headerStyle, toWrite }
-  // },
-// }
+const toManage = () => {
+  router.push(
+    {path:'/Manage'}
+  )
+}
+// 点击弹出登录框
+const login_register = () => {
+  state.showUserModal = true
+}
+
 </script>
 
 scope

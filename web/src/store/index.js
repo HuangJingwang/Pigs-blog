@@ -4,11 +4,15 @@ import {
   getTagList,
   getArticleList,
   getArchives,
+  login,
 } from '@/api'
 export default createStore({
   state: {
+    // 用户登陆数据
+    user: {
+      isLogin: 'false',
+    },
     // 首页文章列表数据
-    // articleList: [],
     articleData: {
       totalArticle: 0,
       hasNext: 'true',
@@ -21,7 +25,7 @@ export default createStore({
     basis: 'create_at',
 
     archivesData: {
-      total: 50,
+      total: 0,
       archivesList: [],
     },
     // 分类列表
@@ -30,11 +34,19 @@ export default createStore({
     tagList: [],
     // 页面高度
     innerHeight: 0,
+    // 判断是否弹出登录/注册组件
+    showUserModal: false,
   },
 
   getter: {},
 
   actions: {
+    // 发起登录请求
+    async reqLogin({ commit }, data) {
+      let result = await login(data)
+      // console.log(result)
+      return result
+    },
     // 发起请求获取首页文章列表数据
     async reqArticleData({ commit, state }) {
       let pageNo = state.currentPageNo
@@ -44,13 +56,11 @@ export default createStore({
       }
     },
     // 发起获取归档列表数据
-
     async reqArchiveData({ commit, state }) {
       let result = await getArchives()
       // console.log(author)
       commit('HANDLEARCHIVESDATA', result)
     },
-
     // 请求分类列表数据
     async reqGroupList({ commit }) {
       let result = await getGroupListData()

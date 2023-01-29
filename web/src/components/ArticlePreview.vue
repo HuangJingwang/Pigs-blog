@@ -38,22 +38,16 @@ const state = reactive({
   scrollElementOffsetTop: 300,
 })
 
-// 目录跟随页面悬停
 const catalog = ref(null)
 
 onMounted(() => {
-  // console.log(catalog.value)
 })
 // 测试
 // const theme = ref(null)
 
 const testLog = () => {
-  // console.log(123)
-  console.log(catalog.value.offsetTop)
-  console.log(window.scrollY)
 }
 
-onMounted(() => {})
 </script>
 
 <style scoped>
@@ -73,6 +67,11 @@ onMounted(() => {})
 }
 .previewBox .md-catalog {
   padding: 20px 15px;
-  width: 275px;
+  width:  275px;
+}
+
+
+.md-catalog >>> h1{
+  font-size: 45px;
 }
 </style>

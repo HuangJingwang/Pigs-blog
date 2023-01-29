@@ -24,11 +24,7 @@ let imgUrl = require('@/assets/img/bgi1.jpg')
 // 点击按钮滚动页面
 const distance = ref(0)
 const scrollToMain = () => {
-  let options = {
-    top: distance,
-    behavior: 'smooth' | 'instant',
-  }
-
+console.log
   distance.value = window.innerHeight
   console.log(window.innerHeight)
   console.log(distance.value)
