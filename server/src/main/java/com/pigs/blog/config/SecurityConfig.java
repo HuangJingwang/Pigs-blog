@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
-                .antMatchers("/pigs-blog/user/login", "/*","/pigs-blog/**").permitAll()
+                .antMatchers("/pigs-blog/user/login", "/**", "/pigs-blog/**", "/github/**", "/login/oauth").permitAll()
                 .antMatchers("/api/*/auth/**", "/test/**").permitAll() // 登录注册等请求过滤 // 傻瓜式乱测
                 .antMatchers("/doc.html", "/doc.html/**", "/webjars/**", "/v2/**", "/swagger-resources",
                         "/swagger-resources/**", "/swagger-ui.html", "/swagger-ui.html/**").permitAll()

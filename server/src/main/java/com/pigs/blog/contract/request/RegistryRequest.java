@@ -17,7 +17,12 @@ public class RegistryRequest {
     @ApiModelProperty("账户")
     @NotBlank(message = "account cannot be blank when registry")
     private String account;//账户
+
     @ApiModelProperty("密码")
     @NotBlank(message = "password cannot be blank when registry")
     private String password;//密码
+
+    @ApiModelProperty("昵称")
+    @NotBlank(message = "nickName cannot be blank when registry")
+    private String nickName;//昵称
 }

@@ -35,4 +35,8 @@ public class ArticlesUpdateRequest {
     @ApiModelProperty("封面图片路径")
     //@NotBlank(message = "imgUrl cannot be blank")
     private String imgUrl;
+
+    @ApiModelProperty("简介")
+    @NotBlank(message = "introduction cannot be blank")
+    private String introduction;//文章内容
 }

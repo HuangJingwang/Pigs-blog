@@ -14,7 +14,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +31,8 @@ public class ArticlesController {
             @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageNo", value = ""),
             @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageSize", value = ""),
             @ApiImplicitParam(paramType = "query", dataType = "string", name = "author", value = ""),
-            @ApiImplicitParam(paramType = "query", dataType = "string", name = "status", value = "")
+            @ApiImplicitParam(paramType = "query", dataType = "string", name = "status", value = ""),
+            @ApiImplicitParam(paramType = "query", dataType = "boolean", name = "orderByPV", value = "")
     })
     @ApiOperation(value = "分页接口", notes = "", httpMethod = "GET")
     @RequestMapping(value = "/getArticlesPageData", method = RequestMethod.GET, produces = "application/json")
@@ -40,12 +40,14 @@ public class ArticlesController {
             @RequestParam(name = "pageNo", required = false, defaultValue = "1") Integer pageNo,
             @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize,
             @RequestParam(name = "author", required = false, defaultValue = "") String author,
-            @RequestParam(name = "status", required = false, defaultValue = "") String status) {
+            @RequestParam(name = "status", required = false, defaultValue = "") String status,
+            @RequestParam(name = "orderByPV", required = false, defaultValue = "false") Boolean orderByPV) {
         ArticlesListPageRequest request = new ArticlesListPageRequest();
         request.setAuthor(author);
         request.setPageNo(pageNo);
         request.setPageSize(pageSize);
         request.setStatus(status);
+        request.setOrderByPV(orderByPV);
         PageData<ArticlesListResponse> pageData = articlesInterface.getPageData(request);
         return ResultResponse.success(pageData);
     }

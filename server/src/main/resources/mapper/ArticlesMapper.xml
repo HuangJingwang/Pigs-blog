@@ -7,11 +7,12 @@
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="author" jdbcType="VARCHAR" property="author" />
     <result column="tags" jdbcType="VARCHAR" property="tags" />
-    <result column="detail" jdbcType="VARCHAR" property="detail" />
+    <result column="introduction" jdbcType="VARCHAR" property="introduction" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+    <result column="page_view" jdbcType="BIGINT" property="pageView" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.pigs.blog.model.Articles">
     <result column="articles_text" jdbcType="LONGVARCHAR" property="articlesText" />
@@ -75,7 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, group_id, title, author, tags, detail, img_url, status, create_at, update_at
+    id, group_id, title, author, tags, introduction, img_url, status, create_at, update_at, 
+    page_view
   </sql>
   <sql id="Blob_Column_List">
     articles_text
@@ -130,13 +132,15 @@
   </delete>
   <insert id="insert" parameterType="com.pigs.blog.model.Articles">
     insert into articles (id, group_id, title, 
-      author, tags, detail, 
+      author, tags, introduction, 
       img_url, status, create_at, 
-      update_at, articles_text)
+      update_at, page_view, articles_text
+      )
     values (#{id,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
-      #{author,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, 
+      #{author,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, 
       #{imgUrl,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
-      #{updateAt,jdbcType=TIMESTAMP}, #{articlesText,jdbcType=LONGVARCHAR})
+      #{updateAt,jdbcType=TIMESTAMP}, #{pageView,jdbcType=BIGINT}, #{articlesText,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.pigs.blog.model.Articles">
     insert into articles
@@ -156,8 +160,8 @@
       <if test="tags != null">
         tags,
       </if>
-      <if test="detail != null">
-        detail,
+      <if test="introduction != null">
+        introduction,
       </if>
       <if test="imgUrl != null">
         img_url,
@@ -170,6 +174,9 @@
       </if>
       <if test="updateAt != null">
         update_at,
+      </if>
+      <if test="pageView != null">
+        page_view,
       </if>
       <if test="articlesText != null">
         articles_text,
@@ -191,8 +198,8 @@
       <if test="tags != null">
         #{tags,jdbcType=VARCHAR},
       </if>
-      <if test="detail != null">
-        #{detail,jdbcType=VARCHAR},
+      <if test="introduction != null">
+        #{introduction,jdbcType=VARCHAR},
       </if>
       <if test="imgUrl != null">
         #{imgUrl,jdbcType=VARCHAR},
@@ -205,6 +212,9 @@
       </if>
       <if test="updateAt != null">
         #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pageView != null">
+        #{pageView,jdbcType=BIGINT},
       </if>
       <if test="articlesText != null">
         #{articlesText,jdbcType=LONGVARCHAR},
@@ -235,8 +245,8 @@
       <if test="row.tags != null">
         tags = #{row.tags,jdbcType=VARCHAR},
       </if>
-      <if test="row.detail != null">
-        detail = #{row.detail,jdbcType=VARCHAR},
+      <if test="row.introduction != null">
+        introduction = #{row.introduction,jdbcType=VARCHAR},
       </if>
       <if test="row.imgUrl != null">
         img_url = #{row.imgUrl,jdbcType=VARCHAR},
@@ -249,6 +259,9 @@
       </if>
       <if test="row.updateAt != null">
         update_at = #{row.updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="row.pageView != null">
+        page_view = #{row.pageView,jdbcType=BIGINT},
       </if>
       <if test="row.articlesText != null">
         articles_text = #{row.articlesText,jdbcType=LONGVARCHAR},
@@ -265,11 +278,12 @@
       title = #{row.title,jdbcType=VARCHAR},
       author = #{row.author,jdbcType=VARCHAR},
       tags = #{row.tags,jdbcType=VARCHAR},
-      detail = #{row.detail,jdbcType=VARCHAR},
+      introduction = #{row.introduction,jdbcType=VARCHAR},
       img_url = #{row.imgUrl,jdbcType=VARCHAR},
       status = #{row.status,jdbcType=VARCHAR},
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
       update_at = #{row.updateAt,jdbcType=TIMESTAMP},
+      page_view = #{row.pageView,jdbcType=BIGINT},
       articles_text = #{row.articlesText,jdbcType=LONGVARCHAR}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -282,11 +296,12 @@
       title = #{row.title,jdbcType=VARCHAR},
       author = #{row.author,jdbcType=VARCHAR},
       tags = #{row.tags,jdbcType=VARCHAR},
-      detail = #{row.detail,jdbcType=VARCHAR},
+      introduction = #{row.introduction,jdbcType=VARCHAR},
       img_url = #{row.imgUrl,jdbcType=VARCHAR},
       status = #{row.status,jdbcType=VARCHAR},
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
-      update_at = #{row.updateAt,jdbcType=TIMESTAMP}
+      update_at = #{row.updateAt,jdbcType=TIMESTAMP},
+      page_view = #{row.pageView,jdbcType=BIGINT}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -306,8 +321,8 @@
       <if test="tags != null">
         tags = #{tags,jdbcType=VARCHAR},
       </if>
-      <if test="detail != null">
-        detail = #{detail,jdbcType=VARCHAR},
+      <if test="introduction != null">
+        introduction = #{introduction,jdbcType=VARCHAR},
       </if>
       <if test="imgUrl != null">
         img_url = #{imgUrl,jdbcType=VARCHAR},
@@ -321,6 +336,9 @@
       <if test="updateAt != null">
         update_at = #{updateAt,jdbcType=TIMESTAMP},
       </if>
+      <if test="pageView != null">
+        page_view = #{pageView,jdbcType=BIGINT},
+      </if>
       <if test="articlesText != null">
         articles_text = #{articlesText,jdbcType=LONGVARCHAR},
       </if>
@@ -333,11 +351,12 @@
       title = #{title,jdbcType=VARCHAR},
       author = #{author,jdbcType=VARCHAR},
       tags = #{tags,jdbcType=VARCHAR},
-      detail = #{detail,jdbcType=VARCHAR},
+      introduction = #{introduction,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP},
+      page_view = #{pageView,jdbcType=BIGINT},
       articles_text = #{articlesText,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -347,11 +366,12 @@
       title = #{title,jdbcType=VARCHAR},
       author = #{author,jdbcType=VARCHAR},
       tags = #{tags,jdbcType=VARCHAR},
-      detail = #{detail,jdbcType=VARCHAR},
+      introduction = #{introduction,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       create_at = #{createAt,jdbcType=TIMESTAMP},
-      update_at = #{updateAt,jdbcType=TIMESTAMP}
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      page_view = #{pageView,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

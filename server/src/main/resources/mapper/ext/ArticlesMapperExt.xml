@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pigs.blog.mapper.ext.ArticlesMapperExt">
-    <sql id="Base_Column_List">
-    id, group_id, title, author, tags, detail, img_url, status, create_at, update_at
-  </sql>
-    <resultMap id="BaseResultMap" type="com.pigs.blog.model.Articles">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="group_id" jdbcType="INTEGER" property="groupId"/>
-        <result column="title" jdbcType="VARCHAR" property="title"/>
-        <result column="author" jdbcType="VARCHAR" property="author"/>
-        <result column="tags" jdbcType="VARCHAR" property="tags"/>
-        <result column="detail" jdbcType="VARCHAR" property="detail"/>
-        <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
-        <result column="status" jdbcType="VARCHAR" property="status"/>
-        <result column="create_at" jdbcType="TIMESTAMP" property="createAt"/>
-        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt"/>
-    </resultMap>
+
     <sql id="selectList">
         where 1 = 1
         <if test="criteria.author != null and criteria.author != ''">
@@ -26,12 +12,17 @@
         </if>
     </sql>
 
-    <select id="selectArticlesList" resultMap="BaseResultMap">
+    <select id="selectArticlesList" resultMap="com.pigs.blog.mapper.ArticlesMapper.BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="com.pigs.blog.mapper.ArticlesMapper.Base_Column_List"/>
         from articles
         <include refid="selectList"/>
-        order by id desc
+        <if test="criteria.orderByPv == 1">
+            order by page_view desc
+        </if>
+        <if test="criteria.orderByPv == 0">
+            order by id desc
+        </if>
         limit #{criteria.start}, #{criteria.offset}
     </select>
 
@@ -42,9 +33,9 @@
         <include refid="selectList"/>
     </select>
 
-    <select id="selectArticlesListByCriteria" resultMap="BaseResultMap">
+    <select id="selectArticlesListByCriteria" resultMap="com.pigs.blog.mapper.ArticlesMapper.BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="com.pigs.blog.mapper.ArticlesMapper.Base_Column_List"/>
         from articles
         where 1 = 1
         <if test="criteria.tags != null">
@@ -58,16 +49,16 @@
         </if>
     </select>
 
-    <select id="selectPreArticle" resultMap="BaseResultMap">
+    <select id="selectPreArticle" resultMap="com.pigs.blog.mapper.ArticlesMapper.BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="com.pigs.blog.mapper.ArticlesMapper.Base_Column_List"/>
         from articles
         limit #{start}, 1
     </select>
 
-    <select id="selectNextArticle" resultMap="BaseResultMap">
+    <select id="selectNextArticle" resultMap="com.pigs.blog.mapper.ArticlesMapper.BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="com.pigs.blog.mapper.ArticlesMapper.Base_Column_List"/>
         from articles
         limit #{start}, 1
     </select>
