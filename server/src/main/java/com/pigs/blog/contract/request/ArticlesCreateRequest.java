@@ -15,8 +15,8 @@ import javax.validation.constraints.NotBlank;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArticlesCreateRequest {
     @ApiModelProperty("作者")
-    @NotBlank(message = "author cannot be blank")
-    private String author;//作者
+    @NotBlank(message = "account cannot be blank")
+    private String account;//作者
 
     @ApiModelProperty("标题")
     @NotBlank(message = "title cannot be blank")

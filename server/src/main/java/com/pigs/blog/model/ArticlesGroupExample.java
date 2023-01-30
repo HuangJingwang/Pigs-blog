@@ -475,73 +475,73 @@ public class ArticlesGroupExample {
             return (Criteria) this;
         }
 
-        public Criteria andAuthorIsNull() {
-            addCriterion("author is null");
+        public Criteria andAccountIsNull() {
+            addCriterion("account is null");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorIsNotNull() {
-            addCriterion("author is not null");
+        public Criteria andAccountIsNotNull() {
+            addCriterion("account is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorEqualTo(String value) {
-            addCriterion("author =", value, "author");
+        public Criteria andAccountEqualTo(String value) {
+            addCriterion("account =", value, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorNotEqualTo(String value) {
-            addCriterion("author <>", value, "author");
+        public Criteria andAccountNotEqualTo(String value) {
+            addCriterion("account <>", value, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorGreaterThan(String value) {
-            addCriterion("author >", value, "author");
+        public Criteria andAccountGreaterThan(String value) {
+            addCriterion("account >", value, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorGreaterThanOrEqualTo(String value) {
-            addCriterion("author >=", value, "author");
+        public Criteria andAccountGreaterThanOrEqualTo(String value) {
+            addCriterion("account >=", value, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorLessThan(String value) {
-            addCriterion("author <", value, "author");
+        public Criteria andAccountLessThan(String value) {
+            addCriterion("account <", value, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorLessThanOrEqualTo(String value) {
-            addCriterion("author <=", value, "author");
+        public Criteria andAccountLessThanOrEqualTo(String value) {
+            addCriterion("account <=", value, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorLike(String value) {
-            addCriterion("author like", value, "author");
+        public Criteria andAccountLike(String value) {
+            addCriterion("account like", value, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorNotLike(String value) {
-            addCriterion("author not like", value, "author");
+        public Criteria andAccountNotLike(String value) {
+            addCriterion("account not like", value, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorIn(List<String> values) {
-            addCriterion("author in", values, "author");
+        public Criteria andAccountIn(List<String> values) {
+            addCriterion("account in", values, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorNotIn(List<String> values) {
-            addCriterion("author not in", values, "author");
+        public Criteria andAccountNotIn(List<String> values) {
+            addCriterion("account not in", values, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorBetween(String value1, String value2) {
-            addCriterion("author between", value1, value2, "author");
+        public Criteria andAccountBetween(String value1, String value2) {
+            addCriterion("account between", value1, value2, "account");
             return (Criteria) this;
         }
 
-        public Criteria andAuthorNotBetween(String value1, String value2) {
-            addCriterion("author not between", value1, value2, "author");
+        public Criteria andAccountNotBetween(String value1, String value2) {
+            addCriterion("account not between", value1, value2, "account");
             return (Criteria) this;
         }
     }

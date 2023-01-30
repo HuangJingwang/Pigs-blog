@@ -11,11 +11,10 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ArticlesListRequest {
-    @ApiModelProperty("分类id")
-    private Integer groupId;//分类id
-    @ApiModelProperty("标签")
-    private String tags;//标签
-    @ApiModelProperty("作者")
-    private String account;//作者
+public class UserInfoPageDataRequest {
+    @ApiModelProperty(hidden = true)
+    private Integer pageNo;
+    @ApiModelProperty(hidden = true)
+    private Integer pageSize;
+    private Integer articlesCountMoreThan;
 }

@@ -22,7 +22,7 @@ public class ArticlesDetailResponse {
     private String title;//标题
 
     @ApiModelProperty("作者")
-    private String author;//作者
+    private String account;//作者
 
     @ApiModelProperty("标签,多个按照逗号分割")
     private String tags;//标签,多个按照逗号分割

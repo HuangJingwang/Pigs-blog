@@ -33,5 +33,5 @@ public class ArticlesGroupListResponse {
     private Short isDelete;//是否被删除
 
     @ApiModelProperty("创造者")
-    private String author;//创造者
+    private String account;//创造者
 }

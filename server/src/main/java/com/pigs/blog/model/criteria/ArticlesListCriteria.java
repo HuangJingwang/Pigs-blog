@@ -8,4 +8,5 @@ import java.util.List;
 public class ArticlesListCriteria {
     private String[] tags;
     private Integer groupId;
+    private String account;
 }

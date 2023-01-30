@@ -1,3 +1,4 @@
 /server/target/
 /.gitignore
 /server/.idea
+/server/src/main/resources/*.yml

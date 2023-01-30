@@ -11,6 +11,8 @@ public class UserInfo {
 
     private String imgUrl;
 
+    private Integer articlesCount;
+
     private Date createAt;
 
     private Date updateAt;
@@ -45,6 +47,14 @@ public class UserInfo {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl == null ? null : imgUrl.trim();
+    }
+
+    public Integer getArticlesCount() {
+        return articlesCount;
+    }
+
+    public void setArticlesCount(Integer articlesCount) {
+        this.articlesCount = articlesCount;
     }
 
     public Date getCreateAt() {

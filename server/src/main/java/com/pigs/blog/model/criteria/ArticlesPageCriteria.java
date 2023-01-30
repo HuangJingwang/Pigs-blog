@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ArticlesPageCriteria {
-    private String author;
+    private String account;
     private Integer start;
     private Integer offset;
     private String status;

@@ -31,8 +31,8 @@ public class ArticlesGroupInterfaceImpl implements ArticlesGroupInterface {
 
         ArticlesGroupExample example = new ArticlesGroupExample();
         ArticlesGroupExample.Criteria criteria = example.createCriteria();
-        if (Strings.isNotBlank(request.getAuthor())) {
-            criteria.andAuthorEqualTo(request.getAuthor());
+        if (Strings.isNotBlank(request.getAccount())) {
+            criteria.andAccountEqualTo(request.getAccount());
         }
         example.setOrderByClause("id desc");
         List<ArticlesGroup> articlesGroups = groupMapper.selectByExample(example);

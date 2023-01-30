@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArticlesUpdateRequest {
     @ApiModelProperty("作者")
-    private String author;//作者
+    private String account;//作者
 
     @ApiModelProperty("标题")
     private String title;//标题

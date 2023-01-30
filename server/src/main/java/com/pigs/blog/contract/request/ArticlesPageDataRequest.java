@@ -13,9 +13,9 @@ import org.springframework.lang.Nullable;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ArticlesListPageRequest {
+public class ArticlesPageDataRequest {
     @ApiModelProperty("作者")
-    private String author;//作者
+    private String account;//作者
     @ApiModelProperty("状态 状态 draft-草稿, published-已发布, deleted-被删除")
     private String status;//状态 状态 draft-草稿, published-已发布, deleted-被删除
     @ApiModelProperty(hidden = true)

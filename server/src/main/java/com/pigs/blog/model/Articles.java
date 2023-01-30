@@ -9,7 +9,7 @@ public class Articles {
 
     private String title;
 
-    private String author;
+    private String account;
 
     private String tags;
 
@@ -51,12 +51,12 @@ public class Articles {
         this.title = title == null ? null : title.trim();
     }
 
-    public String getAuthor() {
-        return author;
+    public String getAccount() {
+        return account;
     }
 
-    public void setAuthor(String author) {
-        this.author = author == null ? null : author.trim();
+    public void setAccount(String account) {
+        this.account = account == null ? null : account.trim();
     }
 
     public String getTags() {

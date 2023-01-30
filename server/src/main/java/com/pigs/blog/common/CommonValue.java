@@ -39,7 +39,7 @@ public class CommonValue {
     public final static String GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s";
 
     //获取github用户信息
-    public final static String GITHUB_USER_URL = "https://api.github.com/user?access_token=%s";
+    public final static String GITHUB_USER_URL = "https://api.github.com/user?";
 
     public final static String ACCESS_TOKEN_NAME = "access_token";
 

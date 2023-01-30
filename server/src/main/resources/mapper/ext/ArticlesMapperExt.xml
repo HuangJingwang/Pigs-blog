@@ -4,8 +4,8 @@
 
     <sql id="selectList">
         where 1 = 1
-        <if test="criteria.author != null and criteria.author != ''">
-            and author = #{criteria.author}
+        <if test="criteria.account != null and criteria.account != ''">
+            and account = #{criteria.account}
         </if>
         <if test="criteria.status != null and criteria.status != ''">
             and status = #{criteria.status}
@@ -61,5 +61,9 @@
         <include refid="com.pigs.blog.mapper.ArticlesMapper.Base_Column_List"/>
         from articles
         limit #{start}, 1
+    </select>
+
+    <select id="getMaxId" resultType="java.lang.Long">
+        select max(id) from articles
     </select>
 </mapper>

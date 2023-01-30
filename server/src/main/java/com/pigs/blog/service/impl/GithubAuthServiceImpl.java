@@ -1,12 +1,16 @@
 package com.pigs.blog.service.impl;
 
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.pigs.blog.common.CommonValue;
 import com.pigs.blog.service.GithubAuthService;
-import org.apache.http.HttpEntity;
+import org.apache.http.entity.BasicHttpEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -18,6 +22,8 @@ import org.springframework.http.converter.support.AllEncompassingFormHttpMessage
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -80,12 +86,14 @@ public class GithubAuthServiceImpl implements GithubAuthService {
     }
 
     public String getOpenId(String accessToken) {
-        String url = String.format(CommonValue.GITHUB_USER_URL, accessToken);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-        URI uri = builder.build().encode().toUri();
-        String resp = getRestTemplate().getForObject(uri, String.class);
-        logger.error("getAccessToken resp = " + resp);
-        return resp;
+        String url = CommonValue.GITHUB_USER_URL;
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "token " + accessToken);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(null, headers);
+        ResponseEntity<String> resp = getRestTemplate().exchange(url, HttpMethod.GET, request, String.class);
+        String result = resp.getBody();
+        logger.error("getAccessToken resp = " + result);
+        return result;
     }
 
 

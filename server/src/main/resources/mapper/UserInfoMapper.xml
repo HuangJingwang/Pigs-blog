@@ -6,6 +6,7 @@
     <result column="account" jdbcType="VARCHAR" property="account" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="articles_count" jdbcType="INTEGER" property="articlesCount" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
   </resultMap>
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, account, nickname, img_url, create_at, update_at
+    id, account, nickname, img_url, articles_count, create_at, update_at
   </sql>
   <select id="selectByExample" parameterType="com.pigs.blog.model.UserInfoExample" resultMap="BaseResultMap">
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="com.pigs.blog.model.UserInfo">
     insert into user_info (id, account, nickname, 
-      img_url, create_at, update_at
-      )
+      img_url, articles_count, create_at, 
+      update_at)
     values (#{id,jdbcType=BIGINT}, #{account,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
-      #{imgUrl,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}
-      )
+      #{imgUrl,jdbcType=VARCHAR}, #{articlesCount,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, 
+      #{updateAt,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.pigs.blog.model.UserInfo">
     insert into user_info
@@ -122,6 +123,9 @@
       </if>
       <if test="imgUrl != null">
         img_url,
+      </if>
+      <if test="articlesCount != null">
+        articles_count,
       </if>
       <if test="createAt != null">
         create_at,
@@ -142,6 +146,9 @@
       </if>
       <if test="imgUrl != null">
         #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="articlesCount != null">
+        #{articlesCount,jdbcType=INTEGER},
       </if>
       <if test="createAt != null">
         #{createAt,jdbcType=TIMESTAMP},
@@ -172,6 +179,9 @@
       <if test="row.imgUrl != null">
         img_url = #{row.imgUrl,jdbcType=VARCHAR},
       </if>
+      <if test="row.articlesCount != null">
+        articles_count = #{row.articlesCount,jdbcType=INTEGER},
+      </if>
       <if test="row.createAt != null">
         create_at = #{row.createAt,jdbcType=TIMESTAMP},
       </if>
@@ -189,6 +199,7 @@
       account = #{row.account,jdbcType=VARCHAR},
       nickname = #{row.nickname,jdbcType=VARCHAR},
       img_url = #{row.imgUrl,jdbcType=VARCHAR},
+      articles_count = #{row.articlesCount,jdbcType=INTEGER},
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
       update_at = #{row.updateAt,jdbcType=TIMESTAMP}
     <if test="example != null">
@@ -207,6 +218,9 @@
       <if test="imgUrl != null">
         img_url = #{imgUrl,jdbcType=VARCHAR},
       </if>
+      <if test="articlesCount != null">
+        articles_count = #{articlesCount,jdbcType=INTEGER},
+      </if>
       <if test="createAt != null">
         create_at = #{createAt,jdbcType=TIMESTAMP},
       </if>
@@ -221,6 +235,7 @@
     set account = #{account,jdbcType=VARCHAR},
       nickname = #{nickname,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
+      articles_count = #{articlesCount,jdbcType=INTEGER},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

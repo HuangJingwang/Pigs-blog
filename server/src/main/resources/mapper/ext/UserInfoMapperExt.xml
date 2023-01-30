@@ -1,0 +1,26 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pigs.blog.mapper.ext.UserInfoMapperExt">
+
+    <sql id="pageByCriteria">
+        where 1= 1
+        <if test="criteria.articlesCountMoreThan != null">
+            and articles_count &gt; #{criteria.articlesCountMoreThan}
+        </if>
+    </sql>
+
+    <select id="selectPageByCriteria" resultMap="com.pigs.blog.mapper.UserInfoMapper.BaseResultMap">
+        select
+        <include refid="com.pigs.blog.mapper.UserInfoMapper.Base_Column_List"/>
+        from user_info
+        <include refid="pageByCriteria"/>
+        limit #{criteria.start}, #{criteria.offset}
+    </select>
+
+    <select id="countPageByCriteria" resultType="java.lang.Long">
+        select
+        count(*)
+        from user_info
+        <include refid="pageByCriteria"/>
+    </select>
+
+</mapper>

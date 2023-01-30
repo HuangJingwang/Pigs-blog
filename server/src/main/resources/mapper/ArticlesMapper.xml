@@ -5,7 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="group_id" jdbcType="BIGINT" property="groupId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
     <result column="tags" jdbcType="VARCHAR" property="tags" />
     <result column="introduction" jdbcType="VARCHAR" property="introduction" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
@@ -76,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, group_id, title, author, tags, introduction, img_url, status, create_at, update_at, 
+    id, group_id, title, account, tags, introduction, img_url, status, create_at, update_at, 
     page_view
   </sql>
   <sql id="Blob_Column_List">
@@ -132,12 +132,12 @@
   </delete>
   <insert id="insert" parameterType="com.pigs.blog.model.Articles">
     insert into articles (id, group_id, title, 
-      author, tags, introduction, 
+      account, tags, introduction, 
       img_url, status, create_at, 
       update_at, page_view, articles_text
       )
     values (#{id,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
-      #{author,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, 
+      #{account,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, 
       #{imgUrl,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
       #{updateAt,jdbcType=TIMESTAMP}, #{pageView,jdbcType=BIGINT}, #{articlesText,jdbcType=LONGVARCHAR}
       )
@@ -154,8 +154,8 @@
       <if test="title != null">
         title,
       </if>
-      <if test="author != null">
-        author,
+      <if test="account != null">
+        account,
       </if>
       <if test="tags != null">
         tags,
@@ -192,8 +192,8 @@
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="author != null">
-        #{author,jdbcType=VARCHAR},
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
       </if>
       <if test="tags != null">
         #{tags,jdbcType=VARCHAR},
@@ -239,8 +239,8 @@
       <if test="row.title != null">
         title = #{row.title,jdbcType=VARCHAR},
       </if>
-      <if test="row.author != null">
-        author = #{row.author,jdbcType=VARCHAR},
+      <if test="row.account != null">
+        account = #{row.account,jdbcType=VARCHAR},
       </if>
       <if test="row.tags != null">
         tags = #{row.tags,jdbcType=VARCHAR},
@@ -276,7 +276,7 @@
     set id = #{row.id,jdbcType=BIGINT},
       group_id = #{row.groupId,jdbcType=BIGINT},
       title = #{row.title,jdbcType=VARCHAR},
-      author = #{row.author,jdbcType=VARCHAR},
+      account = #{row.account,jdbcType=VARCHAR},
       tags = #{row.tags,jdbcType=VARCHAR},
       introduction = #{row.introduction,jdbcType=VARCHAR},
       img_url = #{row.imgUrl,jdbcType=VARCHAR},
@@ -294,7 +294,7 @@
     set id = #{row.id,jdbcType=BIGINT},
       group_id = #{row.groupId,jdbcType=BIGINT},
       title = #{row.title,jdbcType=VARCHAR},
-      author = #{row.author,jdbcType=VARCHAR},
+      account = #{row.account,jdbcType=VARCHAR},
       tags = #{row.tags,jdbcType=VARCHAR},
       introduction = #{row.introduction,jdbcType=VARCHAR},
       img_url = #{row.imgUrl,jdbcType=VARCHAR},
@@ -315,8 +315,8 @@
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="author != null">
-        author = #{author,jdbcType=VARCHAR},
+      <if test="account != null">
+        account = #{account,jdbcType=VARCHAR},
       </if>
       <if test="tags != null">
         tags = #{tags,jdbcType=VARCHAR},
@@ -349,7 +349,7 @@
     update articles
     set group_id = #{groupId,jdbcType=BIGINT},
       title = #{title,jdbcType=VARCHAR},
-      author = #{author,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
       tags = #{tags,jdbcType=VARCHAR},
       introduction = #{introduction,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
@@ -364,7 +364,7 @@
     update articles
     set group_id = #{groupId,jdbcType=BIGINT},
       title = #{title,jdbcType=VARCHAR},
-      author = #{author,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
       tags = #{tags,jdbcType=VARCHAR},
       introduction = #{introduction,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},

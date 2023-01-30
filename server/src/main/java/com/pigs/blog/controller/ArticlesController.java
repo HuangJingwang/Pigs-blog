@@ -3,12 +3,13 @@ package com.pigs.blog.controller;
 import com.pigs.blog.common.PageData;
 import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.request.ArticlesCreateRequest;
-import com.pigs.blog.contract.request.ArticlesListPageRequest;
 import com.pigs.blog.contract.request.ArticlesListRequest;
+import com.pigs.blog.contract.request.ArticlesPageDataRequest;
 import com.pigs.blog.contract.request.ArticlesUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesDetailResponse;
 import com.pigs.blog.contract.response.ArticlesListResponse;
 import com.pigs.blog.contract.response.ArticlesPreOrNextResponse;
+import com.pigs.blog.contract.response.ArticlesSaveResponse;
 import com.pigs.blog.service.ArticlesInterface;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -30,7 +31,7 @@ public class ArticlesController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageNo", value = ""),
             @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageSize", value = ""),
-            @ApiImplicitParam(paramType = "query", dataType = "string", name = "author", value = ""),
+            @ApiImplicitParam(paramType = "query", dataType = "string", name = "account", value = ""),
             @ApiImplicitParam(paramType = "query", dataType = "string", name = "status", value = ""),
             @ApiImplicitParam(paramType = "query", dataType = "boolean", name = "orderByPV", value = "")
     })
@@ -39,11 +40,11 @@ public class ArticlesController {
     public ResultResponse<PageData<ArticlesListResponse>> getArticlesPageData(
             @RequestParam(name = "pageNo", required = false, defaultValue = "1") Integer pageNo,
             @RequestParam(name = "pageSize", required = false, defaultValue = "10") Integer pageSize,
-            @RequestParam(name = "author", required = false, defaultValue = "") String author,
+            @RequestParam(name = "account", required = false, defaultValue = "") String account,
             @RequestParam(name = "status", required = false, defaultValue = "") String status,
             @RequestParam(name = "orderByPV", required = false, defaultValue = "false") Boolean orderByPV) {
-        ArticlesListPageRequest request = new ArticlesListPageRequest();
-        request.setAuthor(author);
+        ArticlesPageDataRequest request = new ArticlesPageDataRequest();
+        request.setAccount(account);
         request.setPageNo(pageNo);
         request.setPageSize(pageSize);
         request.setStatus(status);
@@ -57,9 +58,9 @@ public class ArticlesController {
     })
     @ApiOperation(value = "保存", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json")
-    public ResultResponse saveArticles(@RequestBody @Valid ArticlesCreateRequest request) {
-        articlesInterface.saveArticles(request);
-        return ResultResponse.success(null);
+    public ResultResponse<ArticlesSaveResponse> saveArticles(@RequestBody @Valid ArticlesCreateRequest request) {
+        ArticlesSaveResponse result = articlesInterface.saveArticles(request);
+        return ResultResponse.success(result);
     }
 
     @ApiImplicitParams({
@@ -103,10 +104,12 @@ public class ArticlesController {
     @RequestMapping(value = "/listArticles", method = RequestMethod.GET, produces = "application/json")
     public ResultResponse<List<ArticlesListResponse>> listArticlesByGroupId(
             @RequestParam(value = "groupId", required = false) Integer groupId,
-            @RequestParam(value = "tags", required = false) String tags) {
+            @RequestParam(value = "tags", required = false) String tags,
+            @RequestParam(value = "account", required = false) String account) {
         ArticlesListRequest request = new ArticlesListRequest();
         request.setTags(tags);
         request.setGroupId(groupId);
+        request.setAccount(account);
         List<ArticlesListResponse> list = articlesInterface.listArticlesByCriteria(request);
         return ResultResponse.success(list);
     }

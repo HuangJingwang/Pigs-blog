@@ -25,14 +25,14 @@ public class ArticlesGroupController {
     @Autowired
     private ArticlesGroupInterface groupInterface;
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "string", name = "author", value = "")
+            @ApiImplicitParam(paramType = "query", dataType = "string", name = "account", value = "")
     })
     @ApiOperation(value = "分类列表", notes = "", httpMethod = "GET")
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
     public ResultResponse<List<ArticlesGroupListResponse>> getArticlesGroupList(
-            @RequestParam(value = "author", required = false) String author){
+            @RequestParam(value = "account", required = false) String account){
         ArticlesGroupListRequest request = new ArticlesGroupListRequest();
-        request.setAuthor(author);
+        request.setAccount(account);
         List<ArticlesGroupListResponse> result = groupInterface.list(request);
         return ResultResponse.success(result);
     }
