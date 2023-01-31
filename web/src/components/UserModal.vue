@@ -26,7 +26,7 @@
 
       <div class="container">
         <!-- 注册 -->
-        <div class="register-container" :v-show="showRegister">
+        <div class="register-container"  >
           <!-- 昵称 -->
           <div class="nickname-panel">
             <div class="nickname-placeholder" :class="active0">Nickname</div>
@@ -115,7 +115,7 @@
           </div>
         </div>
         <!-- 登录 -->
-        <div class="login-container" :v-show="showLogin">
+        <div class="login-container" >
           <!-- 账户 -->
           <div class="account-panel">
             <div class="account-placeholder" :class="active4">Account</div>
@@ -177,12 +177,15 @@
   </div>
 </template>
 <script setup>
-import { ElMessageBox } from 'element-plus'
-import { register } from '@/api'
+import { ElMessageBox ,ElMessage} from 'element-plus'
+import { login, register } from '@/api'
 import { ref, reactive, computed } from 'vue'
 import { useStore } from 'vuex'
 const { state, dispatch } = useStore()
 
+
+// let registerVisibility = ref('hidden')
+// let loginVisibility = ref('visible')
 // 绑定注册相关数据
 let registerData = reactive({
   nick_name: '',
@@ -199,16 +202,26 @@ const registerAccount = async () => {
     password: registerData.password,
   }
 
-  if (data.account && data.nick_name && data.password) {
-    if (registerData.confirmPassword == data.password) {
-      let result = register(data)
+  if (data.account && data.nick_name && data.password&&registerData.confirmPassword == data.password) {
+  //   if () {
+      let result = await register(data)
       console.log(result)
-    } else {
-      ElMessageBox.alert('两次输入密码不一致', 'ERROR', {
+      maskStyle.value = 'mask-login'
+
+       
+  // registerOpacity = 0
+  //   } else {
+  //     ElMessageBox.alert('两次输入密码不一致', 'ERROR', {
+  //       confirmButtonText: '确定',
+  //       lockScroll: false,
+  //     })
+  //   }
+  } else if (registerData.confirmPassword !== data.password) {
+         ElMessageBox.alert('两次输入密码不一致', 'ERROR', {
         confirmButtonText: '确定',
         lockScroll: false,
       })
-    }
+    
   } else {
     ElMessageBox.alert('请补注册全信息', 'ERROR', {
       confirmButtonText: '确定',
@@ -227,6 +240,7 @@ let loginData = reactive({
 const userLogin = async () => {
   if (loginData.account && loginData.password) {
     let result = await dispatch('reqLogin', loginData)
+    console.log(result)
     if (!result.success) {
       ElMessageBox.alert('账号或密码错误', 'ERROR', {
       confirmButtonText: '确定',
@@ -234,6 +248,10 @@ const userLogin = async () => {
       })
     
     } else {
+      ElMessage({
+      message: '登录成功',
+      type: 'success',
+    })
       // 关闭登录窗口
       state.showUserModal = false
     }
@@ -286,8 +304,7 @@ const seePsw = (e) => {
 }
 
 // 切换注册/登录页面
-let showRegister = ref(false)
-let showLogin = ref(true)
+
 
 let maskStyle = ref('mask-login')
 
@@ -295,19 +312,19 @@ let maskStyle = ref('mask-login')
 const toRegister = () => {
   maskStyle.value = 'mask-register'
   // 隐藏登录面板,显示注册面板
-  showRegister.value = true
-  setTimeout(() => {
-    showLogin.value = false
-  }, 500)
+  // showRegister.value = true
+  // setTimeout(() => {
+  //   showLogin.value = false
+  // }, 500)
 }
 // to登陆页面
 const toLogin = () => {
   maskStyle.value = 'mask-login'
   // 隐藏注册面板,显示登录面板
-  showLogin.value = true
-  setTimeout(() => {
-    showRegister.value = false
-  }, 500)
+  // showLogin.value = true
+  // setTimeout(() => {
+  //   showRegister.value = false
+  // }, 500)
 }
 </script>
 <style scoped>
@@ -486,6 +503,7 @@ const toLogin = () => {
 }
 .background1,
 .background2 {
+  background-color: #fff;
   position: relative;
   /* width: 800px; */
   width: 100%;
