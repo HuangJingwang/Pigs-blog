@@ -1,5 +1,6 @@
 package com.pigs.blog.service;
 
+import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.request.ArticlesGroupCreateRequest;
 import com.pigs.blog.contract.request.ArticlesGroupListRequest;
 import com.pigs.blog.contract.request.ArticlesGroupUpdateRequest;
@@ -12,9 +13,9 @@ import java.util.List;
 public interface ArticlesGroupInterface {
     List<ArticlesGroupListResponse> list(ArticlesGroupListRequest request);
 
-    void create(ArticlesGroupCreateRequest request);
+    ResultResponse create(ArticlesGroupCreateRequest request);
 
     void deleteById(Long id);
 
-    void update(ArticlesGroupUpdateRequest request);
+    ResultResponse update(ArticlesGroupUpdateRequest request, Long id);
 }

@@ -1,10 +1,10 @@
 import requests from './requests'
 
 // 获取首页文章列表数据
-export const getArticleList = (pageNo = 0 ,author) => {
+export const getArticleList = (pageNo = 0, author) => {
   return requests({
     method: 'GET',
-    url:`/articles/getArticlesPageData?pageNo=${pageNo}`
+    url: `/articles/getArticlesPageData?pageNo=${pageNo}`,
   })
 }
 
@@ -22,10 +22,10 @@ export const getArchives = (author) => {
   // })
   // }
 
-    return requests({
-        method: 'GET',
-        url: '/articles/listArticles'
-    })
+  return requests({
+    method: 'GET',
+    url: '/articles/listArticles',
+  })
 }
 // 获取分类列表数据
 export const getGroupListData = () => {
@@ -43,7 +43,7 @@ export const getTagList = () => {
 }
 
 // 创建新标签
-export const createNewTag = data => {
+export const createNewTag = (data) => {
   return requests({
     method: 'POST',
     url: '/articles-tags/create',
@@ -52,26 +52,26 @@ export const createNewTag = data => {
 }
 
 // 删除标签
-export const deleteTags = id => {
+export const deleteTags = (id) => {
   return requests({
     method: 'POST',
     url: `/articles-tags/delete/${id}`,
   })
 }
 // 保存文章
-export const saveArticle = data => {
+export const saveArticle = (data) => {
   return requests({
     method: 'POST',
     url: '/articles/save',
-    data:data
+    data: data,
   })
 }
 // 更新文章
-export const updateArticle = (data,id )=> {
+export const updateArticle = (data, id) => {
   return requests({
     method: 'POST',
     url: `/articles/update/${id}`,
-    data:data
+    data: data,
   })
 }
 
@@ -80,15 +80,15 @@ export const login = (data) => {
   return requests({
     method: 'POST',
     url: '/user/login',
-    data:data
+    data: data,
   })
 }
 // 注册
-export const register = data => {
+export const register = (data) => {
   return requests({
-    method:'POST',
+    method: 'POST',
     url: '/user/registry',
-    data:data
+    data: data,
   })
 }
 
@@ -96,6 +96,6 @@ export const register = data => {
 export const logout = () => {
   return requests({
     method: 'POST',
-    url:'/user/logout'
+    url: '/user/logout',
   })
 }

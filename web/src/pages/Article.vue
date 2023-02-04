@@ -33,7 +33,7 @@ const articleData = reactive({
   theme: 'dark',
   text: '# 1\n123456\n## 234  \n123456456\n### 3\nagjaiong\nwjaihgiu\n## afhiu\n#### 4\n##### 5\n###### 6',
   id: 'my-editor',
-  distance: 300,
+  distance: 400,
 })
 const test = () => {
   console.log(window.scrollY)

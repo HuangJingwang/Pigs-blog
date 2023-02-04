@@ -52,8 +52,8 @@ public class ArticlesGroupController {
     })
     @ApiOperation(value = "编辑", notes = "", httpMethod = "POST")
     @RequestMapping(value = "update/{id}", method = RequestMethod.POST, produces = "application/json")
-    public ResultResponse updateArticlesGroup(@RequestBody @Valid ArticlesGroupUpdateRequest request){
-        groupInterface.update(request);
+    public ResultResponse updateArticlesGroup(@RequestBody @Valid ArticlesGroupUpdateRequest request, @PathVariable Long id){
+        groupInterface.update(request, id);
         return ResultResponse.success(null);
     }
 
