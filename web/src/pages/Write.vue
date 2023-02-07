@@ -8,14 +8,19 @@
         v-model="articleTitle"
       />
       <div class="right">
-        <div class="saveInfo">文章将保存至草稿箱</div>
+        <div class="saveInfo">{{ saveInfo }}</div>
         <button class="draft">草稿箱</button>
         <button class="public" @click="showConfigBox" ref="pubBtn">发布</button>
         <div class="user">头像</div>
       </div>
     </div>
 
-    <MdEditor v-model="articlesText" class="editor"></MdEditor>
+    <MdEditor
+      v-model="articlesText"
+      @on-change="autosave"
+      @onSave="handleSave"
+      class="editor"
+    ></MdEditor>
     <!-- 配置发布文章相关属性 -->
     <div class="configBox" v-show="isShowConfig" ref="configBox">
       <div class="header">发布文章</div>
@@ -92,7 +97,7 @@
               placeholder="Please input"
               maxlength="100"
             />
-            <span class="number">{{ data.introduction.length }}/100</span>
+            <span class="number">{{ articleIntroduction.length }}/100</span>
           </div>
         </div>
         <!-- 添加封面 -->
@@ -118,14 +123,40 @@ import { ElMessage } from 'element-plus'
 import { useStore } from 'vuex'
 import { reactive, onMounted, ref, watch, computed } from 'vue'
 import { createNewTag, deleteTags, saveArticle, updateArticle } from '@/api'
+// import debounce from '@/utils/debounce'
 import MdEditor from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import UploadImg from '@/components/UploadImg.vue'
 import { SelectProps } from 'element-plus/es/components/select-v2/src/defaults'
+import { ElMessageBox } from 'element-plus'
+import { declareExportDeclaration } from '@babel/types'
 // const MdCatalog = MdEditor.MdCatalog
 const scrollElement = document.documentElement
-const { state, dispatch } = useStore()
 
+const { state, dispatch } = useStore()
+// 创建初始文章及数据
+let saveInfo = ref('文章将保存至草稿箱')
+let articleId = ref()
+let articleTitle = ref('')
+let articleIntroduction = ref('')
+let articlesText = ref('')
+// 文章数据
+let data = reactive({
+  account: '123',
+  articles_text: 'null',
+  author: 'test',
+  group_id: 0,
+  status: 'draft',
+  introduction: 'null',
+  tags: 'null',
+  title: 'null',
+})
+
+onMounted(async () => {
+  let result = await saveArticle(data)
+  articleId.value = result.data.id
+  console.log(result)
+})
 // 控制文章模块显示与隐藏
 let configBox = ref(null)
 let pubBtn = ref(null)
@@ -144,26 +175,6 @@ const hideConfig = (e) => {
 const cancelPub = () => {
   isShowConfig.value = false
 }
-
-let articleTitle = ref('')
-let articleIntroduction = ref('')
-let articlesText = ref('')
-// 文章数据
-let data = reactive({
-  articles_text: 'null',
-  author: 'test',
-  group_id: 0,
-  status: 'draft',
-  introduction: 'null',
-  tags: 'null',
-  title: 'null',
-})
-
-onMounted(async () => {
-  let result = await saveArticle(data)
-  console.log(result)
-})
-
 // 选择group_id
 const group_id = ref([])
 // 配置联级选择器
@@ -179,7 +190,6 @@ const addGroupId = () => {
 }
 
 // 判断是否选中此tag
-
 // 选择tags
 let tagList = computed(() => {
   return state.tagList
@@ -241,28 +251,87 @@ const editorTags = () => {
   editorTag.value = !editorTag.value
   tagDisabled.value = !tagDisabled.value
 }
+
+// function debounce(fn,wait=1500){
+//         let timeout = null
+//         return function(){
+//             if(timeout){//如果存在定时器就清空
+//                 clearTimeout(timeout)
+//             }
+//             timeout=setTimeout(function(){
+//                 fn()
+//             },wait)
+//         }
+//     }
+// 自动保存
+const handleSave = () => {
+  // console.log(1234)
+}
+
+let t = null
+const autosave = () => {
+  updateDraft()
+}
+// 更新草稿数据
+const updateDraft = () => {
+  if (t !== null) {
+    clearTimeout(t)
+  }
+  t = setTimeout(async () => {
+    // console.log(123)
+    data.articles_text = articlesText.value ? articlesText.value : 'null'
+    data.introduction = articleIntroduction.value ? articleIntroduction : 'null'
+    data.title = articleTitle.value  ? articleTitle.value : 'null'
+    data.tags = tags.join(',') ? tags.join(',') : 'null'
+    console.log(data)
+    saveInfo.value = '保存中...'
+    let result = await updateArticle(data, articleId.value) 
+    console.log(result)
+    if (result.success) {
+      saveInfo.value = '文章已保存'
+    }
+  }, 1000)
+}
+
 // 保存文章
 
 const handleSaveArticle = async () => {
+  // 更新数据
   data.status = 'published'
-  data.articles_text = articleTitle
-  data.introduction = articleIntroduction
-  data.title = articleTitle
+  data.articles_text = articlesText.value
+  data.introduction = articleIntroduction.value
+  data.title = articleTitle.value
   data.tags = tags.join(',')
   console.log(data)
-  if (data.articles_text && data.group_id && data.title&&data.introduction) {
-    let result = await updateArticle(data)
+  console.log(articleId.value)
+  if (data.articles_text && data.group_id && data.title && data.introduction) {
+    let result = await updateArticle(data, articleId.value) 
     console.log(result)
     if (result.success) {
-      ElMessage({
-        message: '保存成功.',
+      ElMessageBox.confirm('文章已发布,您将离开此页面', '发布成功', {
+        confirmButtonText: '确定',
         type: 'success',
+        center: true,
+        showClose: false,
+        lockScroll: false,
+        showCancelButton: false,
+      }).then(() => {
+        window.close()
+        // ElMessage({
+        //   type: 'success',
+        //   message: 'Delete completed',
+        // })
       })
       data.articles_text = ''
       data.group_id = ''
       data.title = ''
       data.tags = ''
       data.introduction = ''
+    } else {
+      ElMessage({
+      message: 'error',
+      type: 'error',
+    })
     }
   } else if (!data.articles_text) {
     ElMessage({
@@ -279,7 +348,7 @@ const handleSaveArticle = async () => {
       message: '请添加分类.',
       type: 'warning',
     })
-  }else if (!data.introduction) {
+  } else if (!data.introduction) {
     ElMessage({
       message: '请添输入摘要.',
       type: 'warning',
@@ -427,6 +496,8 @@ const handleSaveArticle = async () => {
 .addTags .tag_box {
   display: flex;
   flex-direction: column;
+  /* justify-content: start; */
+  /* background-color: pink; */
 }
 .addTags {
   position: relative;
@@ -441,6 +512,8 @@ const handleSaveArticle = async () => {
 .tagOptions {
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
   /* height: 110px;
   overflow: scroll; */
 }
@@ -515,8 +588,9 @@ const handleSaveArticle = async () => {
   width: 50px;
   height: 30px;
   line-height: 30px;
-  background-color: blue;
+  background-color: rgb(70, 70, 171);
   float: right;
+  font-size: 12px;
 }
 .isMust {
   color: rgb(224, 8, 8);

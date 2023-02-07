@@ -32,8 +32,6 @@ export default createStore({
     groupList: [],
     // 标签列表
     tagList: [],
-    // 页面高度
-    innerHeight: 0,
     // 判断是否弹出登录/注册组件
     showUserModal: false,
   },
