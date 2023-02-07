@@ -58,9 +58,8 @@ public class ArticlesController {
     })
     @ApiOperation(value = "保存", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json")
-    public ResultResponse<ArticlesSaveResponse> saveArticles(@RequestBody @Valid ArticlesCreateRequest request) {
-        ArticlesSaveResponse result = articlesInterface.saveArticles(request);
-        return ResultResponse.success(result);
+    public ResultResponse saveArticles(@RequestBody @Valid ArticlesCreateRequest request) {
+        return articlesInterface.saveArticles(request);
     }
 
     @ApiImplicitParams({

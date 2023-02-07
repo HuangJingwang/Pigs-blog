@@ -12,4 +12,6 @@ public interface LoginService {
     ResultResponse logout();
 
     ResultResponse registry(RegistryRequest request);
+
+    ResultResponse getGitHubUserInfo(String key);
 }

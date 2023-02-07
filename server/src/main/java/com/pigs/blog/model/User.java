@@ -11,6 +11,12 @@ public class User {
 
     private String role;
 
+    private Long githubId;
+
+    private String questionAnswer1;
+
+    private String questionAnswer2;
+
     private Date createAt;
 
     private Date updateAt;
@@ -45,6 +51,30 @@ public class User {
 
     public void setRole(String role) {
         this.role = role == null ? null : role.trim();
+    }
+
+    public Long getGithubId() {
+        return githubId;
+    }
+
+    public void setGithubId(Long githubId) {
+        this.githubId = githubId;
+    }
+
+    public String getQuestionAnswer1() {
+        return questionAnswer1;
+    }
+
+    public void setQuestionAnswer1(String questionAnswer1) {
+        this.questionAnswer1 = questionAnswer1 == null ? null : questionAnswer1.trim();
+    }
+
+    public String getQuestionAnswer2() {
+        return questionAnswer2;
+    }
+
+    public void setQuestionAnswer2(String questionAnswer2) {
+        this.questionAnswer2 = questionAnswer2 == null ? null : questionAnswer2.trim();
     }
 
     public Date getCreateAt() {

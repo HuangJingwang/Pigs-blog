@@ -13,6 +13,8 @@ public class UserInfo {
 
     private Integer articlesCount;
 
+    private String githubUrl;
+
     private Date createAt;
 
     private Date updateAt;
@@ -55,6 +57,14 @@ public class UserInfo {
 
     public void setArticlesCount(Integer articlesCount) {
         this.articlesCount = articlesCount;
+    }
+
+    public String getGithubUrl() {
+        return githubUrl;
+    }
+
+    public void setGithubUrl(String githubUrl) {
+        this.githubUrl = githubUrl == null ? null : githubUrl.trim();
     }
 
     public Date getCreateAt() {

@@ -1,18 +1,17 @@
 package com.pigs.blog.service.impl;
 
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.pigs.blog.common.CommonValue;
 import com.pigs.blog.service.GithubAuthService;
-import org.apache.http.entity.BasicHttpEntity;
+import com.pigs.blog.utils.RedisCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
@@ -21,23 +20,23 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter;
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Source;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class GithubAuthServiceImpl implements GithubAuthService {
     private static final Logger logger = LoggerFactory.getLogger(GithubAuthServiceImpl.class);
+    @Autowired
+    private RedisCache redisCache;
     /**
      * 服务器github的客户端ID
      */
@@ -57,15 +56,16 @@ public class GithubAuthServiceImpl implements GithubAuthService {
     private String REDIRECT_URL;
 
     @Override
-    public String getGithubAuthPath() {
+    public String getGithubAuthPath(String url) {
         logger.info("is login by github");
+
         return String.format(CommonValue.GITHUB_CODE_URL, CLIENT_ID, REDIRECT_URL, CommonValue.STATE);
     }
 
     @Override
-    public String callback(String code) {
+    public void callback(String code, HttpServletResponse resp) {
         String accessToken = getAccessToken(code);
-        return getOpenId(accessToken);
+        getOpenId(accessToken, resp);
     }
 
 
@@ -85,15 +85,26 @@ public class GithubAuthServiceImpl implements GithubAuthService {
 
     }
 
-    public String getOpenId(String accessToken) {
+    public void getOpenId(String accessToken, HttpServletResponse response) {
         String url = CommonValue.GITHUB_USER_URL;
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "token " + accessToken);
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(null, headers);
         ResponseEntity<String> resp = getRestTemplate().exchange(url, HttpMethod.GET, request, String.class);
         String result = resp.getBody();
+
+        UUID uuid = UUID.randomUUID();
+        String uuidStr = uuid.toString().replace("-", "");
+
         logger.error("getAccessToken resp = " + result);
-        return result;
+        String key = "user-info-" + uuidStr;
+        redisCache.setCacheObject(key, result, 30, TimeUnit.MINUTES);
+        try {
+            response.sendRedirect("http://49.233.45.84/#/index?key=" + key);
+        } catch (IOException e) {
+            logger.error("redirect fail:" + "http://49.233.45.84/#/index?key=");
+            e.printStackTrace();
+        }
     }
 
 

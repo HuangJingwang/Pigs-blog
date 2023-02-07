@@ -435,6 +435,76 @@ public class UserInfoExample {
             return (Criteria) this;
         }
 
+        public Criteria andGithubUrlIsNull() {
+            addCriterion("github_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlIsNotNull() {
+            addCriterion("github_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlEqualTo(String value) {
+            addCriterion("github_url =", value, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlNotEqualTo(String value) {
+            addCriterion("github_url <>", value, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlGreaterThan(String value) {
+            addCriterion("github_url >", value, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("github_url >=", value, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlLessThan(String value) {
+            addCriterion("github_url <", value, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlLessThanOrEqualTo(String value) {
+            addCriterion("github_url <=", value, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlLike(String value) {
+            addCriterion("github_url like", value, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlNotLike(String value) {
+            addCriterion("github_url not like", value, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlIn(List<String> values) {
+            addCriterion("github_url in", values, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlNotIn(List<String> values) {
+            addCriterion("github_url not in", values, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlBetween(String value1, String value2) {
+            addCriterion("github_url between", value1, value2, "githubUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andGithubUrlNotBetween(String value1, String value2) {
+            addCriterion("github_url not between", value1, value2, "githubUrl");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateAtIsNull() {
             addCriterion("create_at is null");
             return (Criteria) this;

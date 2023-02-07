@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @ApiModel
 @Data
@@ -25,4 +26,13 @@ public class RegistryRequest {
     @ApiModelProperty("昵称")
     @NotBlank(message = "nickName cannot be blank when registry")
     private String nickName;//昵称
+
+    @ApiModelProperty("github_id")
+    private Long githubId;
+
+    @ApiModelProperty("github_url")
+    private String githubUrl;
+
+    @ApiModelProperty("头像")
+    private String imgUrl;
 }

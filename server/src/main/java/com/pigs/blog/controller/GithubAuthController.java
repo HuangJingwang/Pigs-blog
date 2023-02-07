@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 
 
-@Api(value = "github",tags = "github")
+@Api(value = "github", tags = "github")
 @RestController
 @RequestMapping("/github")
 public class GithubAuthController {
@@ -27,18 +27,20 @@ public class GithubAuthController {
 
     /**
      * 跳转到github的授权登录页面
+     *
      * @param response
      * @throws Exception
      */
     @ApiOperation(value = "跳转到github的授权登录页面", notes = "跳转到github的授权登录页面", httpMethod = "GET")
-    @RequestMapping(value = "/login",method = RequestMethod.GET, produces = "application/json")
-    public void showLoginPage(HttpServletResponse response) throws Exception {
-        String path = githubAuthService.getGithubAuthPath();
+    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = "application/json")
+    public void showLoginPage(HttpServletResponse response, @RequestParam("url") String url) throws Exception {
+        String path = githubAuthService.getGithubAuthPath(url);
         response.sendRedirect(path);
     }
 
     /**
      * 在github页面登录成功后，github会回调这个
+     *
      * @param code
      * @return
      */
@@ -46,10 +48,9 @@ public class GithubAuthController {
             @ApiImplicitParam(paramType = "query", dataType = "string", name = "code", value = "", required = true)
     })
     @ApiOperation(value = "在github页面登录成功后，github会回调这个(前端不用管)", notes = "在github页面登录成功后，github会回调这个", httpMethod = "GET")
-    @RequestMapping(value = "/callback",method = RequestMethod.GET, produces = "application/json")
-    public ResultResponse<String> callback(@RequestParam(value = "code") String code) {
-        String result = githubAuthService.callback(code);
-        return ResultResponse.success(result);
+    @RequestMapping(value = "/callback", method = RequestMethod.GET, produces = "application/json")
+    public void callback(@RequestParam(value = "code") String code, HttpServletResponse resp) {
+        githubAuthService.callback(code, resp);
     }
 }
 

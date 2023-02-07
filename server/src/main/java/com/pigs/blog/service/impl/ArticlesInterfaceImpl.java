@@ -1,7 +1,9 @@
 package com.pigs.blog.service.impl;
 
 import com.pigs.blog.common.ArticlesStatusEnum;
+import com.pigs.blog.common.ErrorCodeEnum;
 import com.pigs.blog.common.PageData;
+import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.request.ArticlesCreateRequest;
 import com.pigs.blog.contract.request.ArticlesListRequest;
 import com.pigs.blog.contract.request.ArticlesPageDataRequest;
@@ -11,7 +13,6 @@ import com.pigs.blog.contract.response.ArticlesPreOrNextResponse;
 import com.pigs.blog.contract.response.ArticlesSaveResponse;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.mapper.UserInfoMapper;
-import com.pigs.blog.mapper.UserMapper;
 import com.pigs.blog.model.Articles;
 import com.pigs.blog.model.ArticlesExample;
 import com.pigs.blog.model.UserInfo;
@@ -28,8 +29,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -170,33 +169,44 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     }
 
     @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public ArticlesSaveResponse saveArticles(ArticlesCreateRequest request) {
-        //保存数据
+    public ResultResponse saveArticles(ArticlesCreateRequest request) {
+        //1.检测draft的当前用户的文章是否大于10,如果大于10就返回错误
+        ArticlesExample articlesExample = new ArticlesExample();
+        ArticlesExample.Criteria articlesCriteria = articlesExample.createCriteria();
+        articlesCriteria.andAccountEqualTo(request.getAccount());
+        articlesCriteria.andStatusEqualTo(ArticlesStatusEnum.DRAFT.getStatus());
+        long count = mapper.countByExample(articlesExample);
+        if (count >= 10) {
+            return ResultResponse.fail(ErrorCodeEnum.DRAFT_IS_OVER_TEN.getCode(), ErrorCodeEnum.DRAFT_IS_OVER_TEN.getMsg());
+        }
+
+        //2.保存数据
         Articles articles = new Articles();
         BeanUtils.copyProperties(request, articles);
         mapper.insertSelective(articles);
 
-        // 修改用户的文章数：文章数加1
+        //3.修改用户的文章数：文章数加1
         UserInfoExample example = new UserInfoExample();
         UserInfoExample.Criteria criteria = example.createCriteria();
         criteria.andAccountEqualTo(request.getAccount());
         List<UserInfo> userInfos = userInfoMapper.selectByExample(example);
+
         if (CollectionUtils.isEmpty(userInfos)) {
-            logger.error("add articlesCount fail:because cannot find account + " + request.getAccount());
-            return null;
+            logger.error("add articlesCount fail:because cannot find account: " + request.getAccount());
+            return ResultResponse.fail(10004, "account not exist");
         }
+
         UserInfo userInfo = CollectionUtils.firstElement(userInfos);
         userInfo.setArticlesCount(userInfo.getArticlesCount() + 1);
         userInfoMapper.updateByPrimaryKey(userInfo);
 
-        //返回当前的id
+        //4.返回当前的id
         Long id = mapperExt.getMaxId();
         articles.setId(id);
         ArticlesSaveResponse result = new ArticlesSaveResponse();
         BeanUtils.copyProperties(articles, result);
 
-        return result;
+        return ResultResponse.success(result);
     }
 
     private List<ArticlesListResponse> copyList(List<Articles> list) {

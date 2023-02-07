@@ -4,12 +4,14 @@ import com.pigs.blog.common.PageData;
 import com.pigs.blog.contract.request.UserInfoPageDataRequest;
 import com.pigs.blog.contract.response.ArticlesListResponse;
 import com.pigs.blog.contract.response.UserInfoPageDataResponse;
+import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.mapper.UserInfoMapper;
 import com.pigs.blog.mapper.ext.UserInfoMapperExt;
 import com.pigs.blog.model.Articles;
 import com.pigs.blog.model.UserInfo;
 import com.pigs.blog.model.criteria.UserInfoPageCriteria;
 import com.pigs.blog.service.UserInfoService;
+import com.pigs.blog.utils.RedisCache;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,10 +23,9 @@ import java.util.List;
 @Component
 public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
-    private UserInfoMapper userInfoMapper;
-    @Autowired
     private UserInfoMapperExt userInfoMapperExt;
-
+    @Autowired
+    private ArticlesMapper articlesMapper;
     @Override
     public PageData<UserInfoPageDataResponse> getPageData(UserInfoPageDataRequest request) {
         PageData<UserInfoPageDataResponse> result = new PageData<>();
