@@ -7,24 +7,24 @@
         没有文章
       </div> -->
 
-      <div class="articles">
+      <div class="articles" @click="toArticle">
         <div
           class="articleCard basic-box"
           v-for="(article, index) in articleList"
           :key="article.id"
-          @click="$router.push('/article')"
         >
           <!-- 图片 -->
           <div
             class="articleImg"
             :class="index % 2 == 0 ? ' articleImg-left' : 'articleImg-right'"
+            :data-id="article.id"
           ></div>
           <!-- 文章描述信息 -->
           <div
             class="articleInfo articleInfo-right"
             :class="index % 2 == 0 ? 'articleInfo-right' : 'articleInfo-left'"
           >
-            <h1 class="title">{{ article.title }}</h1>
+            <h1 class="title" :data-id="article.id">{{ article.title }}</h1>
             <div class="breads">
               <div class="data">
                 <span class="iconfont"></span>
@@ -33,7 +33,7 @@
               <div class="category">学习笔记</div>
               <div class="tags">css</div>
             </div>
-            <div class="detail">
+            <div class="detail" :data-id="article.id">
               图片裁剪处clip-path 可以把图片自己的需要裁剪出各种形状
               ,图片裁剪处clip-path 可以把图片自己的需要裁剪出各种形状
             </div>
@@ -62,9 +62,14 @@
 
 <script setup>
 import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
 import IndexBackground from '@/components/IndexBackground'
 import { ref, onMounted, computed } from 'vue'
+import { isBoolean } from 'lodash'
 const { dispatch, state } = useStore()
+const route = useRoute()
+const router = useRouter()
+
 // 渲染首页列表数据
 // 获取数据
 let articleList = computed(() => {
@@ -76,7 +81,6 @@ onMounted(() => {
     dispatch('reqArticleData')
   }
 })
-
 // 点击获取更多文章
 // 获取当前文章页数
 let hasNext = computed(() => {
@@ -100,6 +104,36 @@ onMounted(() => {
       components.value.style.top = 90 + 'px'
     }
   })
+})
+
+// 跳转至文章详情页
+const toArticle = (e) => {
+  // console.log(123)
+  let id = e.target.dataset.id
+  if (id) {
+    state.user.key = '1234'
+    console.log(id)
+    router.push({
+      path: '/article',
+      query: {
+        id: id,
+      },
+    })
+  }
+}
+
+onMounted(() => {
+  // 获取key 并存储
+  // 将key存入state中
+
+  let key = route.query.key //获取key
+  console.log(key)
+  let status = sessionStorage.getItem('status')
+  if (status === 'active' && key) {
+    // 存储key
+    state.user.key = key
+    sessionStorage.setItem('key', key)
+  }
 })
 </script>
 

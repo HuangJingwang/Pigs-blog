@@ -11,6 +11,9 @@ export default createStore({
     // 用户登陆数据
     user: {
       isLogin: 'false',
+      key: '' ,//三方登录key
+         // 判断是否弹出登录/注册组件
+    showUserModal: false,
     },
     // 首页文章列表数据
     articleData: {
@@ -32,8 +35,7 @@ export default createStore({
     groupList: [],
     // 标签列表
     tagList: [],
-    // 判断是否弹出登录/注册组件
-    showUserModal: false,
+ 
   },
 
   getter: {},

@@ -154,7 +154,23 @@ let data = reactive({
 
 onMounted(async () => {
   let result = await saveArticle(data)
+  if (result.code = 10006) {
+    ElMessageBox.confirm('草稿箱已满,请清理草稿箱', 'warning', {
+        confirmButtonText: '确定',
+        type: 'warning',
+        center: true,
+        showClose: false,
+        lockScroll: false,
+        showCancelButton: false,
+      }).then(() => {
+    // dispatch('reqArticleData')
+
+        window.close()
+      })
+  } else {
   articleId.value = result.data.id
+    
+  }
   console.log(result)
 })
 // 控制文章模块显示与隐藏
@@ -175,6 +191,7 @@ const hideConfig = (e) => {
 const cancelPub = () => {
   isShowConfig.value = false
 }
+
 // 选择group_id
 const group_id = ref([])
 // 配置联级选择器
@@ -265,15 +282,15 @@ const editorTags = () => {
 //     }
 // 自动保存
 const handleSave = () => {
-  // console.log(1234)
+  updateDraft()
 }
-
 let t = null
 const autosave = () => {
-  updateDraft()
+  // updateDraft()
 }
 // 更新草稿数据
 const updateDraft = () => {
+  saveInfo.value = '文章将保存草稿至箱'
   if (t !== null) {
     clearTimeout(t)
   }
@@ -290,7 +307,7 @@ const updateDraft = () => {
     if (result.success) {
       saveInfo.value = '文章已保存'
     }
-  }, 1000)
+  }, 8000)
 }
 
 // 保存文章
@@ -316,11 +333,9 @@ const handleSaveArticle = async () => {
         lockScroll: false,
         showCancelButton: false,
       }).then(() => {
+    // dispatch('reqArticleData')
+
         window.close()
-        // ElMessage({
-        //   type: 'success',
-        //   message: 'Delete completed',
-        // })
       })
       data.articles_text = ''
       data.group_id = ''
@@ -605,4 +620,8 @@ const handleSaveArticle = async () => {
   right: 0;
   bottom: -15px;
 }
+
+
+
+
 </style>

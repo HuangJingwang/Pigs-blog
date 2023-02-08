@@ -3,7 +3,7 @@
     <div class="coverImg" :style="{ backgroundImage: `url(${imgUrl})` }"></div>
     <div class="headline">
       <div class="mainTitle" @click="test">
-        <span class="logo">logo</span>
+        <div class="logo"></div>
         <p class="title">Pigs-blog</p>
       </div>
       <TypeWriter></TypeWriter>
@@ -58,6 +58,14 @@ console.log
 }
 
 /* 居中标题及logo */
+
+/* logo */
+.mainTitle .logo{
+  width: 65px;
+  height: 65px;
+  background-size: contain;
+  background-image: url(@/assets/img/logo.png);
+}
 .cover .headline {
   position: absolute;
   top: 50%;
@@ -67,24 +75,32 @@ console.log
 }
 
 .headline .mainTitle {
+  display: flex;
+  align-items: center;
+  /* justify-content: ; */
+  justify-content: center;
   text-align: center;
   margin-bottom: 5px;
 }
 .logo,
 .title {
-  display: inline-block;
-  color: #fff;
   height: 50px;
   line-height: 50px;
 }
-.headline .logo {
+.headline  {
   font-size: 45px;
   margin-right: 15px;
 }
 .headline .title {
+  margin-left: 10px;
   font-size: 32px;
+  font-weight: 900;
+font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: rgb(230, 230, 230);
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
 }
+
+ /* 下拉按钮 */
 .cover .scrollToMain {
   width: 200px;
   display: flex;

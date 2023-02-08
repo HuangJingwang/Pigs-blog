@@ -1,18 +1,15 @@
 <template>
-
   <router-view></router-view>
   <Footer v-if="$route.meta.showComponent"></Footer>
-  <UserModal v-show="showUserModal"></UserModal>
+  <UserModal ></UserModal>
   <Header
     v-if="$route.meta.showComponent"
-    :showUserModal="showUserModal"
   ></Header>
 </template>
 
 <script setup>
 import { toRef, computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-// import { useRoute, useRouter } from 'vue-router'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 import UserModal from './components/UserModal.vue'
@@ -21,7 +18,6 @@ const { state, dispatch } = useStore()
 let innerHeight = ref(0)
 innerHeight.value = window.innerHeight
 
-const showUserModal = ref(true)
 
 onMounted(() => {
   dispatch('reqGroupList')

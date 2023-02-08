@@ -8,6 +8,31 @@ export const getArticleList = (pageNo = 0, author) => {
   })
 }
 
+
+// 获取文章详情数据
+export const getArticleDetail = id => {
+  return requests({
+    method: 'GET',
+    url:`/articles/detail/${id}`
+  })
+}
+
+//上一篇文章
+export const getPreArticle = id => {
+  return requests({
+    methods: 'GET',
+    url:`/articles/getPreArticle/${id}`
+  })
+}
+
+
+//下一篇文章
+export const getNextArticle = id => {
+  return requests({
+    methods: 'GET',
+    url:`/articles/getNextArticle/${id}`
+  })
+}
 // 归档数据
 export const getArchives = (author) => {
   // if (author !=='') {
@@ -97,5 +122,14 @@ export const logout = () => {
   return requests({
     method: 'POST',
     url: '/user/logout',
+  })
+}
+
+
+// 三方登录获取信息
+export const getThree_partInfo = (key) => {
+  return requests({
+    method: 'GET',
+    url: `/user/getGithubUserInfo/?key=${key}`,
   })
 }

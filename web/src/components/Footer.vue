@@ -1,5 +1,7 @@
 <template>
-  <div class="footer">这里是底部信息栏</div>
+  <div class="footer">
+  <a href="https://beian.miit.gov.cn/" target="_blank">鄂ICP备2023001057号</a>
+  </div>
 </template>
 
 <script>

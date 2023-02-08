@@ -2,7 +2,7 @@
   <div>
     <el-dialog
       class="dialog"
-      v-model="state.showUserModal"
+      v-model="state.user.showUserModal"
       :lock-scroll="false"
       :append-to-body="true"
       :show-close="false"
@@ -26,7 +26,7 @@
 
       <div class="container">
         <!-- 注册 -->
-        <div class="register-container"  >
+        <div class="register-container">
           <!-- 昵称 -->
           <div class="nickname-panel">
             <div class="nickname-placeholder" :class="active0">Nickname</div>
@@ -115,7 +115,7 @@
           </div>
         </div>
         <!-- 登录 -->
-        <div class="login-container" >
+        <div class="login-container">
           <!-- 账户 -->
           <div class="account-panel">
             <div class="account-placeholder" :class="active4">Account</div>
@@ -159,14 +159,20 @@
             Login
           </el-button>
           <div class="link-panel">
-            <el-link><div class="retrieve">忘记密码?</div></el-link>
+            <el-link>
+              <div class="retrieve" @click="recoverPassword">忘记密码?</div>
+            </el-link>
             <el-link class="noAccount">
               <div class="noAccount" @click="toRegister">立即注册</div>
             </el-link>
           </div>
           <div class="thirdLogin">
             <el-divider><div class="link">第三方登录</div></el-divider>
-            <a href="http://49.233.45.84:6533/github/login" class="github">
+            <a
+              href="http://49.233.45.84:6533/github/login"
+              class="github"
+              @click="getTree_partKey"
+            >
               <span class="githubLogin iconfont icon-GitHub"></span>
             </a>
           </div>
@@ -177,12 +183,12 @@
   </div>
 </template>
 <script setup>
-import { ElMessageBox ,ElMessage} from 'element-plus'
-import { login, register } from '@/api'
-import { ref, reactive, computed } from 'vue'
+import { ElMessageBox, ElMessage } from 'element-plus'
+import { register, getThree_partInfo } from '@/api'
+import { useRoute } from 'vue-router'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 const { state, dispatch } = useStore()
-
 
 // let registerVisibility = ref('hidden')
 // let loginVisibility = ref('visible')
@@ -192,36 +198,107 @@ let registerData = reactive({
   account: '',
   password: '',
   confirmPassword: '',
+  github_url: '',
+  github_id: 0,
+  // avatar_url:''//头像
+  isThreePart: false,
 })
 
+const getTree_partKey = () => {
+  sessionStorage.setItem('status', 'active')
+}
+onMounted(async () => {
+  // 三方注册数据
+  let status = sessionStorage.getItem('status')
+  let key = sessionStorage.getItem('key')
+  // status 为 active ，且key不为''时，表示成功获取到了第三方的key
+  console.log(status)
+  console.log(key)
+  if (status === 'active' && key) {
+    console.log(key)
+    console.log(status)
+    let result = await getThree_partInfo(key)
+    // 整理数据
+    console.log(result)
+    // 若已注册,直接登录,若未注册,则将填入注册信息
+    if (result.code == 200) {
+      // 自动填入账号
+      registerData.account = result.data.login
+      registerData.github_id = result.data.id
+      registerData.github_url = result.data.html_url
+      // registerData.avatar_url = result.data.avatar_url
+      registerData.isThreePart = true
+      state.user.showUserModal = true
+      toRegister()
+    } else if (result.code == 10007) {
+      console.log(result.msg)
+    } else {
+      console.log('error')
+    }
+    // status 为active ,key为'',表示获取key失败,链接超时或网络代理错误
+    sessionStorage.removeItem('key')
+    sessionStorage.removeItem('status')
+  } else if (status === 'active' && key === null) {
+    // 未知错误
+    console.log('unknownError')
+    sessionStorage.removeItem('status')
+  }
+})
 // 注册账号
 const registerAccount = async () => {
-  const data = {
-    account: registerData.account,
-    nick_name: registerData.nick_name,
-    password: registerData.password,
+  let data = {}
+  if (!registerData.isThreePart) {
+    data = {
+      account: registerData.account,
+      nick_name: registerData.nick_name,
+      password: registerData.password,
+    }
+  } else {
+    data = {
+      account: registerData.account,
+      nick_name: registerData.nick_name,
+      password: registerData.password,
+      github_id: registerData.github_id,
+      github_url: registerData.github_url,
+      // avatar_url:registerData.avatar_url
+    }
   }
-
-  if (data.account && data.nick_name && data.password&&registerData.confirmPassword == data.password) {
-  //   if () {
-      let result = await register(data)
-      console.log(result)
-      maskStyle.value = 'mask-login'
-
-       
-  // registerOpacity = 0
-  //   } else {
-  //     ElMessageBox.alert('两次输入密码不一致', 'ERROR', {
-  //       confirmButtonText: '确定',
-  //       lockScroll: false,
-  //     })
-  //   }
+  console.log(data)
+  console.log(registerData)
+  if (
+    data.account &&
+    data.nick_name &&
+    data.password &&
+    registerData.confirmPassword == data.password
+  ) {
+    let result = await register(data)
+    console.log(result.code)
+    if (result.code === 200) {
+      //自动填写登录数据
+      loginData.account = registerData.account
+      loginData.password = registerData.password
+      toLogin()
+      // 注册成功清空数据
+      setTimeout(() => {
+        registerData.nick_name = ''
+        registerData.account = ''
+        registerData.password = ''
+        registerData.confirmPassword = ''
+        registerData.github_id = ''
+        registerData.github_url = ''
+        registerData.avatar_url = ''
+        registerData.isThreePart = false
+        data = {}
+      }, 500)
+      // 填上登录数据
+    } else if (result.code === 10005) {
+      console.log(result.msg)
+    }
   } else if (registerData.confirmPassword !== data.password) {
-         ElMessageBox.alert('两次输入密码不一致', 'ERROR', {
-        confirmButtonText: '确定',
-        lockScroll: false,
-      })
-    
+    ElMessageBox.alert('两次输入密码不一致', 'ERROR', {
+      confirmButtonText: '确定',
+      lockScroll: false,
+    })
   } else {
     ElMessageBox.alert('请补注册全信息', 'ERROR', {
       confirmButtonText: '确定',
@@ -243,17 +320,16 @@ const userLogin = async () => {
     console.log(result)
     if (!result.success) {
       ElMessageBox.alert('账号或密码错误', 'ERROR', {
-      confirmButtonText: '确定',
-      lockScroll: false,
+        confirmButtonText: '确定',
+        lockScroll: false,
       })
-    
     } else {
       ElMessage({
-      message: '登录成功',
-      type: 'success',
-    })
+        message: '登录成功',
+        type: 'success',
+      })
       // 关闭登录窗口
-      state.showUserModal = false
+      state.user.showUserModal = false
     }
   } else {
     ElMessageBox.alert('请填写账号和密码', 'ERROR', {
@@ -287,6 +363,11 @@ const changePlaceholder = (e, value) => {
   }
 }
 
+// 找回密码
+const recoverPassword = () => {
+  console.log(123)
+}
+
 // 显示/隐藏密码
 let status0 = ref('password')
 let status1 = ref('password')
@@ -305,12 +386,12 @@ const seePsw = (e) => {
 
 // 切换注册/登录页面
 
-
 let maskStyle = ref('mask-login')
 
 // to注册页面
 const toRegister = () => {
   maskStyle.value = 'mask-register'
+  console.log(maskStyle.value)
   // 隐藏登录面板,显示注册面板
   // showRegister.value = true
   // setTimeout(() => {
@@ -320,12 +401,25 @@ const toRegister = () => {
 // to登陆页面
 const toLogin = () => {
   maskStyle.value = 'mask-login'
+  console.log(123)
   // 隐藏注册面板,显示登录面板
   // showLogin.value = true
   // setTimeout(() => {
   //   showRegister.value = false
   // }, 500)
 }
+
+// 三方登陆
+// 获取key
+// let key = computed(() => {
+//   return state.user.key
+// })
+// let three_partRegister = reactive({
+//   nick_name: '',
+//   account: '',
+//   password: '',
+
+// })
 </script>
 <style scoped>
 .container {
@@ -334,6 +428,7 @@ const toLogin = () => {
   height: 300px;
   padding-bottom: 15px;
 }
+
 .register-container {
   margin-right: 20px;
 }

@@ -35,7 +35,7 @@ const state = reactive({
   theme: 'dark',
   text: '# 1\n123\n## 2\n### 3\n#### 4\n##### 5\n###### 6',
   id: 'my-editor',
-  scrollElementOffsetTop: 300,
+  scrollElementOffsetTop: 100,
 })
 
 const catalog = ref(null)
