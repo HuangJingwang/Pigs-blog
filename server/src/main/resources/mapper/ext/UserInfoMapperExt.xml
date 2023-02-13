@@ -23,4 +23,12 @@
         <include refid="pageByCriteria"/>
     </select>
 
+    <select id="selectUserInfoByAccount" resultType="com.pigs.blog.model.UserInfo">
+        select
+        <include refid="com.pigs.blog.mapper.UserInfoMapper.Base_Column_List"/>
+        from user_info
+        where account = #{account}
+        limit 1
+    </select>
+
 </mapper>

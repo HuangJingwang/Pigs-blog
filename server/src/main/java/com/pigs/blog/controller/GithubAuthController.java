@@ -33,7 +33,7 @@ public class GithubAuthController {
      */
     @ApiOperation(value = "跳转到github的授权登录页面", notes = "跳转到github的授权登录页面", httpMethod = "GET")
     @RequestMapping(value = "/login", method = RequestMethod.GET, produces = "application/json")
-    public void showLoginPage(HttpServletResponse response, @RequestParam("url") String url) throws Exception {
+    public void showLoginPage(HttpServletResponse response, @RequestParam(name = "url", required = false) String url) throws Exception {
         String path = githubAuthService.getGithubAuthPath(url);
         response.sendRedirect(path);
     }

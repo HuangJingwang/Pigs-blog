@@ -24,8 +24,6 @@ import java.util.List;
 public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
     private UserInfoMapperExt userInfoMapperExt;
-    @Autowired
-    private ArticlesMapper articlesMapper;
     @Override
     public PageData<UserInfoPageDataResponse> getPageData(UserInfoPageDataRequest request) {
         PageData<UserInfoPageDataResponse> result = new PageData<>();

@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-@Api(value = "pigs-blog/picture",tags = "图片接口")
+@Api(value = "pigs-blog/picture", tags = "图片接口")
 @RestController
 @RequestMapping("pigs-blog/picture")
 public class PictureController {

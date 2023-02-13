@@ -104,8 +104,10 @@ public class ArticlesController {
     public ResultResponse<List<ArticlesListResponse>> listArticlesByGroupId(
             @RequestParam(value = "groupId", required = false) Integer groupId,
             @RequestParam(value = "tags", required = false) String tags,
-            @RequestParam(value = "account", required = false) String account) {
+            @RequestParam(value = "account", required = false) String account,
+            @RequestParam(value = "status", required = false) String status) {
         ArticlesListRequest request = new ArticlesListRequest();
+        request.setStatus(status);
         request.setTags(tags);
         request.setGroupId(groupId);
         request.setAccount(account);
@@ -118,7 +120,7 @@ public class ArticlesController {
     })
     @ApiOperation(value = "上一篇文章", notes = "", httpMethod = "GET")
     @RequestMapping(value = "/getPreArticle/{id}", method = RequestMethod.GET, produces = "application/json")
-    public ResultResponse<ArticlesPreOrNextResponse> getPreArticle(@PathVariable("id") Long id){
+    public ResultResponse<ArticlesPreOrNextResponse> getPreArticle(@PathVariable("id") Long id) {
         ArticlesPreOrNextResponse result = articlesInterface.findPreArticle(id);
         return ResultResponse.success(result);
     }
@@ -128,7 +130,7 @@ public class ArticlesController {
     })
     @ApiOperation(value = "下一篇文章", notes = "", httpMethod = "GET")
     @RequestMapping(value = "/getNextArticle/{id}", method = RequestMethod.GET, produces = "application/json")
-    public ResultResponse<ArticlesPreOrNextResponse> getNextArticle(@PathVariable("id") Long id){
+    public ResultResponse<ArticlesPreOrNextResponse> getNextArticle(@PathVariable("id") Long id) {
         ArticlesPreOrNextResponse result = articlesInterface.findNextArticle(id);
         return ResultResponse.success(result);
     }

@@ -7,8 +7,10 @@ import com.pigs.blog.common.ErrorCodeEnum;
 import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.entity.LoginUser;
 import com.pigs.blog.contract.request.RegistryRequest;
+import com.pigs.blog.contract.response.LoginUserDataResponse;
 import com.pigs.blog.mapper.UserInfoMapper;
 import com.pigs.blog.mapper.UserMapper;
+import com.pigs.blog.mapper.ext.UserMapperExt;
 import com.pigs.blog.model.User;
 import com.pigs.blog.model.UserExample;
 import com.pigs.blog.model.UserInfo;
@@ -53,6 +55,9 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private UserInfoMapper userInfoMapper;
+
+    @Autowired
+    private UserMapperExt userMapperExt;
 
     @Override
     public ResultResponse login(User user) {
@@ -177,8 +182,13 @@ public class LoginServiceImpl implements LoginService {
         UserInfoExample.Criteria criteria = example.createCriteria();
         criteria.andAccountEqualTo(user.getAccount());
         List<UserInfo> userInfos = userInfoMapper.selectByExample(example);
+
+        LoginUserDataResponse userData = new LoginUserDataResponse();
+        BeanUtils.copyProperties(user,userData);
+
         if(!CollectionUtils.isEmpty(userInfos)){
-            map.put("user_data", JSONObject.toJSONString(CollectionUtils.firstElement(userInfos)));
+            BeanUtils.copyProperties(CollectionUtils.firstElement(userInfos),userData);
+            map.put("user_data", JSONObject.toJSONString(userData));
         }
         map.put("token", jwt);
         return map;

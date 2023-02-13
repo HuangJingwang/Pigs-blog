@@ -47,20 +47,29 @@
         <if test="criteria.groupId != null">
             and group_id = #{criteria.groupId}
         </if>
+        <if test="criteria.status != null and criteria.status != ''">
+            and status = #{criteria.status}
+        </if>
+        <if test="criteria.account != null and criteria.account != ''">
+            and account = #{criteria.account}
+        </if>
     </select>
 
     <select id="selectPreArticle" resultMap="com.pigs.blog.mapper.ArticlesMapper.BaseResultMap">
         select
         <include refid="com.pigs.blog.mapper.ArticlesMapper.Base_Column_List"/>
         from articles
-        limit #{start}, 1
+        where id <![CDATA[ <= ]]> #{start} and status = 'published'
+        order by id desc
+        limit 1
     </select>
 
     <select id="selectNextArticle" resultMap="com.pigs.blog.mapper.ArticlesMapper.BaseResultMap">
         select
         <include refid="com.pigs.blog.mapper.ArticlesMapper.Base_Column_List"/>
         from articles
-        limit #{start}, 1
+        where id > #{start} and status = 'published'
+        limit 1
     </select>
 
     <select id="getMaxId" resultType="java.lang.Long">

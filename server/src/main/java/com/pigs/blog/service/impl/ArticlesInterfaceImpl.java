@@ -77,6 +77,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     @Override
     public void deleteArticles(Long id) {
         Articles articles = new Articles();
+        articles.setId(id);
         articles.setStatus(ArticlesStatusEnum.DELETED.getStatus());
         mapper.updateByPrimaryKeySelective(articles);
     }
@@ -131,8 +132,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         if (count == 0) {
             return result;
         }
-        long start = count - 1;
-        List<Articles> articles = mapperExt.selectPreArticle(start);
+        List<Articles> articles = mapperExt.selectPreArticle(count);
         if (!CollectionUtils.isEmpty(articles)) {
             BeanUtils.copyProperties(CollectionUtils.firstElement(articles), result);
         }
@@ -164,6 +164,9 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         }
         if (request.getGroupId() != null) {
             criteria.setGroupId(request.getGroupId());
+        }
+        if (Strings.isNotBlank(request.getStatus())) {
+            criteria.setStatus(request.getStatus());
         }
         return criteria;
     }

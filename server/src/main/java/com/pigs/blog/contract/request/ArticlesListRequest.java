@@ -18,4 +18,6 @@ public class ArticlesListRequest {
     private String tags;//标签
     @ApiModelProperty("作者")
     private String account;//作者
+    @ApiModelProperty("状态")
+    private String status;//状态
 }
