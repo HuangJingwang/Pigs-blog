@@ -1,13 +1,13 @@
 function debounce(fn, delay) {
   let timer = null
-  return (function () {
+  return function () {
     if (timer !== null) {
       clearTimeout(timer)
     }
     timer = setTimeout(() => {
       fn()
     }, delay)
-  })()
+  }
 }
 
 export default debounce

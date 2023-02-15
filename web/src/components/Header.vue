@@ -98,7 +98,7 @@ const login_register = () => {
   padding: 0 20px;
   position: fixed;
   top: 0;
-  transition: all 0.7s;
+  transition: all 0.5s;
   display: flex;
   justify-content: space-between;
   box-shadow: 0 10px 8px rgba(0, 0, 0, 0.3);
@@ -106,7 +106,7 @@ const login_register = () => {
 } 
 
 .header-active {
-  height: 42px;
+  height: 45px;
   background-color: rgb(124, 131, 151);
 }
 
@@ -195,14 +195,14 @@ justify-content: flex-end;
 .pig-right .home p,.pig-right .write p,.pig-right .categories  p,.pig-right .archives  p,.pig-right .about  p,.pig-right .user  p{
   position: absolute;
   top:  32px;
-  transition: all .5s;
+  transition: all .3s;
   color: rgb(200, 200, 200);
   zoom: 0.9;
 }
 .navigation .iconfont{
   color: rgb(200, 200, 200);
   font-size: 24px;
-  transition: all .5s;
+  transition: all .3s;
 }
 /* .navigation:hover {
   background:rgb(120, 120, 120);

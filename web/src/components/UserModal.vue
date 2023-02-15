@@ -186,7 +186,7 @@
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { register, getThree_partInfo } from '@/api'
 import { useRoute } from 'vue-router'
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted,onBeforeUnmount,watch} from 'vue'
 import { useStore } from 'vuex'
 const { state, dispatch } = useStore()
 
@@ -206,43 +206,56 @@ let registerData = reactive({
 
 const getTree_partKey = () => {
   sessionStorage.setItem('status', 'active')
+  console.log(sessionStorage.getItem('status'))
+  console.log(123)
 }
-onMounted(async () => {
-  // 三方注册数据
-  let status = sessionStorage.getItem('status')
-  let key = sessionStorage.getItem('key')
-  // status 为 active ，且key不为''时，表示成功获取到了第三方的key
-  console.log(status)
-  console.log(key)
-  if (status === 'active' && key) {
-    console.log(key)
-    console.log(status)
-    let result = await getThree_partInfo(key)
-    // 整理数据
-    console.log(result)
-    // 若已注册,直接登录,若未注册,则将填入注册信息
-    if (result.code == 200) {
-      // 自动填入账号
-      registerData.account = result.data.login
-      registerData.github_id = result.data.id
-      registerData.github_url = result.data.html_url
-      // registerData.avatar_url = result.data.avatar_url
-      registerData.isThreePart = true
-      state.user.showUserModal = true
-      toRegister()
-    } else if (result.code == 10007) {
-      console.log(result.msg)
-    } else {
-      console.log('error')
-    }
-    // status 为active ,key为'',表示获取key失败,链接超时或网络代理错误
-    sessionStorage.removeItem('key')
-    sessionStorage.removeItem('status')
-  } else if (status === 'active' && key === null) {
-    // 未知错误
-    console.log('unknownError')
-    sessionStorage.removeItem('status')
-  }
+
+let status =sessionStorage.getItem('status')
+  // let key = ref(sessionStorage.getItem('key'))
+let key = computed(()=>state.user.key)
+
+// 检测key 
+watch(key, async (value) => {
+  console.log(key,key.value)
+  // key = value
+console.log(status)
+  if (status === 'active' && key.value) {
+
+let result = await getThree_partInfo(key.value)
+// 整理数据
+console.log(result)
+    let three_partData = JSON.parse(result.data)
+console.log(three_partData)
+if (result.data) {
+  // let three_partData = JSON.parse(result.data)
+}
+
+// 若已注册,直接登录,若未注册,则将填入注册信息
+if (result.code == 200) {
+  // 自动填入账号
+  registerData.account = three_partData.login
+  registerData.github_id = three_partData.id
+  registerData.github_url = three_partData.html_url
+  // registerData.avatar_url =three_partData.avatar_url
+  registerData.isThreePart = true
+  state.user.showUserModal = true
+  toRegister()
+} else if (result.code == 10007) {
+  console.log(result.msg)
+} else {
+  console.log('error')
+}
+// status 为active ,key为'',表示获取key失败,链接超时或网络代理错误
+// sessionStorage.removeItem('status')
+} else if (status === 'active' && key === '') {
+// 未知错误
+console.log('unknownError')
+}
+})
+// 关闭页面时，删除session数据
+onBeforeUnmount(() => {
+  // sessionStorage.removeItem('key')
+  // sessionStorage.removeItem('status')
 })
 // 注册账号
 const registerAccount = async () => {
