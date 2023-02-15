@@ -2,3 +2,4 @@
 /.gitignore
 /server/.idea
 /server/src/main/resources/**.yml
+/server/src/main/resources/**.jks

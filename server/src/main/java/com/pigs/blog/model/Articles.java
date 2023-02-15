@@ -25,8 +25,6 @@ public class Articles {
 
     private Long pageView;
 
-    private String articlesText;
-
     public Long getId() {
         return id;
     }
@@ -113,13 +111,5 @@ public class Articles {
 
     public void setPageView(Long pageView) {
         this.pageView = pageView;
-    }
-
-    public String getArticlesText() {
-        return articlesText;
-    }
-
-    public void setArticlesText(String articlesText) {
-        this.articlesText = articlesText == null ? null : articlesText.trim();
     }
 }

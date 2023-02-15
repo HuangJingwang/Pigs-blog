@@ -13,10 +13,7 @@ import com.pigs.blog.contract.response.ArticlesPreOrNextResponse;
 import com.pigs.blog.contract.response.ArticlesSaveResponse;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.mapper.UserInfoMapper;
-import com.pigs.blog.model.Articles;
-import com.pigs.blog.model.ArticlesExample;
-import com.pigs.blog.model.UserInfo;
-import com.pigs.blog.model.UserInfoExample;
+import com.pigs.blog.model.*;
 import com.pigs.blog.model.criteria.ArticlesListCriteria;
 import com.pigs.blog.contract.response.ArticlesListResponse;
 import com.pigs.blog.mapper.ext.ArticlesMapperExt;
@@ -32,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,6 +43,8 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     private ArticlesMapper mapper;
     @Autowired
     private UserInfoMapper userInfoMapper;
+    @Autowired
+    private QiniuService qiniuService;
 
     @Override
     public PageData<ArticlesListResponse> getPageData(ArticlesPageDataRequest request) {
@@ -66,18 +66,25 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         return result;
     }
 
+    /**
+     * 更新文章
+     *
+     * @param id
+     * @param request
+     */
     @Override
     public void updateArticles(Long id, ArticlesUpdateRequest request) {
-        Articles articles = new Articles();
+        ArticlesWithBLOBs articles = new ArticlesWithBLOBs();
         articles.setId(id);
+        String pictureUrls = String.join(",", request.getArticlePictureUrl());
+        articles.setArticlePictureUrl(pictureUrls);
         BeanUtils.copyProperties(request, articles);
         mapper.updateByPrimaryKeySelective(articles);
     }
 
     @Override
     public void deleteArticles(Long id) {
-        Articles articles = new Articles();
-        articles.setId(id);
+        ArticlesWithBLOBs articles = mapper.selectByPrimaryKey(id);
         articles.setStatus(ArticlesStatusEnum.DELETED.getStatus());
         mapper.updateByPrimaryKeySelective(articles);
     }
@@ -93,13 +100,13 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     @Override
     public ArticlesDetailResponse getDetailArticles(Long id) {
         // 1
-        Articles articles = mapper.selectByPrimaryKey(id);
+        ArticlesWithBLOBs articles = mapper.selectByPrimaryKey(id);
         ArticlesDetailResponse result = new ArticlesDetailResponse();
         BeanUtils.copyProperties(articles, result);
 
         // 2
         articles.setPageView(articles.getPageView() + 1);
-        mapper.updateByPrimaryKey(articles);
+        mapper.updateByPrimaryKeySelective(articles);
 
         return result;
     }
@@ -154,6 +161,18 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         return result;
     }
 
+    /**
+     * 物理删除
+     *
+     * @param id
+     */
+    public void deleteForever(Long id) {
+        ArticlesWithBLOBs articles = mapper.selectByPrimaryKey(id);
+        String[] split = articles.getArticlePictureUrl().split(",");
+        qiniuService.deleteImage(Arrays.asList(split));
+        mapper.deleteByPrimaryKey(id);
+    }
+
     public ArticlesListCriteria createCriteria(ArticlesListRequest request) {
         ArticlesListCriteria criteria = new ArticlesListCriteria();
         if (Strings.isNotBlank(request.getTags())) {
@@ -184,7 +203,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         }
 
         //2.保存数据
-        Articles articles = new Articles();
+        ArticlesWithBLOBs articles = new ArticlesWithBLOBs();
         BeanUtils.copyProperties(request, articles);
         mapper.insertSelective(articles);
 

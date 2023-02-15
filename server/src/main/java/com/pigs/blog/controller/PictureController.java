@@ -49,7 +49,7 @@ public class PictureController {
     @ApiOperation(value = "删除云上的图片", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse deletePicture(@RequestBody PictureDeleteRequest request){
-        qiniuService.deleteImage(request);
+        qiniuService.deleteImage(request.getPicturesUrl());
         return ResultResponse.success(null);
     }
 

@@ -14,8 +14,9 @@
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
     <result column="page_view" jdbcType="BIGINT" property="pageView" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.pigs.blog.model.Articles">
-    <result column="articles_text" jdbcType="LONGVARCHAR" property="articlesText" />
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.pigs.blog.model.ArticlesWithBLOBs">
+    <result column="article_text" jdbcType="LONGVARCHAR" property="articleText" />
+    <result column="article_picture_url" jdbcType="LONGVARCHAR" property="articlePictureUrl" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,7 +81,7 @@
     page_view
   </sql>
   <sql id="Blob_Column_List">
-    articles_text
+    article_text, article_picture_url
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="com.pigs.blog.model.ArticlesExample" resultMap="ResultMapWithBLOBs">
     select
@@ -130,19 +131,19 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.pigs.blog.model.Articles">
+  <insert id="insert" parameterType="com.pigs.blog.model.ArticlesWithBLOBs">
     insert into articles (id, group_id, title, 
       account, tags, introduction, 
       img_url, status, create_at, 
-      update_at, page_view, articles_text
-      )
+      update_at, page_view, article_text, 
+      article_picture_url)
     values (#{id,jdbcType=BIGINT}, #{groupId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
       #{account,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, 
       #{imgUrl,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
-      #{updateAt,jdbcType=TIMESTAMP}, #{pageView,jdbcType=BIGINT}, #{articlesText,jdbcType=LONGVARCHAR}
-      )
+      #{updateAt,jdbcType=TIMESTAMP}, #{pageView,jdbcType=BIGINT}, #{articleText,jdbcType=LONGVARCHAR}, 
+      #{articlePictureUrl,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.pigs.blog.model.Articles">
+  <insert id="insertSelective" parameterType="com.pigs.blog.model.ArticlesWithBLOBs">
     insert into articles
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -178,8 +179,11 @@
       <if test="pageView != null">
         page_view,
       </if>
-      <if test="articlesText != null">
-        articles_text,
+      <if test="articleText != null">
+        article_text,
+      </if>
+      <if test="articlePictureUrl != null">
+        article_picture_url,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -216,8 +220,11 @@
       <if test="pageView != null">
         #{pageView,jdbcType=BIGINT},
       </if>
-      <if test="articlesText != null">
-        #{articlesText,jdbcType=LONGVARCHAR},
+      <if test="articleText != null">
+        #{articleText,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="articlePictureUrl != null">
+        #{articlePictureUrl,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -263,8 +270,11 @@
       <if test="row.pageView != null">
         page_view = #{row.pageView,jdbcType=BIGINT},
       </if>
-      <if test="row.articlesText != null">
-        articles_text = #{row.articlesText,jdbcType=LONGVARCHAR},
+      <if test="row.articleText != null">
+        article_text = #{row.articleText,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="row.articlePictureUrl != null">
+        article_picture_url = #{row.articlePictureUrl,jdbcType=LONGVARCHAR},
       </if>
     </set>
     <if test="example != null">
@@ -284,7 +294,8 @@
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
       update_at = #{row.updateAt,jdbcType=TIMESTAMP},
       page_view = #{row.pageView,jdbcType=BIGINT},
-      articles_text = #{row.articlesText,jdbcType=LONGVARCHAR}
+      article_text = #{row.articleText,jdbcType=LONGVARCHAR},
+      article_picture_url = #{row.articlePictureUrl,jdbcType=LONGVARCHAR}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -306,7 +317,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.pigs.blog.model.Articles">
+  <update id="updateByPrimaryKeySelective" parameterType="com.pigs.blog.model.ArticlesWithBLOBs">
     update articles
     <set>
       <if test="groupId != null">
@@ -339,13 +350,16 @@
       <if test="pageView != null">
         page_view = #{pageView,jdbcType=BIGINT},
       </if>
-      <if test="articlesText != null">
-        articles_text = #{articlesText,jdbcType=LONGVARCHAR},
+      <if test="articleText != null">
+        article_text = #{articleText,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="articlePictureUrl != null">
+        article_picture_url = #{articlePictureUrl,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.pigs.blog.model.Articles">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.pigs.blog.model.ArticlesWithBLOBs">
     update articles
     set group_id = #{groupId,jdbcType=BIGINT},
       title = #{title,jdbcType=VARCHAR},
@@ -357,7 +371,8 @@
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP},
       page_view = #{pageView,jdbcType=BIGINT},
-      articles_text = #{articlesText,jdbcType=LONGVARCHAR}
+      article_text = #{articleText,jdbcType=LONGVARCHAR},
+      article_picture_url = #{articlePictureUrl,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.pigs.blog.model.Articles">

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -54,7 +55,9 @@ public class QiniuService {
                 return null;
             }
 
+            //使用UUID是为了多个相同文件名称可以上传
             String fileName = UUID.randomUUID().toString().replaceAll("-", "") + "." + fileExt;
+
             // 调用put方法上传
             Response res = uploadManager.put(file.getBytes(), fileName, getUpToken());
             // 打印返回的信息
@@ -72,13 +75,13 @@ public class QiniuService {
         }
     }
 
-    public void deleteImage(PictureDeleteRequest request) {
+    public void deleteImage(List<String> list) {
         BucketManager bucketManager = new BucketManager(auth, cfg);
 
-        for (String s : request.getPicturesUrl()) {
+        for (String s : list) {
             try {
                 // 若传来的url直接是文件名 则无须用replace去除前面的域名了
-                bucketManager.delete(CommonValue.bucketName, s);
+                bucketManager.delete(CommonValue.bucketName, s.replaceAll(CommonValue.QINIU_IMAGE_DOMAIN,""));
 
                 // 每次删除就刷新一下
                 refresh(s);

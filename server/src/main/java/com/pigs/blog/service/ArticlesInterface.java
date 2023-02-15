@@ -33,4 +33,6 @@ public interface ArticlesInterface {
     ArticlesPreOrNextResponse findPreArticle(Long curId);
 
     ArticlesPreOrNextResponse findNextArticle(Long id);
+
+    void deleteForever(Long id);
 }

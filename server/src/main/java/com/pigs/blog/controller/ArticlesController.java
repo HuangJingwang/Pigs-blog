@@ -9,7 +9,6 @@ import com.pigs.blog.contract.request.ArticlesUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesDetailResponse;
 import com.pigs.blog.contract.response.ArticlesListResponse;
 import com.pigs.blog.contract.response.ArticlesPreOrNextResponse;
-import com.pigs.blog.contract.response.ArticlesSaveResponse;
 import com.pigs.blog.service.ArticlesInterface;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -71,6 +70,16 @@ public class ArticlesController {
     public ResultResponse updateArticles(@PathVariable("id") Long id,
                                          @RequestBody @Valid ArticlesUpdateRequest request) {
         articlesInterface.updateArticles(id, request);
+        return ResultResponse.success(null);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", dataType = "long", name = "id", value = "", required = true)
+    })
+    @ApiOperation(value = "物理删除", notes = "", httpMethod = "POST")
+    @RequestMapping(value = "/delete-forever/{id}", method = RequestMethod.POST, produces = "application/json")
+    public ResultResponse deleteForever(@PathVariable Long id) {
+        articlesInterface.deleteForever(id);
         return ResultResponse.success(null);
     }
 
