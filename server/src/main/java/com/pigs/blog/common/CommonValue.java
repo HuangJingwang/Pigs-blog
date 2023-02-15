@@ -27,7 +27,7 @@ public class CommonValue {
     //要上传的空间
     public static final String bucketName = "pigs-blog"; //对应要上传到七牛上 你的那个路径（自己建文件夹 注意设置私有）
     // 测试域名，只有30天有效期
-    public static final String QINIU_IMAGE_DOMAIN = "http://rooe9ymmd.hn-bkt.clouddn.com/";
+    public static final String QINIU_IMAGE_DOMAIN = "http://moon.starrysummer.com/";
 
     /**
      * GitHub登录相关
