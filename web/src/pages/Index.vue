@@ -41,14 +41,12 @@
         </div>
       </div>
       <div class="aside">
-        <!-- 漂浮组件 -->
+        <!-- 漂浮组件 -->  
         <div class="components" ref="components">
-          <div class="info basic-box">1234566666666666666666666</div>
+          <div class="info basic-box"></div>
           <div class="clock basic-box"></div>
         </div>
         <!-- 非漂浮组件,随滚动移动 -->
-
-        <!-- <div class="hotArticle basic-box" @click="testFloat"></div> -->
       </div>
     </div>
     <div class="loadMore">
@@ -101,7 +99,7 @@ let components = ref(null)
 onMounted(() => {
   window.addEventListener('scroll', () => {
     if (components.value && window.scrollY > components.value.offsetTop - 30) {
-      components.value.style.top = 90 + 'px'
+      components.value.style.top = 70 + 'px'
     }
   })
 })
@@ -111,7 +109,7 @@ const toArticle = (e) => {
   // console.log(123)
   let id = e.target.dataset.id
   if (id) {
-    state.user.key = '1234'
+    // state.user.key = '1234'
     console.log(id)
     router.push({
       path: '/article',
@@ -122,17 +120,15 @@ const toArticle = (e) => {
   }
 }
 
+//三方登录
 onMounted(() => {
   // 获取key 并存储
   // 将key存入state中
-
   let key = route.query.key //获取key
-  console.log(key)
   let status = sessionStorage.getItem('status')
   if (status === 'active' && key) {
     // 存储key
     state.user.key = key
-    sessionStorage.setItem('key', key)
   }
 })
 </script>
@@ -166,11 +162,12 @@ onMounted(() => {
 
 .articleImg-left {
   float: left;
-  background-color: pink;
+  background-image: url(@/assets/img/articleImg.jpg);
 }
 .articleImg-right {
   float: right;
-  background-color: skyblue;
+  /* background-color: skyblue;*/
+  background-image: url(@/assets/img/articleImg.jpg);
 }
 
 /* 方案2 使用伪元素遮罩盖住三角形部分 */
@@ -193,15 +190,15 @@ onMounted(() => {
   border-right: 100px solid transparent;
 }
 .articleImg-left:hover {
-  transform: translateX(-15px);
+  transform: translateX(-20px);
 }
 .articleImg-right:hover {
-  transform: translateX(15px);
+  transform: translateX(20px);
 }
 
 /* 文章简介信息 */
 .articleInfo {
-  width: 450px;
+  width: 500px;
   height: 240px;
   padding: 40px;
   display: flex;
