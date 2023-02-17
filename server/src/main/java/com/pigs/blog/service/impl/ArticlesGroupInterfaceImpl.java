@@ -1,6 +1,6 @@
 package com.pigs.blog.service.impl;
 
-import com.pigs.blog.common.ErrorCodeEnum;
+import com.pigs.blog.exception.ErrorCodeEnum;
 import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.request.ArticlesGroupCreateRequest;
 import com.pigs.blog.contract.request.ArticlesGroupListRequest;

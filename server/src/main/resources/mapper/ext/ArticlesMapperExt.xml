@@ -23,7 +23,9 @@
         <if test="criteria.orderByPv == 0">
             order by id desc
         </if>
+        <if test="criteria.start != null and criteria.offset != null">
         limit #{criteria.start}, #{criteria.offset}
+        </if>
     </select>
 
     <select id="countArticlesList" resultType="java.lang.Long">
@@ -53,6 +55,7 @@
         <if test="criteria.account != null and criteria.account != ''">
             and account = #{criteria.account}
         </if>
+        order by id desc
     </select>
 
     <select id="selectPreArticle" resultMap="com.pigs.blog.mapper.ArticlesMapper.BaseResultMap">

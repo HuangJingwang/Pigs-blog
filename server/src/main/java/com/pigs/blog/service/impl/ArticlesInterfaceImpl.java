@@ -1,7 +1,7 @@
 package com.pigs.blog.service.impl;
 
 import com.pigs.blog.common.ArticlesStatusEnum;
-import com.pigs.blog.common.ErrorCodeEnum;
+import com.pigs.blog.exception.ErrorCodeEnum;
 import com.pigs.blog.common.PageData;
 import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.request.ArticlesCreateRequest;
@@ -11,6 +11,7 @@ import com.pigs.blog.contract.request.ArticlesUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesDetailResponse;
 import com.pigs.blog.contract.response.ArticlesPreOrNextResponse;
 import com.pigs.blog.contract.response.ArticlesSaveResponse;
+import com.pigs.blog.exception.PigsBlogException;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.mapper.UserInfoMapper;
 import com.pigs.blog.model.*;
@@ -82,9 +83,20 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         mapper.updateByPrimaryKeySelective(articles);
     }
 
+    /**
+     * 逻辑删除:
+     * @param id
+     */
     @Override
     public void deleteArticles(Long id) {
         ArticlesWithBLOBs articles = mapper.selectByPrimaryKey(id);
+        ArticlesPageCriteria criteria = new ArticlesPageCriteria();
+        criteria.setAccount(articles.getAccount());
+        Long count = mapperExt.countArticlesList(criteria);
+        if(count >= 20){
+            throw new PigsBlogException(500,"回收箱最多只能回收20篇文章，你首先得彻底删除一些文章");
+        }
+
         articles.setStatus(ArticlesStatusEnum.DELETED.getStatus());
         mapper.updateByPrimaryKeySelective(articles);
     }
@@ -198,7 +210,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         articlesCriteria.andAccountEqualTo(request.getAccount());
         articlesCriteria.andStatusEqualTo(ArticlesStatusEnum.DRAFT.getStatus());
         long count = mapper.countByExample(articlesExample);
-        if (count >= 10) {
+        if (count >= 10 && request.getStatus().equals(ArticlesStatusEnum.DRAFT.getStatus())) {
             return ResultResponse.fail(ErrorCodeEnum.DRAFT_IS_OVER_TEN.getCode(), ErrorCodeEnum.DRAFT_IS_OVER_TEN.getMsg());
         }
 

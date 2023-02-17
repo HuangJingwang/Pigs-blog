@@ -1,4 +1,4 @@
-package com.pigs.blog.common;
+package com.pigs.blog.exception;
 
 public enum ErrorCodeEnum {
     SERVER_ERROR(500, "there is a error in server"),
