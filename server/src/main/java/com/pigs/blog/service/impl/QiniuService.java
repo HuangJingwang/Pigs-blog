@@ -1,8 +1,7 @@
 package com.pigs.blog.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.pigs.blog.common.CommonValue;
-import com.pigs.blog.contract.request.PictureDeleteRequest;
+import com.pigs.blog.common.Constants;
 import com.pigs.blog.utils.FileUtil;
 import com.qiniu.cdn.CdnManager;
 import com.qiniu.common.QiniuException;
@@ -27,7 +26,7 @@ public class QiniuService {
     //上传到七牛后保存的文件名
 
     //密钥配置
-    Auth auth = Auth.create(CommonValue.ACCESS_KEY, CommonValue.SECRET_KEY);
+    Auth auth = Auth.create(Constants.ACCESS_KEY, Constants.SECRET_KEY);
 
     Configuration cfg = new Configuration(Zone.zone2());
     // ...其他参数参考类注释
@@ -35,7 +34,7 @@ public class QiniuService {
 
     // 简单上传，使用默认策略，只需要设置上传的空间名就可以了
     public String getUpToken() {
-        return auth.uploadToken(CommonValue.bucketName);
+        return auth.uploadToken(Constants.bucketName);
     }
 
     public String saveImage(MultipartFile file) throws IOException {
@@ -63,7 +62,7 @@ public class QiniuService {
             // 打印返回的信息
             if (res.isOK() && res.isJson()) {
                 // 返回这张存储照片的地址
-                return CommonValue.QINIU_IMAGE_DOMAIN + JSONObject.parseObject(res.bodyString()).get("key");
+                return Constants.QINIU_IMAGE_DOMAIN + JSONObject.parseObject(res.bodyString()).get("key");
             } else {
                 logger.error("七牛异常:" + res.bodyString());
                 return null;
@@ -81,7 +80,7 @@ public class QiniuService {
         for (String s : list) {
             try {
                 // 若传来的url直接是文件名 则无须用replace去除前面的域名了
-                bucketManager.delete(CommonValue.bucketName, s.replaceAll(CommonValue.QINIU_IMAGE_DOMAIN,""));
+                bucketManager.delete(Constants.bucketName, s.replaceAll(Constants.QINIU_IMAGE_DOMAIN,""));
 
                 // 每次删除就刷新一下
                 refresh(s);

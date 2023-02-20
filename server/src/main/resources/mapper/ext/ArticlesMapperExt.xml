@@ -62,17 +62,17 @@
         select
         <include refid="com.pigs.blog.mapper.ArticlesMapper.Base_Column_List"/>
         from articles
-        where id <![CDATA[ <= ]]> #{start} and status = 'published'
+        where status = 'published'
         order by id desc
-        limit 1
+        limit #{start}, 1
     </select>
 
     <select id="selectNextArticle" resultMap="com.pigs.blog.mapper.ArticlesMapper.BaseResultMap">
         select
         <include refid="com.pigs.blog.mapper.ArticlesMapper.Base_Column_List"/>
         from articles
-        where id > #{start} and status = 'published'
-        limit 1
+        where status = 'published'
+        limit #{start}, 1
     </select>
 
     <select id="getMaxId" resultType="java.lang.Long">

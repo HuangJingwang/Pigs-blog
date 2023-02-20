@@ -34,8 +34,8 @@ public class ArticlesCreateRequest {
     private String tags;//多个tag,逗号分割
 
     @ApiModelProperty("文章内容")
-    @NotBlank(message = "articlesText cannot be blank")
-    private String articlesText;//文章内容
+    @NotBlank(message = "articleText cannot be blank")
+    private String articleText;//文章内容
 
     @ApiModelProperty("封面图片路径")
     private String imgUrl;
@@ -43,68 +43,4 @@ public class ArticlesCreateRequest {
     @ApiModelProperty("简介")
     @NotBlank(message = "introduction cannot be blank")
     private String introduction;//文章内容
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Integer getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    public String getArticlesText() {
-        return articlesText;
-    }
-
-    public void setArticlesText(String articlesText) {
-        this.articlesText = articlesText;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
-    public String getIntroduction() {
-        return introduction;
-    }
-
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
-    }
 }

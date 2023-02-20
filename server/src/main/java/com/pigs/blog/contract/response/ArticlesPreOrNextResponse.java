@@ -16,4 +16,6 @@ public class ArticlesPreOrNextResponse {
     private Long id;
     @ApiModelProperty("标题")
     private String title;//标题
+    @ApiModelProperty("封面路径")
+    private String imgUrl;
 }

@@ -235,4 +235,19 @@ public class RedisCache
     {
         return redisTemplate.keys(pattern);
     }
+
+
+    /**
+     * set nx，上锁
+     * @param key 一般设为lock
+     *@param value 一般使用uuid
+     *@param time 缓存时间，单位为s
+     */
+    public boolean setNx(String key, String value, int time){
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(key, value, time, TimeUnit.SECONDS));
+    }
+    //未指定过期时间
+    public boolean setNx(String key, String value){
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(key, value));
+    }
 }

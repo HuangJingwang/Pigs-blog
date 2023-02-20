@@ -1,7 +1,7 @@
 package com.pigs.blog.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.pigs.blog.common.CommonValue;
+import com.pigs.blog.common.Constants;
 import com.pigs.blog.exception.ErrorCodeEnum;
 import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.entity.LoginUser;
@@ -92,7 +92,7 @@ public class LoginServiceImpl implements LoginService {
         Long userid = loginUser.getUser().getId();
 
         //根据userId找到redis对应值进行删除
-        redisCache.deleteObject(CommonValue.REDIS_TOKEN_PREFIX + userid);
+        redisCache.deleteObject(Constants.REDIS_TOKEN_PREFIX + userid);
         return ResultResponse.success(null);
     }
 
@@ -170,7 +170,7 @@ public class LoginServiceImpl implements LoginService {
         String userId = user.getId().toString();
 
         //将用户数据放入redis
-        redisCache.setCacheObject(CommonValue.REDIS_TOKEN_PREFIX + userId, loginUser);
+        redisCache.setCacheObject(Constants.REDIS_TOKEN_PREFIX + userId, loginUser);
 
         //返回token和用户数据
         String jwt = JwtUtil.createJWT(userId);

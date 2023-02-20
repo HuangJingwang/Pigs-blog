@@ -31,9 +31,9 @@ public class ArticlesUpdateRequest {
     private String tags;//多个tag,逗号分割
 
     @ApiModelProperty("文章内容")
-    private String articlesText;//文章内容
+    private String articleText;//文章内容
 
-    @ApiModelProperty(hidden = true)//@NotBlank(message = "imgUrl cannot be blank")
+    @ApiModelProperty("封面图片")//@NotBlank(message = "imgUrl cannot be blank")
     private String imgUrl;
 
     @ApiModelProperty("文章简介")

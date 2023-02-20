@@ -12,6 +12,7 @@ import com.pigs.blog.contract.response.ArticlesDetailResponse;
 import com.pigs.blog.contract.response.ArticlesPreOrNextResponse;
 import com.pigs.blog.contract.response.ArticlesSaveResponse;
 import com.pigs.blog.exception.PigsBlogException;
+import com.pigs.blog.mapper.ArticlesGroupMapper;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.mapper.UserInfoMapper;
 import com.pigs.blog.model.*;
@@ -46,6 +47,8 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     private UserInfoMapper userInfoMapper;
     @Autowired
     private QiniuService qiniuService;
+    @Autowired
+    private ArticlesGroupMapper articlesGroupMapper;
 
     @Override
     public PageData<ArticlesListResponse> getPageData(ArticlesPageDataRequest request) {
@@ -114,6 +117,11 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         // 1
         ArticlesWithBLOBs articles = mapper.selectByPrimaryKey(id);
         ArticlesDetailResponse result = new ArticlesDetailResponse();
+
+        ArticlesGroup articlesGroup = articlesGroupMapper.selectByPrimaryKey(articles.getGroupId());
+        result.setGroupName(articlesGroup.getGroupName());
+
+        result.setArticlePictureUrl(Arrays.asList(articles.getArticlePictureUrl().split(",")));
         BeanUtils.copyProperties(articles, result);
 
         // 2
@@ -146,12 +154,10 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
 
         ArticlesExample example = new ArticlesExample();
         ArticlesExample.Criteria criteria = example.createCriteria();
-        criteria.andIdLessThan(curId);
+        criteria.andIdGreaterThan(curId);
+        criteria.andStatusEqualTo(ArticlesStatusEnum.PUBLISHED.getStatus());
         long count = mapper.countByExample(example);
-        if (count == 0) {
-            return result;
-        }
-        List<Articles> articles = mapperExt.selectPreArticle(count);
+        List<Articles> articles = mapperExt.selectPreArticle(count + 1);
         if (!CollectionUtils.isEmpty(articles)) {
             BeanUtils.copyProperties(CollectionUtils.firstElement(articles), result);
         }
@@ -165,6 +171,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         ArticlesExample example = new ArticlesExample();
         ArticlesExample.Criteria criteria = example.createCriteria();
         criteria.andIdLessThanOrEqualTo(id);
+        criteria.andStatusEqualTo(ArticlesStatusEnum.PUBLISHED.getStatus());
         long count = mapper.countByExample(example);
         List<Articles> articles = mapperExt.selectNextArticle(count);
         if (!CollectionUtils.isEmpty(articles)) {

@@ -1,6 +1,6 @@
 package com.pigs.blog.service.impl;
 
-import com.pigs.blog.common.CommonValue;
+import com.pigs.blog.common.Constants;
 import com.pigs.blog.service.GithubAuthService;
 import com.pigs.blog.utils.RedisCache;
 import org.slf4j.Logger;
@@ -59,7 +59,7 @@ public class GithubAuthServiceImpl implements GithubAuthService {
     public String getGithubAuthPath(String url) {
         logger.info("is login by github");
 
-        return String.format(CommonValue.GITHUB_CODE_URL, CLIENT_ID, REDIRECT_URL, CommonValue.STATE);
+        return String.format(Constants.GITHUB_CODE_URL, CLIENT_ID, REDIRECT_URL, Constants.STATE);
     }
 
     @Override
@@ -70,14 +70,14 @@ public class GithubAuthServiceImpl implements GithubAuthService {
 
 
     public String getAccessToken(String code) {
-        String url = String.format(CommonValue.GITHUB_TOKEN_URL, CLIENT_ID, CLIENT_SECRETE, code);
+        String url = String.format(Constants.GITHUB_TOKEN_URL, CLIENT_ID, CLIENT_SECRETE, code);
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
         URI uri = builder.build().encode().toUri();
 
         String resp = getRestTemplate().getForObject(uri, String.class);
-        if (resp.contains(CommonValue.ACCESS_TOKEN_NAME)) {
+        if (resp.contains(Constants.ACCESS_TOKEN_NAME)) {
             Map<String, String> map = getParam(resp);
-            String access_token = map.get(CommonValue.ACCESS_TOKEN_NAME);
+            String access_token = map.get(Constants.ACCESS_TOKEN_NAME);
             return access_token;
         } else {
             throw new RuntimeException(resp);
@@ -86,7 +86,7 @@ public class GithubAuthServiceImpl implements GithubAuthService {
     }
 
     public void getOpenId(String accessToken, HttpServletResponse response) {
-        String url = CommonValue.GITHUB_USER_URL;
+        String url = Constants.GITHUB_USER_URL;
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "token " + accessToken);
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(null, headers);
@@ -100,9 +100,9 @@ public class GithubAuthServiceImpl implements GithubAuthService {
         String key = "user-info-" + uuidStr;
         redisCache.setCacheObject(key, result, 30, TimeUnit.MINUTES);
         try {
-            response.sendRedirect("http://49.233.45.84/#/index?key=" + key);
+            response.sendRedirect("https://www.starrysummer.com/#/index?key=" + key);
         } catch (IOException e) {
-            logger.error("redirect fail:" + "http://49.233.45.84/#/index?key=");
+            logger.error("redirect fail:" + "https://www.starrysummer.com/#/index?key=");
             e.printStackTrace();
         }
     }

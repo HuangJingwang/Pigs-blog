@@ -37,6 +37,9 @@ public class ArticlesListResponse {
     @ApiModelProperty("分类Id")
     private Long groupId;//分类
 
+    @ApiModelProperty("分类名称")
+    private String groupName;
+
     @ApiModelProperty("状态 draft-草稿, published-已发布, deleted-被删除")
     private String status;//状态 draft-草稿, published-已发布, deleted-被删除
 

@@ -9,6 +9,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.List;
 
 @ApiModel
 @Data
@@ -37,6 +38,9 @@ public class ArticlesDetailResponse {
     @ApiModelProperty("分类Id")
     private Long groupId;//分类
 
+    @ApiModelProperty("分类名称")
+    private String groupName;
+
     @ApiModelProperty("状态 draft-草稿, published-已发布, deleted-被删除")
     private String status;//状态 draft-草稿, published-已发布, deleted-被删除
 
@@ -47,8 +51,11 @@ public class ArticlesDetailResponse {
     private Date updateAt;//更新于(时间)
 
     @ApiModelProperty("文章内容")
-    private String articlesText;//文章内容
+    private String articleText;//文章内容
 
     @ApiModelProperty("文章浏览量")
     private Long pageView;
+
+    @ApiModelProperty("文章内图片路径")
+    private List<String> articlePictureUrl;
 }
