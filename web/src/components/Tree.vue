@@ -2,14 +2,14 @@
   <!-- 查看一下传过来的data -->
   <div class="TreeBox">
     <!-- 点击打印data -->
-    <ul @click="showData" :style="{ display: show ? 'block' : 'none' }">
+    <ul :style="{ display: show ? 'block' : 'none' }">
       <!-- 遍历data目录 -->
       <!-- mlgb 这里的show不知道为甚改不了 -->
       <li
         v-for="item in props.data"
         :key="item"
         @click.stop="item.show = !item.show"
-        @click="showData(item.show)"
+        @click="showData(item,item.show) ; showChange(item,item.show)" 
       >
         <p>{{ item.group_name }}</p>
         <!-- 使用递归组件 -->
@@ -35,17 +35,29 @@ const props = defineProps({
   },
 })
 
-function showData(show) {
-  console.log('Tree', props.data)
-  // console.log(show)
-  console.log(props.show)
-  // 下面的show undifined 不管是 item.show 还是 data.item.show都不行
-  // console.log(this.show);
+function showData(item,show) {
+  console.log('showData',item)
+  console.log(show)
+}
+function showChange(item,show){
+  console.log('showChange',item);
+  console.log(show)
+
 }
 </script>
 
 <style scoped>
 .TreeBox {
-  background-color: rgb(240, 204, 157);
+}
+
+li{
+    height: 40px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+p{
+  padding: 12px 20px;
+
 }
 </style>

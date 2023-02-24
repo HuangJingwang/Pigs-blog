@@ -1,11 +1,8 @@
 <template>
-  <!-- <Background></Background> -->
-  <div class="container">
-
-
-1232
-      <Tree :data="data"></Tree>
+  <Background></Background>
+  <div class="container basic-box">
       <div class="articleTitle">
+        <Tree :data="data"></Tree>
       </div>
   </div>
 </template>
@@ -74,8 +71,16 @@ export default {
 
 <style scoped>
 .container {
-  width: 800px;
-  height: 800px;
+  width: 1200px;
+  min-height: 400px;
   background-color: #fff;
+
+  margin: 0 auto;
+  padding: 1px;
+  transform: translateY(-150px);
+}
+.articleTitle{
+  margin:48px 80px ;
+
 }
 </style>
