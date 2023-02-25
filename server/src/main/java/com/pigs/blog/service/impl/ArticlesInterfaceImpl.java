@@ -128,6 +128,18 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         articles.setPageView(articles.getPageView() + 1);
         mapper.updateByPrimaryKeySelective(articles);
 
+        //3 查询nickname
+        UserInfoExample userInfoExample = new UserInfoExample();
+        UserInfoExample.Criteria criteria = userInfoExample.createCriteria();
+        criteria.andAccountEqualTo(articles.getAccount());
+        List<UserInfo> userInfos = userInfoMapper.selectByExample(userInfoExample);
+
+        if(CollectionUtils.isEmpty(userInfos)){
+            throw new PigsBlogException(ErrorCodeEnum.NICKNAME_CANNOT_BE_FOUND_BY_ACCOUNT.getCode(),ErrorCodeEnum.NICKNAME_CANNOT_BE_FOUND_BY_ACCOUNT.getMsg());
+        }
+
+        UserInfo userInfo = CollectionUtils.firstElement(userInfos);
+        result.setNickName(userInfo.getNickname());
         return result;
     }
 
