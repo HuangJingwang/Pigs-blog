@@ -1,0 +1,29 @@
+<template>
+<div class="cover">
+    <div class="articleInfo"></div>
+    
+</div>
+</template>
+
+<script setup>
+const props = defineProps(['articleData'])
+console.log('props传参',props.articleData)
+</script>
+
+<style  scoped>
+.cover{
+    width: 100%;
+    height: 400px;
+    background-color: aqua;
+    position: relative;
+}
+.cover .articleInfo{
+    width: 700px;
+    height: 200px;
+    background-color: pink;
+position: absolute;
+top: 50px;
+left: 50px;
+transform: translate(50%,50%);
+}
+</style>
