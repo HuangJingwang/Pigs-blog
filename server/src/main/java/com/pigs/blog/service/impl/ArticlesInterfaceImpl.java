@@ -88,6 +88,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
 
     /**
      * 逻辑删除:
+     *
      * @param id
      */
     @Override
@@ -96,8 +97,8 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         ArticlesPageCriteria criteria = new ArticlesPageCriteria();
         criteria.setAccount(articles.getAccount());
         Long count = mapperExt.countArticlesList(criteria);
-        if(count >= 20){
-            throw new PigsBlogException(500,"回收箱最多只能回收20篇文章，你首先得彻底删除一些文章");
+        if (count >= 20) {
+            throw new PigsBlogException(500, "回收箱最多只能回收20篇文章，你首先得彻底删除一些文章");
         }
 
         articles.setStatus(ArticlesStatusEnum.DELETED.getStatus());
@@ -119,6 +120,9 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         ArticlesDetailResponse result = new ArticlesDetailResponse();
 
         ArticlesGroup articlesGroup = articlesGroupMapper.selectByPrimaryKey(articles.getGroupId());
+        if (null == articlesGroup) {
+            throw new PigsBlogException(500, "articlesGroup is not exist: groupId is {" + articles.getGroupId() + "}");
+        }
         result.setGroupName(articlesGroup.getGroupName());
 
         result.setArticlePictureUrl(Arrays.asList(articles.getArticlePictureUrl().split(",")));

@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -55,6 +56,7 @@ public class ArticlesController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "ArticlesCreateRequest", name = "request", value = "", required = true)
     })
+    @PreAuthorize("hasAuthority('root')")
     @ApiOperation(value = "保存", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse saveArticles(@RequestBody @Valid ArticlesCreateRequest request) {
@@ -65,6 +67,7 @@ public class ArticlesController {
             @ApiImplicitParam(paramType = "path", dataType = "long", name = "id", value = "", required = true),
             @ApiImplicitParam(paramType = "body", dataType = "ArticlesUpdateRequest", name = "request", value = "", required = true)
     })
+    @PreAuthorize("hasAuthority('root')")
     @ApiOperation(value = "更新", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse updateArticles(@PathVariable("id") Long id,
@@ -76,6 +79,7 @@ public class ArticlesController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", dataType = "long", name = "id", value = "", required = true)
     })
+    @PreAuthorize("hasAuthority('root')")
     @ApiOperation(value = "物理删除", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/delete-forever/{id}", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse deleteForever(@PathVariable Long id) {
@@ -86,6 +90,7 @@ public class ArticlesController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", dataType = "long", name = "id", value = "", required = true)
     })
+    @PreAuthorize("hasAuthority('root')")
     @ApiOperation(value = "逻辑删除", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse deleteArticles(@PathVariable Long id) {
