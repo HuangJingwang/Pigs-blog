@@ -1,8 +1,10 @@
 package com.pigs.blog.service.impl;
 
 import com.pigs.blog.common.PageData;
+import com.pigs.blog.contract.request.HomepageUserInfoRequest;
 import com.pigs.blog.contract.request.UserInfoPageDataRequest;
 import com.pigs.blog.contract.response.ArticlesListResponse;
+import com.pigs.blog.contract.response.HomepageUserInfoResponse;
 import com.pigs.blog.contract.response.UserInfoPageDataResponse;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.mapper.UserInfoMapper;
@@ -10,6 +12,7 @@ import com.pigs.blog.mapper.ext.UserInfoMapperExt;
 import com.pigs.blog.model.Articles;
 import com.pigs.blog.model.UserInfo;
 import com.pigs.blog.model.criteria.UserInfoPageCriteria;
+import com.pigs.blog.model.vo.HomepageUserInfo;
 import com.pigs.blog.service.UserInfoService;
 import com.pigs.blog.utils.RedisCache;
 import org.springframework.beans.BeanUtils;
@@ -44,6 +47,22 @@ public class UserInfoServiceImpl implements UserInfoService {
         return result;
     }
 
+    @Override
+    public HomepageUserInfoResponse getHomepageUserInfo(HomepageUserInfoRequest request) {
+        String account = request.getAccount();
+        HomepageUserInfo info = userInfoMapperExt.selectHomepageUserInfoByAccount(account);
+
+        HomepageUserInfoResponse response = new HomepageUserInfoResponse();
+        response.setAccount(account);
+        response.setArticlesCount(info.getArticlesCount());
+        response.setGithubUrl(info.getGithubUrl());
+        response.setNickname(info.getNickname());
+        response.setImgUrl(info.getImgUrl());
+        response.setPageView(info.getPageView());
+
+        return response;
+    }
+
     private UserInfoPageCriteria createCriteria(UserInfoPageDataRequest request) {
         UserInfoPageCriteria criteria = new UserInfoPageCriteria();
         criteria.setArticlesCountMoreThan(request.getArticlesCountMoreThan());
@@ -61,4 +80,5 @@ public class UserInfoServiceImpl implements UserInfoService {
         });
         return responses;
     }
+
 }

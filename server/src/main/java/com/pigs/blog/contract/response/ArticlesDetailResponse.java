@@ -58,4 +58,7 @@ public class ArticlesDetailResponse {
 
     @ApiModelProperty("文章内图片路径")
     private List<String> articlePictureUrl;
+
+    @ApiModelProperty("昵称")
+    private String nickName;
 }

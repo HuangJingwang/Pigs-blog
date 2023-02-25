@@ -31,4 +31,18 @@
         limit 1
     </select>
 
+    <select id="selectHomepageUserInfoByAccount"  resultType="com.pigs.blog.model.vo.HomepageUserInfo">
+SELECT
+    user_info.nickname as nickname,
+	user_info.img_url as imgUrl,
+	user_info.articles_count as articlesCount,
+	user_info.github_url as githubUrl,
+	sum( articles.page_view ) as pageView
+FROM
+	`user_info`,
+	`articles`
+WHERE
+	user_info.account = #{account} AND
+	articles.account = #{account}
+</select>
 </mapper>
