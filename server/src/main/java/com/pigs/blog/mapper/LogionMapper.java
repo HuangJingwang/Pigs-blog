@@ -4,6 +4,7 @@ import com.pigs.blog.model.Logion;
 import com.pigs.blog.model.LogionExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 public interface LogionMapper {
     long countByExample(LogionExample example);
@@ -27,4 +28,5 @@ public interface LogionMapper {
     int updateByPrimaryKeySelective(Logion row);
 
     int updateByPrimaryKey(Logion row);
+
 }

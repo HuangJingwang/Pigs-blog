@@ -50,7 +50,7 @@ public class UserInfoController {
     @ApiOperation(value = "获取首页用户信息", notes = "", httpMethod = "GET")
     @RequestMapping(value = "getHomepageUserInfo", method = RequestMethod.GET, produces = "application/json")
     public ResultResponse<HomepageUserInfoResponse> getHomepageUserInfo(
-            @RequestParam(name = "account") String account
+            @RequestParam(name = "account", required = false) String account
     ){
         HomepageUserInfoRequest request = new HomepageUserInfoRequest();
         request.setAccount(account);
