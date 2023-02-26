@@ -7,7 +7,7 @@
         <!-- <span >haishanliao</span> -->
         <a href="https://github.com/haishanliao" class="partnerName"> haishanliao</a>
         <span class="partnerJob">前端</span>
-        <span class="partnerWords">踏破铁鞋无觅处，得来全不费工夫</span>
+        <span class="partnerWords">纸上得来终觉浅，绝知此事要躬行</span>
        </div>
     </div>
     <div class="partner2">

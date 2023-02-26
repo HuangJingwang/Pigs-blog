@@ -11,7 +11,7 @@
 import { ref, reactive} from 'vue'
 import { toRaw } from '@vue/reactivity'
 import { useStore } from 'vuex'
-import Tree from '../../components/Tree.vue'
+import Tree from './Tree'
 
 export default {
 

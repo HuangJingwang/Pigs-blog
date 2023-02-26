@@ -79,6 +79,7 @@ export default createStore({
     async reqGroupList({ commit }) {
       let result = await getGroupListData()
       commit('HANDLEGROUPLIST', result)
+      console.log(groupList);
     },
     // 请求标签列表数据
     async reqTagList({ commit }) {
