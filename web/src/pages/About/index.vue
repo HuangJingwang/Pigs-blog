@@ -1,5 +1,5 @@
 <template>
-<background></background>
+<Background :title="`About`"></Background>
   <!-- <div>About</div> -->
   <MdEditor
   preview-only="true"

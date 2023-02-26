@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Background></Background>
+    <Background :title="`Archive`"></Background>
     <div class="container basic-box">
       <!-- 初版归档结构 -->
       <!-- <div class="total">{{ total }} articles in total</div>
@@ -19,7 +19,8 @@
           <span class="date">{{ article.month }}-{{ article.day }}</span>
         </div>
       </div> -->
-
+    
+    
       <!-- 第二版 -->
       <div class="head">
         <div class="title">Archives</div>

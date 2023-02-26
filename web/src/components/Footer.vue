@@ -60,6 +60,6 @@ export default {}
 }
 .ipc ,.plc{
   font-size: 12px;
-  color: #3d3d3d;
+  color: #d9d9d9;
 }
 </style>

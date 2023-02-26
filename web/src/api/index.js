@@ -6,6 +6,18 @@ export const getArticleList = (pageNo = 0, author) => {
     url: `/articles/getArticlesPageData?pageNo=${pageNo}`,
   })
 }
+
+// 获取首页用户数据
+export const getHomeUserInfo = (account) => {
+  let url = ''
+account = ''?url='/user-info/getHomepageUserInfo':url =`/user-info/getHomepageUserInfo?account=${account}` 
+  return requests({
+    method: 'GET',
+    url:url,
+  })
+}
+
+
 // 获取文章详情数据
 export const getArticleDetail = (id) => {
   return requests({
@@ -145,5 +157,12 @@ export const getThree_partInfo = (key) => {
   return requests({
     method: 'GET',
     url: `/user/getGithubUserInfo/?key=${key}`,
+  })
+}
+
+export const getSayings = () => {
+  return requests({
+    method: 'GET',
+    url:'/logion/random'
   })
 }

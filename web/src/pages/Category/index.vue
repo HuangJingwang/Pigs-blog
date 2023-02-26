@@ -1,5 +1,5 @@
 <template>
-  <!-- <Background></Background> -->
+  <Background :title="`Category`"></Background>
   <div class="container">
 
 
