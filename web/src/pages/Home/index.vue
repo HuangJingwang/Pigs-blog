@@ -7,6 +7,7 @@
       </div> -->
       <!-- 展示文章卡片 -->
       <div class="articles" @click="toArticle">
+        <div class="notice basic-box"></div>
         <div
           class="articleCard basic-box"
           v-for="(article, index) in articleList"
@@ -44,19 +45,9 @@
         </div>
       </div>
       <!-- 侧边功能模块 -->
-      <div class="aside">
-        <!-- 非漂浮组件,随滚动移动 -->
-        用户信息
-        <!-- 漂浮组件 -->
-        <div class="components" ref="components">
-          <div class="personalInfo basic-box">
-            <!-- <div class="avatar__box"></div>
-            <div class="articleCount"></div>
-            <div class="viewCount"></div> -->
-          </div>
-          <div class="webInfo basic-box"></div>
-        </div>
-      </div>
+
+      <Aside/>
+ 
     </div>
     <div class="loadMore">
       <a v-show="hasNext" href="javascript:void(0)" @click="loadMore"> loadMore... </a>
@@ -69,6 +60,7 @@
 import { useStore } from "vuex"
 import { useRoute, useRouter } from "vue-router"
 import Cover from "./Cover"
+import Aside from './Aside'
 import { ref, onMounted, computed } from "vue"
 const { dispatch, state } = useStore()
 const route = useRoute()
@@ -99,16 +91,7 @@ const loadMore = () => {
   }
 }
 
-// 侧边栏悬浮效果
-// 监听文档滚动事件
-let components = ref(null)
-onMounted(() => {
-  window.addEventListener("scroll", () => {
-    if (components.value && window.scrollY > components.value.offsetTop - 30) {
-      components.value.style.top = 70 + "px"
-    }
-  })
-})
+
 // 跳转至文章详情页
 const toArticle = (e) => {
   // console.log(123)
@@ -138,25 +121,31 @@ onMounted(() => {
   }
 })
 </script>
-
 <style scoped>
 .container {
+  position: relative;
   padding-top: 20px;
   width: 1250px;
   margin: auto;
 }
 .container .articles {
-  margin-top: 50px;
-  margin-right: 30px;
+  margin-right: 20px;
+  width: 975px;
+
 }
 
 /* 公告栏 */
-
+.container .notice{
+  width: 100%;
+  height:40px;
+  margin-bottom: 20px;
+  background-color: #fff;
+}
 /* 文章卡片 */
 .articleCard {
   /* 图片添加圆角 */
   overflow: hidden;
-  width: 975px;
+  width: 100%;
   height: 240px;
   margin-bottom: 20px;
 }
@@ -189,7 +178,7 @@ onMounted(() => {
   height: 100%;
   top: 0;
   content: "";
-  border-top: 240px solid #eee;
+  border-top: 240px solid #fff;
 }
 .articleImg-left::before {
   right: 0;
@@ -260,31 +249,7 @@ onMounted(() => {
   display: flex;
   /* justify-content: space-between; */
 }
-.mainBody .aside {
-  margin-top: 50px;
-  flex: 1;
-}
-.aside .components {
-  position: absolute;
-  position: sticky;
-}
-.aside .info {
-  padding: 15px;
-  background-color: #fff;
-  height: 200px;
-  width: 245px;
-  margin-bottom: 20px;
-}
-.aside .clock {
-  height: 300px;
-  margin-bottom: 20px;
-}
-.aside .hotArticle {
-  height: 250px;
-  width: 245px;
-  position: fixed;
-  bottom: 20px;
-}
+
 /* 加载更多文章 */
 .container .loadMore {
   text-align: center;

@@ -4,7 +4,7 @@ import router from './router/index.js'
 // 引入全局组件
 import Background from './components/Background.vue'
 // 引入仓库
-import store from './store'
+import store from './store/vuex'
 // 引入element-plus
 import ElementPlus from 'element-plus'
 // 引入element-plus样式

@@ -45,4 +45,9 @@ public class Constants {
 
     //该字段的值会回传回来
     public final static String STATE = "true";
+
+    //网站信息
+    public final static String WEBSITE_IMG_URL = "https://moon.starrysummer.com/3686fd078f7649528d5b5ba31de2a9d7.jpg";
+    public final static String WEBSITE_GITHUB_URL = "https://github.com/HuangJingwang/Pigs-blog";
+    public final static String WEBSITE_NICKNAME = "StarrySummer";
 }

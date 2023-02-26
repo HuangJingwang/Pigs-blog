@@ -82,7 +82,8 @@ const changeTheme = (e) => {
 // let github = ref('github')
 let articleData = reactive({
   id:-1,
-  account:'',//作者
+  account: '',//作者
+  nick_name:'',
   article_text: ``, //内容
   title: "", //标题
   tags: "", //签

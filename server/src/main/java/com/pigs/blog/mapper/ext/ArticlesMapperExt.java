@@ -5,6 +5,7 @@ import com.pigs.blog.model.criteria.ArticlesListCriteria;
 import com.pigs.blog.model.criteria.ArticlesPageCriteria;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -21,4 +22,7 @@ public interface ArticlesMapperExt {
     List<Articles> selectNextArticle(@Param("start") long start);
 
     Long getMaxId();
+
+    @Select("select sum(page_view) from articles where status = 'published'")
+    Long selectAllPageViewCount();
 }

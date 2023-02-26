@@ -49,7 +49,7 @@
             class="avatar"
             :style="{
               backgroundImage:
-                'url(http://moon.starrysummer.com/cad31bce881d464e8a9964c97456b09e.jpg)',
+                `url(${avatarImg})`,
             }"
           ></div>
           <template #dropdown>
@@ -106,6 +106,11 @@ const login_register = () => {
   console.log(state.user.showUserModal)
 }
 
+//显示头像
+let avatarImg = computed(() => {
+  return '123'
+  // return state.user.userInfo.imgUrl
+})
 // 登录状态下拉栏
 // 管理文章
 const showArticleModal = () => {

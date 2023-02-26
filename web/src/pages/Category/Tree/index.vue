@@ -8,8 +8,8 @@
       <li
         v-for="item in categoryData"
         :key="item"
-        @click.stop="item.show = !item.show "
-        @click="showData(item,item.show) ;arrowChange()" 
+        @click.stop="item.show = !item.show ; arrowChange(item)"
+      
       >
         <p>{{ item.group_name }} <span class="icon-arror iconfont"></span></p>
         
@@ -37,12 +37,19 @@ const props = defineProps({
   },
 })
 let categoryData = reactive(props.data)
-const arrowChange = ()=>{
-console.log(123);
-}
-function showData(item,show) {
-  console.log('item',item,'show',show)
-  console.log('这是data',props.data);
+
+// function showData(item,show) {
+//   console.log('show',item)
+//   console.log(show)
+//   console.log('这data',props.data,categoryData);
+// }
+
+function arrowChange(item){
+    console.log(item.show);
+    if (item.show) {
+    }else{
+      return 
+    }
 }
 
 </script>
@@ -50,15 +57,15 @@ function showData(item,show) {
 <style scoped>
 .TreeBox {
 }
-
 li{
+    max-height: 1000px;
     min-height: 40px;
     font-size: 1.5rem;
     font-weight: bold;
+    transition: all 2s linear 0s;
 }
 p:hover{
     background-color: rgb(138, 157, 159);
-    
 }
 p{
   padding: 12px 20px;

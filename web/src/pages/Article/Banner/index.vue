@@ -7,7 +7,7 @@
       <div class="breads">
         <div class="author">
           <span class="iconfont icon-gaojian-zuozhe"></span>
-          <p class="text">作者: {{ articleData.account }}</p>
+          <p class="text">作者: {{ articleData.nick_name }}</p>
         </div>
         <span
           :style="{
@@ -66,7 +66,17 @@ const editorArticle = (id) => {
   height: 100%;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.cover::after{
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+/* background-color: rgba(20, 80, 110, 0.5); */
+background: linear-gradient( rgba(20, 80, 110, 0), rgba(20, 80, 110, .6));
 }
 .cover .articleInfo {
   width: 750px;

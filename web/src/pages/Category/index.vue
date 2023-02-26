@@ -1,6 +1,9 @@
 <template>
-  <Background></Background>
+
+<Background :title="`Category`"></Background>
   <div class="container basic-box">
+
+
       <div class="articleTitle">
         <Tree :data="data"></Tree>
       </div>
@@ -78,6 +81,7 @@ export default {
   margin: 0 auto;
   padding: 1px;
   transform: translateY(-150px);
+  
 }
 .articleTitle{
   margin:48px 80px ;

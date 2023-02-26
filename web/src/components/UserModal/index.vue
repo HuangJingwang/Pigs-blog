@@ -212,23 +212,20 @@ watch(key, async () => {
     let result = await getThree_partInfo(key.value)
     // 整理数据
     // 判断token是否存在 作为判断是否已注册的依据
-    console.log(result)
     let three_partData = null//三方注册数据
     // 若已注册,直接登录,若未注册,则将填入注册信息
     if (result.code == 200 && !result.data.token) {
       three_partData = JSON.parse(result.data)
-      console.log(three_partData)
-      // 自动填入账号 //通过第三方注册
       registerData.account = three_partData.login
       registerData.github_id = three_partData.id
       registerData.github_url = three_partData.html_url
       registerData.img_url =three_partData.avatar_url
       registerData.isThreePart = true
       state.user.showUserModal = true
-      console.log('yhu',state.user)
       toRegister()
     } else if (result.code == 200 && result.data.token) {
       // account 已注册，直接登录 //第三方登录
+      console.log('三方登陸成功')
       let userInfo = JSON.parse(result.data.user_data)
       state.user.userInfo = userInfo
       state.user.token = result.data.token
@@ -265,7 +262,7 @@ const registerAccount = async () => {
       nick_name: registerData.nick_name,
       password: registerData.password,
       //默认头像
-      img_url:'http://moon.starrysummer.com/cf43b094c2a948f68dfba53ede55a9ec.jpg'
+      img_url:''
     }
   } else {
     //三方注册
@@ -290,6 +287,7 @@ const registerAccount = async () => {
     let result = await register(data)
     console.log(result.code)
     if (result.code === 200) {
+
       //自动填写登录数据
       loginData.account = registerData.account
       loginData.password = registerData.password
@@ -305,6 +303,7 @@ const registerAccount = async () => {
         registerData.img_url = ""
         registerData.isThreePart = false
         data = {}
+        
       }, 500)
       // 填上登录数据
     } else if (result.code === 10005) {
@@ -343,9 +342,11 @@ const userLogin = async () => {
         lockScroll: false,
       })
     } else {
-      state.user.userInfo = result.user_data
+      console.log(result)
+      state.user.userInfo = JSON.parse(result.data.user_data)
       state.user.isLogin = true
       state.user.token = result.data.token
+      console.log(state.user)
       // console.log(result)
       // 清空登录数据
       loginData.account = ''

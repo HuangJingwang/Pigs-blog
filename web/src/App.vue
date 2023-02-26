@@ -14,11 +14,10 @@
   <!-- <BackToTop></BackToTop> -->
   <!-- 文章管理模块 -->
   <ArticleModal></ArticleModal>
-  <!-- <button @click="showModal" class="testBtn">显示文章管理模块</button> -->
 </template>
 
 <script setup>
-import { onMounted, defineAsyncComponent,toRaw } from "vue"
+import { onMounted, defineAsyncComponent,toRaw,watch } from "vue"
 import { useStore } from "vuex"
 import { useRouter,useRoute } from "vue-router"
 import Header from "./components/Header.vue"
@@ -28,6 +27,7 @@ import UserModal from "./components/UserModal"
 const { state, dispatch } = useStore()
 const router = useRouter()
 const route = useRoute()
+
 // let innerHeight = window.innerHeight + "px"
 // import ArticleModal from './components/ArticleModal'
 // 引入异步组件
@@ -36,7 +36,6 @@ const ArticleModal = defineAsyncComponent({
   loader: () => import("./components/ArticleModal"),
   delay: 200,
 })
-
 const showModal = () => {
   console.log(state.showArticleModal)
   state.showArticleModal = !state.showArticleModal
@@ -45,7 +44,6 @@ const showModal = () => {
 onMounted(async () => {
   dispatch("reqGroupList")
 })
-
 // #region 
 // 点击特效
 function clickEffect() {
@@ -158,7 +156,6 @@ function clickEffect() {
       this.vy *= 0.9
     }
   }
-
   function pushBalls(count = 1, x = origin.x, y = origin.y) {
     for (let i = 0; i < count; i++) {
       balls.push(new Ball(x, y))
@@ -205,18 +202,19 @@ function clickEffect() {
     }
   }
 }
-// clickEffect() //调用特效函数
-
-
-console.log('路由', router)
-
-console.log('2222',toRaw(route))
+// 在特定頁面中不開啓特效
+watch(route, () => {
+  if (route.path !== '/write') {
+    clickEffect()
+  }
+})
 //#endregion
 </script>
 <style>
 .background {
   position: relative;
   width: 100%;
+  overflow: hidden;
   /* z-index: -2; */
 }
 .background::before {
@@ -234,6 +232,7 @@ console.log('2222',toRaw(route))
   -moz-background-size: cover;
   -webkit-background-size: cover;
   filter: blur(30px);
+  transform: scale(1.1);
 }
 .background::after {
   content: "";

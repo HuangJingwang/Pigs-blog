@@ -1,5 +1,8 @@
 <template>
-  <div class="cover" :style="{ backgroundImage: `url(${imgUrl})` ,height:`${innerHeight}`}">
+  <div
+    class="cover"
+    :style="{ backgroundImage: `url(${imgUrl})`, height: `${innerHeight}` }"
+  >
     <!-- <div class="coverImg" :style="{ backgroundImage: `url(${imgUrl})` }"></div> -->
     <div class="headline">
       <div class="mainTitle" @click="test">
@@ -8,55 +11,64 @@
       </div>
       <TypeWriter></TypeWriter>
     </div>
-<div class="transitionBox">
-  <div class="header">
-<!--Waves Container-->
-<div>
-  <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-    <defs>
-      <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-    </defs>
-    <g class="parallax">
-      <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(38,83,118, 0.1)" />
-      <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(38,83,118, 0.3)" />
-      <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(38,83,118, 0.5)" />
-      <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(38,83,118, 0.8)"  />
-    </g>
-  </svg>
-</div>
-<!--Waves end-->
+    <div class="transitionBox">
+      <div class="header">
+        <!--Waves Container-->
+        <div>
+          <svg
+            class="waves"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 150 28"
+            preserveAspectRatio="none"
+            shape-rendering="auto"
+          >
+            <defs>
+              <path
+                id="gentle-wave"
+                d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
+              />
+            </defs>
+            <g class="parallax">
+              <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(38,83,118, 0.1)" />
+              <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(38,83,118, 0.3)" />
+              <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(38,83,118, 0.5)" />
+              <use xlink:href="#gentle-wave" x="48" y="7" fill="rgba(38,83,118, 0.8)" />
+            </g>
+          </svg>
+        </div>
+        <!--Waves end-->
+      </div>
+      <!--Header ends-->
 
+      <!--Content starts-->
+      <div class="content flex">
+        <!--<p></p>-->
+      </div>
+<div class="linear">
 </div>
-<!--Header ends-->
-
-<!--Content starts-->
-<div class="content flex">
-<!--<p></p>-->
-</div>
-<!--Content ends-->
-  <div class="scrollToMain" @click="scrollToMain">
-      <span class="iconfont arrow_one icon-jiantouxia"></span>
-      <span class="iconfont arrow_two icon-jiantouxia"></span>
-      <span class="iconfont arrow_three icon-jiantouxia"></span>
+      <!--Content ends-->
+      <div class="scrollToMain" @click="scrollToMain">
+        <span class="iconfont arrow_one icon-jiantouxia"></span>
+        <span class="iconfont arrow_two icon-jiantouxia"></span>
+        <span class="iconfont arrow_three icon-jiantouxia"></span>
+      </div>
     </div>
-</div>
   </div>
-
-  
 </template>
 
 <script setup>
-import TypeWriter from '@/components/TypeWriter.vue'
-import { ref} from 'vue'
-let imgUrl = require('@/assets/img/bgi1.jpg')
-let  innerHeight = window.innerHeight+'px'
+import TypeWriter from "@/components/TypeWriter.vue"
+import { ref } from "vue"
+let imgUrl = require("@/assets/img/bgi1.jpg")
+let innerHeight = window.innerHeight + "px"
 // 点击按钮滚动页面
 const distance = ref(0)
 const scrollToMain = () => {
   distance.value = window.innerHeight
   window.scrollTo({
     top: distance.value - 40,
-    behavior: 'smooth',
+    behavior: "smooth",
   })
 }
 </script>
@@ -68,14 +80,14 @@ const scrollToMain = () => {
   background-size: cover;
   background-position: center center;
 }
-.cover::before{
-content:'';
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0,0,0,0.5);
+.cover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 .coverImg {
   position: relative;
@@ -85,7 +97,7 @@ background-color: rgba(0,0,0,0.5);
   background-size: cover;
 }
 .coverImg::after {
-  content: '';
+  content: "";
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
@@ -135,7 +147,7 @@ background-color: rgba(0,0,0,0.5);
   margin-left: 10px;
   font-size: 42px;
   font-weight: 900;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   text-indent: 0.1em;
   color: rgb(230, 230, 230);
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
@@ -208,28 +220,28 @@ background-color: rgba(0,0,0,0.5);
   }
 }
 
-
-
-.transitionBox{
+.transitionBox {
   position: absolute;
   bottom: 0;
   width: 100%;
-  /* background-color: red; */
 }
-
+.linear{
+  z-index:0;
+  position: absolute;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient( rgba(40,80,110,1), rgba(40,80,110,0));
+}
 /* 波浪 */
 
 @import url(//fonts.googleapis.com/css?family=Lato:300:400);
 
 body {
-  margin:0;
+  margin: 0;
 }
 
-
-
-
-
-.flex { /*Flexbox for containers*/
+.flex {
+  /*Flexbox for containers*/
   display: flex;
   justify-content: center;
   align-items: center;
@@ -237,19 +249,18 @@ body {
 }
 
 .waves {
-  position:relative;
+  position: relative;
   width: 100%;
-  height:15vh;
-  margin-bottom:-4px; /*Fix for safari gap*/
-  min-height:100px;
-  max-height:150px;
+  height: 15vh;
+  margin-bottom: -4px; /*Fix for safari gap*/
+  min-height: 100px;
+  max-height: 150px;
 }
-
 
 /* Animation */
 
 .parallax > use {
-  animation: move-forever 25s cubic-bezier(.55,.5,.45,.5)     infinite;
+  animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
 }
 .parallax > use:nth-child(1) {
   animation-delay: -2s;
@@ -269,23 +280,23 @@ body {
 }
 @keyframes move-forever {
   0% {
-   transform: translate3d(-90px,0,0);
+    transform: translate3d(-90px, 0, 0);
   }
-  100% { 
-    transform: translate3d(85px,0,0);
+  100% {
+    transform: translate3d(85px, 0, 0);
   }
 }
 /*Shrinking for mobile*/
 @media (max-width: 768px) {
   .waves {
-    height:40px;
-    min-height:40px;
+    height: 40px;
+    min-height: 40px;
   }
   .content {
-    height:30vh;
+    height: 30vh;
   }
   h1 {
-    font-size:24px;
+    font-size: 24px;
   }
 }
 

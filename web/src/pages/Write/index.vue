@@ -1,5 +1,5 @@
 <template>
-  <div class="container" @click="hideConfig">
+  <div class="container" @click="hideConfig" >
     <div class="pubConfig">
       <input
         type="text"
@@ -429,8 +429,14 @@ const handleSaveArticle = async () => {
 
 <style scoped>
 .container {
-  width: 100%;
+  /* position: relative; */
+  position: fixed;
+  top:0;
+  bottom: 0;
   min-height: 100%;
+  height: auto;
+  width: 100%;
+  background-color: #eee;
   display: flex;
   flex-direction: column;
 }

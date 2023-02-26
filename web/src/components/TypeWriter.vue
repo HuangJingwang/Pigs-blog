@@ -8,6 +8,7 @@
 
 <script setup>
 import { reactive, onMounted } from 'vue'
+import { getSayings } from '@/api';
 import EasyTyper from 'easy-typer-js'
 let typeOptions = reactive({
   output: '',
@@ -19,6 +20,11 @@ let typeOptions = reactive({
   backSpeed: 500,
   sentencePause: true,
   // 其他参数省略
+})
+// 进入页面请求saying
+onMounted( async() => {
+  let result = await getSayings()
+  console.log('saying',result)
 })
 onMounted(() => {
   const typed = new EasyTyper(typeOptions, `zzy你什么时候把分类页面写出来?!O.o`)
