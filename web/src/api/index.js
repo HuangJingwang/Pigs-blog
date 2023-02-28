@@ -8,11 +8,13 @@ export const getArticleList = (pageNo = 0, author) => {
 }
 // 获取首页用户数据
 export const getHomeUserInfo = (account) => {
-  let url = account == ''? '/user-info/getHomepageUserInfo':  `/user-info/getHomepageUserInfo?account=${account}`
-  console.log('url', url)
+  let url =
+    account == undefined
+      ? '/user-info/getHomepageUserInfo'
+      : `/user-info/getHomepageUserInfo?account=${account}`
   return requests({
     method: 'GET',
-    url: '/user-info/getHomepageUserInfo',
+    url: url,
   })
 }
 // 获取文章详情数据
@@ -57,7 +59,7 @@ export const getArticleHandleList = (params) => {
   let { account, pageNo, status } = params
   return requests({
     method: 'GET',
-    url: `/articles/getArticlesPageData?account=${account}&pageNo=${pageNo}&pageSize=5&status=${status}`,
+    url: `/articles/getArticlesPageData?pageNo=${pageNo}&pageSize=5&status=${status}`,
   })
 }
 

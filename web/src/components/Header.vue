@@ -70,10 +70,8 @@
 <script setup>
 import { ref,computed } from "vue"
 import {useUserStore}from '@/store/user'
-import { useStore } from "vuex"
 import { useRouter, useRoute } from "vue-router"
 import {logout} from '@/api'
-const { state } = useStore()
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -126,21 +124,25 @@ const testBind = () => {
   console.log(userStore.userInfo.githubId)
 }
 // 退出登录
-const reqLogout = async() => {
+const reqLogout = async () => {
+  // 删除token
   // 1.发出退出登录请求
   let result = await logout()
-  console.log(result)
+  sessionStorage.removeItem('token')
+  console.log(result,'退出登录')
   // 2.清空登陆数据
-  userStore.isLogin = false
-  userStore.userInfo = {}
-  userStore.token = ''
+  userStore.$patch(state => {
+  state.isLogin = false
+  state.userInfo = {}
+  state.token = ''
+  })
 }
 </script>
 
 <style scoped>
 /* 整体布局 */
 .header {
-  height: 50px;
+  height: 65px;
   width: 100%;
   padding: 0 20px;
   position: fixed;
@@ -149,10 +151,10 @@ const reqLogout = async() => {
   display: flex;
   justify-content: space-between;
   box-shadow: 0 10px 8px rgba(0, 0, 0, 0.3);
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.2);
 }
 .header-active {
-  height: 45px;
+  height: 55px;
   background-color: rgb(124, 131, 151);
 }
 
@@ -277,15 +279,16 @@ padding-right: 30px;
   top: 18px;
 }
 .user_login .avatar {
-  width: 32px;
-  height: 32px;
+  width: 37px;
+  height: 37px;
+  margin-left: 25px;
   background-position: center center;
   background-size: contain;
   border-radius: 50%;
   transition: all .2s;
 }
 .user_login .avatar:hover {
-  transform: scale(1.5);
+  transform: scale(1.25);
   border: 1px solid #fff;
 }
 

@@ -1,7 +1,7 @@
 <template>
   <!-- 側邊信息模塊 -->
   <el-affix :offset="offsetTop">
-    <div class="aside" ref="aside">
+    <div class="aside" >
       <!-- 非漂浮组件,随滚动移动 -->
       <!-- 漂浮组件 -->
       <!-- 1,用户信息 -->
@@ -13,20 +13,18 @@
         <div class="github"><span class="iconfont icon-GitHub"></span></div>
       </div>
       <!-- 2,时钟组件 -->
-        <!-- <Clock /> -->
     </div>
   </el-affix>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref ,watch,computed} from "vue"
 import { getHomeUserInfo } from "@/api"
-import Clock from "./Clock"
+import { useUserStore } from "@/store/user";
+const userStore = useUserStore()
 // 侧边栏悬浮效果
 // 监听文档滚动事件
-let aside = ref(null)
-let offsetTop = ref(70)
-let userAccount = ''
+let offsetTop = ref(80)
 // 获取组件数据
 let userData = ref({
   account: "",
@@ -36,15 +34,19 @@ let userData = ref({
   nickname: "",
   page_view: 0,
 })
-onMounted(async () => {
-  let result = await getHomeUserInfo(userAccount)
-  console.log("homeUserInfo", result)
+
+// 获取首页用户数据
+let isLogin = computed(() => {
+  return userStore.isLogin
+})
+watch(isLogin,async () => {
+  let result = await getHomeUserInfo(userStore.userInfo.account)
   if (result.code === 200) {
     for (let key in userData.value) {
       userData.value[key] = result.data[key]
     }
   }
-})
+},{immediate:true})
 </script>
 
 <style scoped>

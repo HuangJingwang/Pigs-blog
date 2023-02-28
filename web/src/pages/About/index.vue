@@ -25,10 +25,11 @@
         <p>除了交流经验，找到更多志同道合的朋友，希望这个网站可以成为我在语言学习深入过程中的纪念碑</p>
         <p>了解更多可以点击头像关注我们github账号</p>
     </div>
-</div> 
+</div> <Waifu/>
 </template>
 
 <script setup>
+
     function qjl(){
 
     }

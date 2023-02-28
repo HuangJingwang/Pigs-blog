@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { onMounted, defineAsyncComponent,toRaw,watch } from "vue"
+import { onMounted, defineAsyncComponent,watch } from "vue"
 import { useUserStore } from "./store/user"
 import { useArticleStore } from "./store/article"
 import { useRouter,useRoute } from "vue-router"
@@ -27,6 +27,12 @@ import UserModal from "./components/UserModal"
 // 引入pinia
 const userStore = useUserStore()
 const articleStore = useArticleStore()
+
+onMounted(() => {
+  // console.log(userStore.showUserModal)
+  console.log('testdata',userStore.token)
+})
+
 
 console.log('piniastore',userStore.isLogin)
  // import BackToTop from "./components/BackToTop.vue"
@@ -47,13 +53,14 @@ const showModal = () => {
   userStore.showArticleModal = !userStore.showArticleModal
 }
 // 请求分类列表数据
-onMounted( () => {
   // dispatch("reqGroupList")
   articleStore.reqGroupList()
-})
 // #region 
 // 点击特效
+
+let active = false
 function clickEffect() {
+active = true
   let balls = []
   let longPressed = false
   let longPress
@@ -211,7 +218,7 @@ function clickEffect() {
 }
 // 在特定頁面中不開啓特效
 watch(route, () => {
-  if (route.path !== '/write') {
+  if (route.path !== '/write'&&active == false) {
     clickEffect()
   }
 })

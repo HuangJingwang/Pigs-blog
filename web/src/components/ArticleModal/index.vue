@@ -1,7 +1,7 @@
 <template>
   <!-- <el-button text @click="dialogVisible = true"> click to open the Dialog </el-button> -->
   <el-dialog
-    v-model="state.showArticleModal"
+    v-model="userStore.showArticleModal"
     title="文章管理"
     width="50%"
     :before-close="handleClose"
@@ -36,15 +36,15 @@
       <Published  :publishedList="publishedList"/>
     </div> -->
     <div v-show="btn_active == 'draft' ? true : false">
-      <Draft :draftData="draftData" @getDraftPage="getDraftPage"/>
+      <Draft :draftData="draftData" @getDraftPage="getDraftPage" />
     </div>
     <!-- <div v-show="btn_active == 'dustbin' ? true : false" >
       <RecycleBin  :dustbinList="dustbinList"/>
     </div> -->
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="state.showArticleModal = false">Cancel</el-button>
-        <el-button type="primary" @click="state.showArticleModal = false">
+        <el-button @click="userStore.showArticleModal = false">Cancel</el-button>
+        <el-button type="primary" @click="userStore.showArticleModal = false">
           Confirm
         </el-button>
       </span>
@@ -54,15 +54,13 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue"
-import { useStore } from "vuex"
 // import Published from "./Published"
 import Draft from "./Draft"
 // import RecycleBin from "./RecycleBin"
 import { getArticleHandleList } from "@/api"
-import { useUserStore } from '@/store/user'
+import { useUserStore } from "@/store/user"
 const userStore = useUserStore()
 // import { ElMessageBox } from "element-plus"
-const { state } = useStore()
 // 关闭按钮
 const handleClose = (done) => {
   userStore.showArticleModal = false
@@ -91,7 +89,7 @@ let draftData = ref(null)
 const getDraftPage = (val) => {
   // console.log(123,val)
   // 更改页码
-  draftParams.value.pageNo=val
+  draftParams.value.pageNo = val
 }
 watch(
   draftParams,
