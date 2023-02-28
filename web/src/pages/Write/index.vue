@@ -117,7 +117,8 @@
 <script setup>
 // 引入消息提示框组件
 import { ElMessage } from "element-plus"
-import { useStore } from "vuex"
+import { useArticleThemeStore } from "@/store/articleTheme"
+import {useArticleStore} from '@/store/article'
 import { reactive, onMounted, ref, computed } from "vue"
 import axios from "axios"
 import {
@@ -131,7 +132,9 @@ import MdEditor from "md-editor-v3"
 import "md-editor-v3/lib/style.css"
 import UploadImg from "@/pages/Write/UploadImage"
 import { ElMessageBox } from "element-plus"
-const { state, dispatch } = useStore()
+const articleThemeStore = useArticleThemeStore()
+const articleStore = useArticleStore()
+
 // 创建初始文章及数据
 
 let coverImg = ''//封面路径
@@ -148,10 +151,9 @@ const acceptUrl = (url) => {
   coverImg = url
   console.log('获取到url',url)
 }
-
 // 主题
 let theme = computed(() => {
-  return state.preview_themeList[state.preview_themeIndex]
+  return articleThemeStore.preview_themeList[articleThemeStore.preview_themeIndex]
 })
 // 文章数据
 let data = reactive({
@@ -165,7 +167,6 @@ let data = reactive({
   tags: "Unspecified",
   title: "Unspecified",
 })
-
 // 控制文章模块显示与隐藏
 let configBox = ref(null)
 let pubBtn = ref(null)
@@ -191,7 +192,7 @@ const selectorOptions = {
 }
 // 分类数据
 const groupOptions = computed(() => {
-  return state.groupList
+  return articleStore.groupList
 })
 // 添加分类
 const addGroupId = () => {
@@ -201,7 +202,7 @@ const addGroupId = () => {
 // 判断是否选中此tag
 // 选择tags
 let tagList = computed(() => {
-  return state.tagList
+  return articleStore.tagList
 })
 let tags = [] // 标签数组
 const addTags = (e) => {
@@ -226,7 +227,8 @@ const removeTags = (e) => {
 
 // 获取tag列表数据
 onMounted(() => {
-  dispatch("reqTagList")
+  // dispatch("reqTagList")
+  articleStore.reqTagList()
 })
 
 // 编辑tag
@@ -240,7 +242,9 @@ const createTag = async () => {
   if (newTag.tag_name) {
     let result = await createNewTag(newTag)
     newTag.tag_name = ""
-    dispatch("reqTagList")
+    // dispatch("reqTagList")
+    articleStore.reqTagList()
+
   }
 }
 // 删除tag
@@ -249,7 +253,8 @@ const deleteTag = async (id) => {
   tags = tags.filter((item) => item != event.currentTarget.dataset.tag)
   let result = await deleteTags(id)
   if (result.success) {
-    dispatch("reqTagList")
+    // dispatch("reqTagList")
+    articleStore.reqTagList()
   }
 }
 // 默认隐藏编辑tag输入框及delete
@@ -334,8 +339,6 @@ async function saveDraft() {
   console.log(articleId)
   console.log(data)
   let result = await updateArticle(data, articleId)
-  // state.article = data.article_text
-  // console.log(state.article)
   console.log(result)
   if (result.success) {
     saveInfo.value = "文章已保存"
@@ -705,7 +708,15 @@ const handleSaveArticle = async () => {
 .md-editor >>> h6 a {
   font-size: 12px;
 }
-.md-editor >>> a {
+
+.md-editor:deep(h1>a),.md-editor:deep(h2>a),.md-editor:deep(h3>a),.md-editor:deep(h4>a),.md-editor:deep(h5>a),
+.md-editor:deep(h6>a){
   pointer-events: none;
+}
+.md-editor:deep(p>strong){
+  font-weight: 900;
+}
+.md-editor:deep(em){
+  font-style: italic;
 }
 </style>

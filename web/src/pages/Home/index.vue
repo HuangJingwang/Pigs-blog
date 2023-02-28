@@ -2,9 +2,7 @@
   <Cover></Cover>
   <div class="container">
     <div class="mainBody">
-      <!-- <div class="default"  >
-        没有文章
-      </div> -->
+ 
       <!-- 展示文章卡片 -->
       <div class="articles" @click="toArticle">
         <div class="notice basic-box"></div>
@@ -45,11 +43,9 @@
         </div>
       </div>
       <!-- 侧边功能模块 -->
-
       <Aside/>
- 
     </div>
-    <div class="loadMore">
+    <div class="loadMore" > 
       <a v-show="hasNext" href="javascript:void(0)" @click="loadMore"> loadMore... </a>
       <p v-show="!hasNext">没有了捏!</p>
     </div>
@@ -58,36 +54,50 @@
 
 <script setup>
 import { useStore } from "vuex"
+import {storeToRefs} from 'pinia'
+import { useUserStore } from "@/store/user"
+import { useArticleStore, } from "@/store/article"
 import { useRoute, useRouter } from "vue-router"
 import Cover from "./Cover"
 import Aside from './Aside'
-import { ref, onMounted, computed } from "vue"
-const { dispatch, state } = useStore()
+import { ref, onMounted, computed,watch } from "vue"
+import { has } from "lodash"
 const route = useRoute()
 const router = useRouter()
-
+const userStore = useUserStore()
+const articleStore = useArticleStore()
 // 渲染首页列表数据
 // 获取数据
 let articleList = computed(() => {
-  return state.articleData.articleList
+  return articleStore.homeArticles.articlesList
 })
-onMounted(() => {
-  // 仅在第一次加载时发送获取初始数据的请求
-  if (articleList.value.length == 0) {
-    dispatch("reqArticleData")
-  }
+let pageNo = computed(()=>{
+  return articleStore.homeArticles.currentPage
 })
+
+watch( pageNo,()=>{
+// console.log(123)
+// 发起请求获取文章
+articleStore.reqArticleList()
+},{deep:true,immediate:true})
+// onMounted(() => {
+//   articleStore.reqArticleList()
+//   // 仅在第一次加载时发送获取初始数据的请求
+//   if (articleList.value.length == 0) {
+//     dispatch("reqArticleData")
+//   }
+// })
 // 点击获取更多文章
 // 获取当前文章页数
 let hasNext = computed(() => {
-  return state.articleData.hasNext
+  return articleStore.homeArticles.hasNext
 })
 // 点击加载更多
 const loadMore = () => {
   // 是否有下一页
-  if (hasNext) {
-    state.currentPageNo += 1
-    dispatch("reqArticleData")
+  if (hasNext.value) {
+    articleStore.homeArticles.currentPage += 1
+    
   }
 }
 
@@ -97,7 +107,6 @@ const toArticle = (e) => {
   // console.log(123)
   let id = e.target.dataset.id
   if (id) {
-    // state.user.key = '1234'
     console.log(id)
     router.push({
       path: "/article",
@@ -111,13 +120,12 @@ const toArticle = (e) => {
 //三方登录
 onMounted(() => {
   // 获取key 并存储
-  // 将key存入state中
   let key = route.query.key //获取key
   let status = sessionStorage.getItem("status")
   if (status === "active" && key) {
-    console.log(key)
     // 存储key
-    state.user.key = key
+    userStore.key = key
+    
   }
 })
 </script>
@@ -252,11 +260,15 @@ onMounted(() => {
 
 /* 加载更多文章 */
 .container .loadMore {
+  
+  color: #fff;
   text-align: center;
   margin: auto;
   /* background-color: pink; */
 }
 .loadMore a {
+  background-color: #fff;
+  color: #eee;
   font-size: 16px;
 }
 </style>

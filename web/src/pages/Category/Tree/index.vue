@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import {reactive} from 'vue'
+import {reactive,onMounted,toRaw} from 'vue'
 import Tree from './index.vue'
 
 const props = defineProps({
@@ -36,8 +36,11 @@ const props = defineProps({
     default: () => true,
   },
 })
-let categoryData = reactive(props.data)
 
+onMounted(() => {
+  console.log(props.data ,'propschuancan')
+})
+let categoryData = reactive(props.data)
 // function showData(item,show) {
 //   console.log('show',item)
 //   console.log(show)
@@ -47,8 +50,6 @@ let categoryData = reactive(props.data)
 function arrowChange(item){
     console.log(item.show);
     if (item.show) {
-    }else{
-      return 
     }
 }
 

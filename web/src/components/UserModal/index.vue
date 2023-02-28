@@ -2,7 +2,7 @@
   <div>
     <el-dialog
       class="dialog"
-      v-model="state.user.showUserModal"
+      v-model="userStore.showUserModal"
       :lock-scroll="false"
       :append-to-body="true"
       :show-close="false"
@@ -179,11 +179,10 @@
 </template>
 <script setup>
 import { ElMessageBox, ElMessage } from "element-plus"
-import { register, getThree_partInfo } from "@/api"
-import { useRoute } from "vue-router"
-import { ref, reactive, computed, onMounted, onBeforeUnmount, watch } from "vue"
-import { useStore } from "vuex"
-const { state, dispatch } = useStore()
+import { register, getThree_partInfo,login } from "@/api"
+import { ref, reactive, computed, watch } from "vue"
+import { useUserStore } from "@/store/user"
+const userStore = useUserStore()
 
 // let registerVisibility = ref('hidden')
 // let loginVisibility = ref('visible')
@@ -205,7 +204,7 @@ const getTree_partKey = () => {
 }
 let status = sessionStorage.getItem("status")
 // let key = ref(sessionStorage.getItem('key'))
-let key = computed(() => state.user.key)
+let key = computed(() => userStore.key)
 // 检测key获取路由参数
 watch(key, async () => {
   if (status === "active" && key.value) {
@@ -221,17 +220,20 @@ watch(key, async () => {
       registerData.github_url = three_partData.html_url
       registerData.img_url =three_partData.avatar_url
       registerData.isThreePart = true
-      state.user.showUserModal = true
+      userStore.showUserModal = true
       toRegister()
     } else if (result.code == 200 && result.data.token) {
       // account 已注册，直接登录 //第三方登录
       console.log('三方登陸成功')
       let userInfo = JSON.parse(result.data.user_data)
-      state.user.userInfo = userInfo
-      state.user.token = result.data.token
-      state.user.isLogin = true
-      console.log("登录信息", state.user.userInfo)
-      console.log("token", state.user.token)
+      userStore.$patch((state) => {
+        state.isLogin = true
+        state.userInfo = userInfo
+      state.token = result.data.token
+
+      })
+      console.log("登录信息", userStore.userInfo)
+      console.log("token", userStore.token)
       ElMessage({  
         message: "登录成功",
         type: "success",
@@ -276,8 +278,6 @@ const registerAccount = async () => {
       img_url:registerData.img_url
     }
   }
-  console.log(data)
-  console.log(registerData)
   if (
     data.account &&
     data.nick_name &&
@@ -287,7 +287,6 @@ const registerAccount = async () => {
     let result = await register(data)
     console.log(result.code)
     if (result.code === 200) {
-
       //自动填写登录数据
       loginData.account = registerData.account
       loginData.password = registerData.password
@@ -309,7 +308,7 @@ const registerAccount = async () => {
     } else if (result.code === 10005) {
       // console.log(result.msg)
       ElMessage({
-    message: '登陆失败',
+    message: '注册失败',
     type: 'error',
   })
     }
@@ -334,19 +333,23 @@ let loginData = reactive({
 // 登录
 const userLogin = async () => {
   if (loginData.account && loginData.password) {
-    let result = await dispatch("reqLogin", loginData)
-    console.log(result)
+    let result = await login(loginData) 
     if (!result.success) {
       ElMessageBox.alert("账号或密码错误", "ERROR", {
         confirmButtonText: "确定",
         lockScroll: false,
       })
     } else {
-      console.log(result)
-      state.user.userInfo = JSON.parse(result.data.user_data)
-      state.user.isLogin = true
-      state.user.token = result.data.token
-      console.log(state.user)
+      console.log('loginData',result)
+      userStore.$patch((state) => {
+        state.userInfo = JSON.parse(result.data.user_data)
+        state.isLogin = true
+        state.token = result.data.token
+      })
+console.log(userStore)
+      // state.user.userInfo = JSON.parse(result.data.user_data)
+      // state.user.isLogin = true
+      // state.user.token = result.data.token
       // console.log(result)
       // 清空登录数据
       loginData.account = ''
@@ -356,7 +359,7 @@ const userLogin = async () => {
         type: "success",
       })
       // 关闭登录窗口
-      state.user.showUserModal = false
+      userStore.showUserModal = false
     }
   } else {
     ElMessageBox.alert("请填写账号和密码", "ERROR", {

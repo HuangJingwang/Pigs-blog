@@ -22,39 +22,7 @@
       <label for="upload" class="replacePic iconfont icon-yunshangchuan"></label>
     </div>
   </button>
-  <!-- <el-upload
-    action
-    :http-request="handUpload"
-    :on-success="onSuccess"
-    :on-error="onError"
-    :before-upload="beforeUpload"
-    :file-list="fileList"
-    :limit="2"
-    list-type="picture-card"
-    :on-change="handelChange"
-    :show-file-list="true"
-    :auto-upload="true">
-    <el-icon><Plus /></el-icon>
 
-    <template #file="{ file }">
-      <div>
-        <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-        <span class="el-upload-list__item-actions">
-          <span
-            class="el-upload-list__item-preview"
-            @click="handlePictureCardPreview(file)">
-            <el-icon><zoom-in /></el-icon>
-          </span>
-          <span
-            v-if="!disabled"
-            class="el-upload-list__item-delete"
-            @click="handleRemove(file,files)">
-            <el-icon><Delete /></el-icon>
-          </span>
-        </span>
-      </div>
-    </template>
-  </el-upload> -->
 
   <el-dialog v-model="dialogVisible">
     <img w-full :src="picture_url" class="preview" alt="Preview Image" />

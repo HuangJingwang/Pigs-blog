@@ -59,13 +59,13 @@ import { useStore } from "vuex"
 import Draft from "./Draft"
 // import RecycleBin from "./RecycleBin"
 import { getArticleHandleList } from "@/api"
+import { useUserStore } from '@/store/user'
+const userStore = useUserStore()
 // import { ElMessageBox } from "element-plus"
 const { state } = useStore()
 // 关闭按钮
 const handleClose = (done) => {
-  console.log(done)
-  state.showArticleModal = false
-  console.log(state)
+  userStore.showArticleModal = false
 }
 // 设置按钮active状态
 let btn_active = ref("published")

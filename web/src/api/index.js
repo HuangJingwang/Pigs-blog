@@ -6,18 +6,15 @@ export const getArticleList = (pageNo = 0, author) => {
     url: `/articles/getArticlesPageData?pageNo=${pageNo}`,
   })
 }
-
 // 获取首页用户数据
 export const getHomeUserInfo = (account) => {
-  let url = ''
-account = ''?url='/user-info/getHomepageUserInfo':url =`/user-info/getHomepageUserInfo?account=${account}` 
+  let url = account == ''? '/user-info/getHomepageUserInfo':  `/user-info/getHomepageUserInfo?account=${account}`
+  console.log('url', url)
   return requests({
     method: 'GET',
-    url:url,
+    url: '/user-info/getHomepageUserInfo',
   })
 }
-
-
 // 获取文章详情数据
 export const getArticleDetail = (id) => {
   return requests({
@@ -61,7 +58,7 @@ export const getArticleHandleList = (params) => {
   return requests({
     method: 'GET',
     url: `/articles/getArticlesPageData?account=${account}&pageNo=${pageNo}&pageSize=5&status=${status}`,
-  })  
+  })
 }
 
 // 获取标签数据
@@ -124,8 +121,6 @@ export const updateArticle = (data, id) => {
   })
 }
 
-
-
 // 登录
 export const login = (data) => {
   return requests({
@@ -151,7 +146,6 @@ export const logout = () => {
   })
 }
 
-
 // 三方登录获取信息
 export const getThree_partInfo = (key) => {
   return requests({
@@ -159,10 +153,10 @@ export const getThree_partInfo = (key) => {
     url: `/user/getGithubUserInfo/?key=${key}`,
   })
 }
-
+// 獲取箴言
 export const getSayings = () => {
   return requests({
     method: 'GET',
-    url:'/logion/random'
+    url: '/logion/random',
   })
 }

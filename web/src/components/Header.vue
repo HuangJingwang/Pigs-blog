@@ -8,7 +8,7 @@
     <!-- 搜索区 -->
     <div class="pig-middle">
       <!-- 搜索框及图标 -->
-      <input type="text" class="search" placeholder="javascript 递归" />
+      <input type="text" class="search" placeholder="javascript" />
       <span class="iconfont icon-sousuo"></span>
     </div>
     <!-- 导航区 -->
@@ -39,11 +39,11 @@
         <p>关于</p>
       </div>
       <!-- 用户 -->
-      <div class="user navigation" @click="login_register" v-show="!state.user.isLogin">
+      <div class="user navigation" @click="login_register" v-show="!userStore.isLogin">
         <span class="iconfont icon-denglu"></span>
         <p>登录</p>
       </div>
-      <div class="user_login" v-show="state.user.isLogin">
+      <div class="user_login" v-show="userStore.isLogin">
         <el-dropdown>
           <div
             class="avatar"
@@ -69,11 +69,13 @@
 
 <script setup>
 import { ref,computed } from "vue"
-
+import {useUserStore}from '@/store/user'
 import { useStore } from "vuex"
 import { useRouter, useRoute } from "vue-router"
 import {logout} from '@/api'
 const { state } = useStore()
+
+const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
 // 监听页面滚动事件,改变header样式
@@ -96,30 +98,32 @@ const toWrite = () => {
 // 控制write 是否显示
 
 let showWrite = computed(() => {
-  return state.user.isLogin
+  return userStore.isLogin
 })
 
 
 // 点击弹出登录框
 const login_register = () => {
-  state.user.showUserModal = true
-  console.log(state.user.showUserModal)
+  userStore.showUserModal = true
+  console.log(userStore.showUserModal)
 }
 
-//显示头像
+//显示头像x`
 let avatarImg = computed(() => {
-  return '123'
-  // return state.user.userInfo.imgUrl
+  console.log(userStore.userInfo.imgUrl)
+  return userStore.userInfo.imgUrl!==undefined && userStore.userInfo.imgUrl == '' ?
+  'https://moon.starrysummer.com/3686fd078f7649528d5b5ba31de2a9d7.jpg' : userStore.userInfo.imgUrl
+  // return userStore.userInfo.imgUrl
 })
 // 登录状态下拉栏
 // 管理文章
 const showArticleModal = () => {
-  state.showArticleModal = true
+  userStore.showArticleModal = true
 }
 
 // 对于未通过三方登录注册的用户，提供绑定github功能
 const testBind = () => {
-  console.log(state.user.userInfo.githubId)
+  console.log(userStore.userInfo.githubId)
 }
 // 退出登录
 const reqLogout = async() => {
@@ -127,8 +131,9 @@ const reqLogout = async() => {
   let result = await logout()
   console.log(result)
   // 2.清空登陆数据
-  state.user.isLogin = false
-  state.user.userInfo =null 
+  userStore.isLogin = false
+  userStore.userInfo = {}
+  userStore.token = ''
 }
 </script>
 
@@ -146,7 +151,6 @@ const reqLogout = async() => {
   box-shadow: 0 10px 8px rgba(0, 0, 0, 0.3);
   background: rgba(0, 0, 0, 0.3);
 }
-
 .header-active {
   height: 45px;
   background-color: rgb(124, 131, 151);
@@ -283,5 +287,13 @@ padding-right: 30px;
 .user_login .avatar:hover {
   transform: scale(1.5);
   border: 1px solid #fff;
+}
+
+/* 調整指針 */
+.pig-left>.logo,.pig-left>.title,.pig-middle .iconfont,.pig-right .home,.pig-right .write, .pig-right .categories , .pig-right .archives, .pig-right .about ,.pig-right .user,.pig-right .user_login{
+  cursor:pointer 
+}
+.pig-right .iconfont{
+  cursor: pointer;
 }
 </style>

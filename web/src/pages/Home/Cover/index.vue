@@ -67,7 +67,7 @@ const distance = ref(0)
 const scrollToMain = () => {
   distance.value = window.innerHeight
   window.scrollTo({
-    top: distance.value - 40,
+    top: distance.value - 50,
     behavior: "smooth",
   })
 }
@@ -163,17 +163,17 @@ const scrollToMain = () => {
   /* font-size: 32px; */
   position: absolute;
   bottom: 0px;
+  cursor: pointer;
   right: 50%;
   transform: translateX(50%);
 }
-.scrollToMain:hover {
-  cursor: pointer;
-}
+
 .scrollToMain .icon-jiantouxia {
   color: #fff;
   height: 35px;
   line-height: 35px;
   font-size: 30px;
+  cursor: pointer;
   /* animation: pullDown1 2s ease-out  infinite; */
 }
 .scrollToMain .arrow_one {

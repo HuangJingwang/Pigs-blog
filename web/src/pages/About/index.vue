@@ -1,11 +1,11 @@
 <template>
-<background></background>
+<background :title="`About`"></background>
 <div class="container basic-box">
     <div class="partner1">
         <img src="https://avatars.githubusercontent.com/u/106206840?v=4" alt="">
        <div class="text">
         <!-- <span >haishanliao</span> -->
-        <a href="https://github.com/haishanliao" class="partnerName"> haishanliao</a>
+        <a href="https://github.com/haishanliao" class="partnerName"> 海山了</a>
         <span class="partnerJob">前端</span>
         <span class="partnerWords">纸上得来终觉浅，绝知此事要躬行</span>
        </div>

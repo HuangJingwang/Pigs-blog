@@ -18,15 +18,21 @@
 
 <script setup>
 import { onMounted, defineAsyncComponent,toRaw,watch } from "vue"
-import { useStore } from "vuex"
+import { useUserStore } from "./store/user"
+import { useArticleStore } from "./store/article"
 import { useRouter,useRoute } from "vue-router"
 import Header from "./components/Header.vue"
 import Footer from "./components/Footer.vue"
 import UserModal from "./components/UserModal"
-// import BackToTop from "./components/BackToTop.vue"
-const { state, dispatch } = useStore()
+// 引入pinia
+const userStore = useUserStore()
+const articleStore = useArticleStore()
+
+console.log('piniastore',userStore.isLogin)
+ // import BackToTop from "./components/BackToTop.vue"
 const router = useRouter()
 const route = useRoute()
+
 
 // let innerHeight = window.innerHeight + "px"
 // import ArticleModal from './components/ArticleModal'
@@ -37,12 +43,13 @@ const ArticleModal = defineAsyncComponent({
   delay: 200,
 })
 const showModal = () => {
-  console.log(state.showArticleModal)
-  state.showArticleModal = !state.showArticleModal
+  console.log(userStore.showArticleModal)
+  userStore.showArticleModal = !userStore.showArticleModal
 }
 // 请求分类列表数据
-onMounted(async () => {
-  dispatch("reqGroupList")
+onMounted( () => {
+  // dispatch("reqGroupList")
+  articleStore.reqGroupList()
 })
 // #region 
 // 点击特效

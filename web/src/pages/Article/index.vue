@@ -1,9 +1,9 @@
 <template>
   <!-- <Background /> -->
-  <Banner :articleData="articleData"/>
+  <Banner :articleData="articleData" />
   <div class="container">
     <div class="leftBox">
-      <div class="preview" @click="test">
+      <div class="preview" >
         <md-editor
           class="md-editor basic-box"
           v-model="articleData.article_text"
@@ -15,24 +15,27 @@
         />
       </div>
       <div class="adjacent basic-box">
-        <Adjacent :id="id"
-        ></Adjacent>
+        <Adjacent :id="id"></Adjacent>
       </div>
     </div>
     <!-- 侧边功能模块 -->
     <div class="aside">
       <div class="theme basic-box" @click="changeTheme">
-      <div class="title">
-      主题切换
-      </div>
-       <div class="themeWrapper">
-        <span class="arr_left iconfont icon-zuojiantou" data-method="reduce"></span>
-        <div class="themeName">{{ theme }}</div>
-        <span class="arr_right iconfont icon-youjiantou" data-method="plus"></span></div>
+        <div class="title">
+          <span class="iconfont icon-zhuti_tiaosepan"></span>
+          <span> 主题切换</span>
+        </div>
+        <div class="themeWrapper">
+          <span class="arr_left iconfont icon-zuojiantou" data-method="reduce"></span>
+          <div class="themeName">{{theme }}</div>
+          <span class="arr_right iconfont icon-youjiantou" data-method="plus"></span>
+        </div>
       </div>
 
       <!-- 目录 -->
       <div class="catalog basic-box" ref="catalog">
+        <div class="title"><span class="iconfont icon-danlieliebiao"></span> 目录</div>
+        <hr class="line">
         <md-catalog
           class="md-catalog"
           :editor-id="md_editor_config.id"
@@ -48,75 +51,68 @@
 <script setup>
 import { reactive, ref, onMounted, computed, watch } from "vue"
 import { useRoute } from "vue-router"
-import { useStore } from "vuex"
+import{useArticleThemeStore} from '@/store/articleTheme'
 import { getArticleDetail } from "@/api"
 import MdEditor from "md-editor-v3"
 import "md-editor-v3/lib/style.css"
 import Adjacent from "./Adjacent"
-import Banner from './Banner'
+import Banner from "./Banner"
 const MdCatalog = MdEditor.MdCatalog
 const scrollElement = document.documentElement
 const route = useRoute()
-const { state } = useStore()
+const articleThemeStore = useArticleThemeStore()
 // 切换文章预览主题
 let theme = computed(() => {
-  return state.preview_themeList[state.preview_themeIndex]
+  return articleThemeStore.preview_themeList[articleThemeStore.preview_themeIndex]
 })
 
 // 更改预览主题
 const changeTheme = (e) => {
   console.log(e.target.dataset.method)
   if (e.target.dataset.method == "plus") {
-    state.preview_themeIndex++
-    console.log(state.preview_themeIndex)
-    state.preview_themeIndex =
-      state.preview_themeIndex == 5 ? 0 : state.preview_themeIndex
+    articleThemeStore.preview_themeIndex++
+    articleThemeStore.preview_themeIndex =
+    articleThemeStore.preview_themeIndex == 5 ? 0 : articleThemeStore.preview_themeIndex
   } else if (e.target.dataset.method == "reduce") {
-    state.preview_themeIndex--
-    console.log(state.preview_themeIndex)
-    state.preview_themeIndex =
-      state.preview_themeIndex == -1 ? 5 : state.preview_themeIndex
+    articleThemeStore.preview_themeIndex--
+    console.log(articleThemeStore.preview_themeIndex)
+    articleThemeStore.preview_themeIndex =
+    articleThemeStore.preview_themeIndex == -1 ? 5 : articleThemeStore.preview_themeIndex
   }
 }
 
 // let github = ref('github')
 let articleData = reactive({
-  id:-1,
-  account: '',//作者
-  nick_name:'',
+  id: -1,
+  account: "", //作者
+  nick_name: "",
   article_text: ``, //内容
   title: "", //标题
   tags: "", //签
   create_at: "", //创建时间
   img_url: "", //封面
-  group_name:'',//文章分类
+  group_name: "", //文章分类
   introduction: "", //简介
   page_view: "", //浏览量
   update_at: "", //最近更新
 })
 
-const test = () => {
-  console.log(123)
-  console.log(route.query)
-  console.log(route.query.id)
-}
 let id = route.query.id
 watch(
   route,
-  async ( ) => {
+  async () => {
     id = route.query.id
     let result = await getArticleDetail(id)
-    console.log('文章详情',result)
+    console.log("文章详情", result)
 
     // articleData.article_text = result.data.article_text
     Object.keys(articleData).forEach((key) => {
       articleData[key] =
         result.data[key] == undefined ? articleData[key] : result.data[key]
     })
-    console.log(articleData, '修改数值')
+    console.log(articleData, "修改数值")
     articleData.update_at = articleData.update_at.slice(0, 10)
-    console.log(articleData, '修改数值')
-    
+    console.log(articleData, "修改数值")
   },
   { immediate: true, dee: true }
 )
@@ -229,7 +225,7 @@ onMounted(() => {
   justify-content: space-between;
 }
 
-.theme .themeWrapper{
+.theme .themeWrapper {
   width: 100%;
   display: flex;
   align-items: center;
@@ -289,29 +285,61 @@ onMounted(() => {
   transition: all 0.3s;
 }
 /* 修改标题字体大小 */
-.preview >>> p {
+.preview:deep(h1 a) {
   font-size: 16px;
 }
-.preview >>> h1 a {
+.preview:deep(h1 a) {
   font-size: 32px;
 }
-.preview >>> h2 a {
+.preview:deep(h2 a) {
   font-size: 24px;
 }
 
-.preview >>> h3 a {
+.preview:deep(h3 a) {
   font-size: 18.72px;
 }
-.preview >>> h4 a {
+.preview:deep(h4 a) {
   font-size: 16px;
 }
-.preview >>> h5 a {
+.preview:deep(h5 a) {
   font-size: 13.28px;
 }
-.preview >>> h6 a {
+.preview:deep(h6 a) {
   font-size: 12px;
 }
-.preview >>> a {
+.theme {
+  vertical-align: middle;
+}
+.theme .title .iconfont {
+  font-size: 30px;
+}
+.theme .title span {
+  height: 40px;
+  font-size: 20px;
+  line-height: 40px;
+}
+
+.preview:deep(h1 > a),
+.preview:deep(h2 > a),
+.preview:deep(h3 > a),
+.preview:deep(h4 > a),
+.preview:deep(h5 > a),
+.preview:deep(h6 > a) {
   pointer-events: none;
+}
+.preview:deep(p > strong) {
+  font-weight: 900;
+}
+.preview:deep(em) {
+  font-style: italic;
+}
+.line{
+border-color: rgb(255, 255, 255);
+}
+.md-catalog{
+  margin-top: 15px;
+}
+.title>.iconfont{
+  margin-bottom: 15px;
 }
 </style>

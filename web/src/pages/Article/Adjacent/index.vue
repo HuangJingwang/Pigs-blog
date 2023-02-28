@@ -3,7 +3,7 @@
   <div class="pre" @click="toPreArticle">
     <div
       class="coverImg_pre"
-      :style="{ backgroundImage: `url(${imgUrl})` }"
+      :style="{ backgroundImage: `url(${preArticle.img_url})` }"
     ></div>
     <div class="articleCard_pre">
       <span class="btn_pre iconfont icon-qiehuanqizuo" :data-id="preArticle.id"></span>
@@ -15,56 +15,70 @@
   <div class="next" @click="toNextArticle">
     <div
       class="coverImg_next"
-      :style="{ backgroundImage: `url(${imgUrl})` }"
+      :style="{ backgroundImage: `url(${nextArticle.img_url})` }"
     ></div>
     <div class="articleCard_next">
       <span class="btn_next iconfont icon-qiehuanqiyou" :data-id="nextArticle.id"></span>
-      <div class="title" :data-id="nextArticle.id">{{nextArticle.title}}</div>
+      <div class="title" :data-id="nextArticle.id">{{ nextArticle.title }}</div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, watch, ref } from 'vue'
-import {useRouter} from 'vue-router'
-import { getPreArticle, getNextArticle } from '@/api'
+import { onMounted, watch, ref } from "vue"
+import { useRouter } from "vue-router"
+import { getPreArticle, getNextArticle } from "@/api"
 
 const router = useRouter()
 const props = defineProps(["id"])
-let imgUrl = ''
+let imgUrl = ""
 let preArticle = ref({
   id: -100,
-  title: 'untitled',
-  img_url:''
+  title: "untitled",
+  img_url: "",
 })
 let nextArticle = ref({
   id: -100,
-  title: 'untitled',
-  img_url:''
+  title: "untitled",
+  img_url: "https://moon.starrysummer.com/05650df26e4b49ae86f459bfdfa0e293.jpg",
 })
 
-watch(props, async () => {
-  let preResult = await getPreArticle(props.id)
-  console.log('pre', preResult)
-  if (preResult.data!=={}){ preArticle.value = preResult.data
-  } else {
-    console.log('没有数据,使用默认数据')
- }
-  let nextResult = await getNextArticle(props.id)
-  console.log('next',nextResult)
-  if (JSON.stringify(nextResult.data) !== '{}') {
-    console.log('有数据')
-    console.log(nextResult.data)
-    nextArticle.value = nextResult.data
-  } else {
-    // 为nextArticle 赋默认值
-    console.log('没有数据,使用默认数据')
-    console.log(nextResult == {})
+watch(
+  props,
+  async () => {
+    let preResult = await getPreArticle(props.id)
+    console.log("pre", preResult)
+    if (JSON.stringify(preResult.data) !== "{}") {
+      preArticle.value = preResult.data
+    } else {
+      console.log('没有数据,使用默认数据')
+      preArticle.value = {
+        id: -100,
+        title: "untitled",
+        img_url: "https://moon.starrysummer.com/05650df26e4b49ae86f459bfdfa0e293.jpg",
+      }
+    }
+    let nextResult = await getNextArticle(props.id)
+    console.log("next", nextResult)
+    if (JSON.stringify(nextResult.data) !== "{}") {
+      console.log("有数据")
+      console.log(nextResult.data)
+      nextArticle.value = nextResult.data
+    } else {
+      // 为nextArticle 赋默认值
+      console.log("没有数据,使用默认数据")
+      // console.log(nextResult == {})
+      nextArticle.value = {
+        id: -100,
+        title: "untitled",
+        img_url: "https://moon.starrysummer.com/05650df26e4b49ae86f459bfdfa0e293.jpg",
+      }
+    }
+  },
+  {
+    immediate: true,
   }
-
-}, {
-  immediate:true
-})
+)
 
 // 点击事件
 
@@ -73,7 +87,6 @@ const toPreArticle = (e) => {
   console.log(props)
   let id = e.target.dataset.id
   jumpArticle(id)
-
 }
 const toNextArticle = (e) => {
   console.log(props.id)
@@ -86,13 +99,12 @@ function jumpArticle(id) {
   //携带文章id 跳转到article页面
   if (id >= 0) {
     router.push({
-      path: '/article',
+      path: "/article",
       query: {
-        id:id
-      }
+        id: id,
+      },
     })
   }
-
 }
 </script>
 
@@ -122,7 +134,7 @@ function jumpArticle(id) {
 
 .pre .coverImg_pre::after,
 .next .coverImg_next::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   height: 0;
@@ -159,7 +171,6 @@ function jumpArticle(id) {
   transform: translate(-50%, -50%);
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 .pre .btn_pre,
 .next .btn_next {
