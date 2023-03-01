@@ -36,6 +36,7 @@ console.log(props.title)
   transform: translate(-50%,-50%);
   font-size: 50px;
   color: #fff;
+  pointer-events: none;
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 </style>

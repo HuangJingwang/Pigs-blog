@@ -39,6 +39,7 @@
               data-placeholder="Nickname"
               @focus="changePlaceholder_active"
               @blur="changePlaceholder($event, registerData.nick_name)"
+              :disabled="registering"
             />
           </div>
 
@@ -54,6 +55,7 @@
               data-placeholder="Account"
               @focus="changePlaceholder_active"
               @blur="changePlaceholder($event, registerData.account)"
+              :disabled="registering"
             />
           </div>
           <!-- 输入密码 -->
@@ -69,6 +71,7 @@
               data-placeholder="Password"
               @focus="changePlaceholder_active"
               @blur="changePlaceholder($event, registerData.password)"
+              :disabled="registering"
             />
             <span
               class="seePsw iconfont icon-yincangbukejian"
@@ -92,6 +95,7 @@
               data-placeholder="ConfirmPassword"
               @focus="changePlaceholder_active"
               @blur="changePlaceholder($event, registerData.confirmPassword)"
+              :disabled="registering"
             />
             <span
               class="seePsw iconfont icon-yincangbukejian"
@@ -104,7 +108,7 @@
             width="200px"
             class="btn-register"
             @click="registerAccount"
-            ref="buttonRef"
+            :disabled="registering"
           >
             Register
           </el-button>
@@ -128,6 +132,7 @@
               data-placeholder="Account"
               @focus="changePlaceholder_active"
               @blur="changePlaceholder($event, loginData.account)"
+              :disabled="logining"
             />
           </div>
           <!-- 密码 -->
@@ -143,6 +148,7 @@
               data-placeholder="Password"
               @focus="changePlaceholder_active"
               @blur="changePlaceholder($event, loginData.password)"
+              :disabled="logining"
             />
             <span
               class="seePsw iconfont icon-yincangbukejian"
@@ -150,7 +156,13 @@
               data-type="status2"
             ></span>
           </div>
-          <el-button type="primary" width="200px" class="btn-login" @click="userLogin">
+          <el-button
+            type="primary"
+            width="200px"
+            class="btn-login"
+            @click="userLogin"
+            :disabled="logining"
+          >
             Login
           </el-button>
           <div class="link-panel">
@@ -179,13 +191,16 @@
 </template>
 <script setup>
 import { ElMessageBox, ElMessage } from "element-plus"
-import { register, getThree_partInfo,login } from "@/api"
-import { ref, reactive, computed, watch } from "vue"
+import { register, getThree_partInfo, login } from "@/api"
+import { ref, reactive, computed, watch,onMounted } from "vue"
 import { useUserStore } from "@/store/user"
+import { useRouter, useRoute } from "vue-router"
+const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
-
-// let registerVisibility = ref('hidden')
-// let loginVisibility = ref('visible')
+// 切换登录，注册窗口
+let registering = ref(true)
+let logining = ref(false)
 // 绑定注册相关数据
 let registerData = reactive({
   nick_name: "",
@@ -194,66 +209,70 @@ let registerData = reactive({
   confirmPassword: "",
   github_url: "",
   github_id: 0,
-  img_url:'',//头像
+  img_url: "", //头像
   isThreePart: false,
 })
-// 
+//
 const getTree_partKey = () => {
   // 存储当前登录状态
   sessionStorage.setItem("status", "active")
 }
 let status = sessionStorage.getItem("status")
-// let key = ref(sessionStorage.getItem('key'))
 let key = computed(() => userStore.key)
 // 检测key获取路由参数
 watch(key, async () => {
+  // 标记为active状态，且key存在
   if (status === "active" && key.value) {
     let result = await getThree_partInfo(key.value)
     // 整理数据
     // 判断token是否存在 作为判断是否已注册的依据
-    let three_partData = null//三方注册数据
     // 若已注册,直接登录,若未注册,则将填入注册信息
     if (result.code == 200 && !result.data.token) {
-      three_partData = JSON.parse(result.data)
+      let three_partData = JSON.parse(result.data)
       registerData.account = three_partData.login
       registerData.github_id = three_partData.id
       registerData.github_url = three_partData.html_url
-      registerData.img_url =three_partData.avatar_url
+      registerData.img_url = three_partData.avatar_url
       registerData.isThreePart = true
       userStore.showUserModal = true
       toRegister()
     } else if (result.code == 200 && result.data.token) {
       // account 已注册，直接登录 //第三方登录
-      console.log('三方登陸成功')
+      console.log("三方登录成功")
       let userInfo = JSON.parse(result.data.user_data)
       userStore.$patch((state) => {
         state.isLogin = true
         state.userInfo = userInfo
-      state.token = result.data.token
-
+        state.token = result.data.token
       })
       console.log("登录信息", userStore.userInfo)
       console.log("token", userStore.token)
-      ElMessage({  
+      ElMessage({
         message: "登录成功",
         type: "success",
       })
     } else if (result.code == 10007) {
-      // account 已被占用
-
-      ElMessage()
-      console.log(result.msg)
-      // console.log("error")
+      ElMessage.error("账号已被注册")
     }
     // status 为active ,key为'',表示获取key失败,链接超时或网络代理错误
+    sessionStorage.removeItem("status")
+    // 刷新页面清除query参数（key）
+    router.push({
+      path:'/index',
+      query:{}
+    })
+    // 无论注册/登录成功与否,初始化数据
   } else if (status === "active" && key === "") {
     // 未知错误
-    console.log("unknownError")
+    ElMessage.error("登陆失败")
+    sessionStorage.removeItem("status")
   }
 })
-// onBeforeUnmount(() => {
-//   console.log(12345,'destory')
-// })
+onMounted(() => {
+  console.log(route)
+  console.log(router)
+  console.log("----------------------------")
+})
 // 注册账号
 const registerAccount = async () => {
   let data = {}
@@ -263,19 +282,17 @@ const registerAccount = async () => {
       account: registerData.account,
       nick_name: registerData.nick_name,
       password: registerData.password,
-      //默认头像
-      img_url:''
+      img_url: registerData.img_url,
     }
   } else {
     //三方注册
-
     data = {
       account: registerData.account,
       nick_name: registerData.nick_name,
       password: registerData.password,
       github_id: registerData.github_id,
       github_url: registerData.github_url,
-      img_url:registerData.img_url
+      img_url: registerData.img_url,
     }
   }
   if (
@@ -302,15 +319,14 @@ const registerAccount = async () => {
         registerData.img_url = ""
         registerData.isThreePart = false
         data = {}
-        
       }, 500)
       // 填上登录数据
     } else if (result.code === 10005) {
       // console.log(result.msg)
       ElMessage({
-    message: '注册失败',
-    type: 'error',
-  })
+        message: "注册失败",
+        type: "error",
+      })
     }
   } else if (registerData.confirmPassword !== data.password) {
     ElMessageBox.alert("两次输入密码不一致", "ERROR", {
@@ -333,27 +349,31 @@ let loginData = reactive({
 // 登录
 const userLogin = async () => {
   if (loginData.account && loginData.password) {
-    let result = await login(loginData) 
+    let result = await login(loginData)
+    console.log(result)
     if (!result.success) {
       ElMessageBox.alert("账号或密码错误", "ERROR", {
         confirmButtonText: "确定",
         lockScroll: false,
       })
     } else {
-      console.log('loginData',result)
+      console.log("loginData", result)
+      let userData = JSON.parse(result.data.user_data)
       userStore.$patch((state) => {
-        state.userInfo = JSON.parse(result.data.user_data)
+        state.userInfo = userData
         state.isLogin = true
         state.token = result.data.token
       })
-console.log(userStore)
+      console.log('settoken',result.data)
+      sessionStorage.setItem('token',result.data.token)
+      console.log(sessionStorage.getItem('token'),'gettoken')
       // state.user.userInfo = JSON.parse(result.data.user_data)
       // state.user.isLogin = true
       // state.user.token = result.data.token
       // console.log(result)
       // 清空登录数据
-      loginData.account = ''
-      loginData.password = ''
+      loginData.account = ""
+      loginData.password = ""
       ElMessage({
         message: "登录成功",
         type: "success",
@@ -421,6 +441,8 @@ let maskStyle = ref("mask-login")
 // to注册页面
 const toRegister = () => {
   maskStyle.value = "mask-register"
+  registering.value = false
+  logining.value = true
   console.log(maskStyle.value)
   // 隐藏登录面板,显示注册面板
   // showRegister.value = true
@@ -431,9 +453,10 @@ const toRegister = () => {
 // to登陆页面
 const toLogin = () => {
   maskStyle.value = "mask-login"
+  registering.value = true
+  logining.value = false
   console.log(maskStyle.value)
 }
-
 
 // })
 </script>

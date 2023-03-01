@@ -52,7 +52,7 @@
       </div>
       <div class="foot">{{ total }} articles in total</div>
     </div>
-  </div>
+  </div><Waifu/>
 </template>
 
 <script setup>

@@ -5,6 +5,7 @@
       <Tree :data="data"></Tree>
     </div>
   </div>
+  <Waifu/>
 </template>
 
 <script setup>

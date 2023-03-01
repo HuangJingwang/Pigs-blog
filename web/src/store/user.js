@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { login } from '@/api'
 export const useUserStore = defineStore('user', {
   state: () => {
     return {
@@ -8,9 +7,14 @@ export const useUserStore = defineStore('user', {
       showUserModal: false, //顯示登錄窗口
       userInfo: {}, //登錄信息
       token: '', //token
-      showArticleModal: false,
+      showArticleModal: false, //显示文章管理模块
     }
   },
   getters: {},
   actions: {},
+  persist: {
+    storage: sessionStorage,
+    key: 'user',
+    paths: ['token', 'userInfo', 'isLogin'],
+  },
 })

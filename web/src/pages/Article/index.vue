@@ -45,7 +45,7 @@
         />
       </div>
     </div>
-  </div>
+  </div><Waifu/>
 </template>
 
 <script setup>

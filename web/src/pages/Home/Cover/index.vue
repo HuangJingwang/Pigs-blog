@@ -67,7 +67,7 @@ const distance = ref(0)
 const scrollToMain = () => {
   distance.value = window.innerHeight
   window.scrollTo({
-    top: distance.value - 50,
+    top: distance.value - 60,
     behavior: "smooth",
   })
 }
