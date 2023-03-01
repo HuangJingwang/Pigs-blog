@@ -6,10 +6,9 @@
       <!-- 遍历data目录 -->
       <!-- mlgb 这里的show不知道为甚改不了 -->
       <li
-        v-for="item in categoryData"
+        v-for="item in data"
         :key="item"
         @click.stop="item.show = !item.show ; arrowChange(item)"
-      
       >
         <p>{{ item.group_name }} <span class="icon-arror iconfont"></span></p>
         
@@ -17,6 +16,7 @@
         <template v-if="item.children">
           <Tree :data="item.children" :show="item.show"></Tree>
         </template>
+
       </li>
     </ul>
   </div>
@@ -25,6 +25,7 @@
 <script setup>
 import {reactive,onMounted,toRaw} from 'vue'
 import Tree from './index.vue'
+import {getGroupArticles} from '@/api'
 
 const props = defineProps({
   data: {
@@ -35,12 +36,28 @@ const props = defineProps({
     type: Boolean,
     default: () => true,
   },
+  articleList:{
+    type:Array,
+    default:() => []
+  }
 })
 
 onMounted(() => {
-  console.log(props.data ,'propschuancan')
+  // console.log(props.data ,'propschuancan','data id',props.data.id)
+  // let {id} = props.data
+  // console.log(id);
+  let data = JSON.parse(JSON.stringify(props.data))
+  console.log('props传过来json处理的data',data);
+  data.forEach(async(item) =>{
+    if(!item.children){
+    let articleList = await getGroupArticles(item.id)
+    console.log('itemid',item.id,'articleList.data',articleList);
+  }
+  })
 })
-let categoryData = reactive(props.data)
+
+
+// let categoryData = reactive(props.data)
 // function showData(item,show) {
 //   console.log('show',item)
 //   console.log(show)
@@ -48,7 +65,6 @@ let categoryData = reactive(props.data)
 // }
 
 function arrowChange(item){
-    console.log(item.show);
     if (item.show) {
     }
 }
@@ -63,7 +79,8 @@ li{
     min-height: 40px;
     font-size: 1.5rem;
     font-weight: bold;
-    transition: all 2s linear 0s;
+
+    /* transition: all 2s linear 0s; */
 }
 p:hover{
     background-color: rgb(138, 157, 159);

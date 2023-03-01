@@ -47,10 +47,9 @@ const showModal = () => {
   userStore.showArticleModal = !userStore.showArticleModal
 }
 // 请求分类列表数据
-onMounted( () => {
   // dispatch("reqGroupList")
   articleStore.reqGroupList()
-})
+
 // #region 
 // 点击特效
 function clickEffect() {

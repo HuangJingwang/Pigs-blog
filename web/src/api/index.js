@@ -160,3 +160,10 @@ export const getSayings = () => {
     url: '/logion/random',
   })
 }
+// 分类获取当前分类文章
+export const getGroupArticles = (query) => {
+  return requests({
+    method:'GET',
+    url:`/articles/listArticles?groupId=${query}`
+  })
+}

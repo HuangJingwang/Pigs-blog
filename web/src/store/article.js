@@ -41,7 +41,7 @@ export const useArticleStore = defineStore('article', {
         }
       } catch (error) {
         // 让表单组件显示错误
-        console.log(error)
+        // console.log(error)
         return error
       }
       console.log('homeArticles', this.homeArticles)
@@ -50,7 +50,7 @@ export const useArticleStore = defineStore('article', {
     async reqGroupList() {
       let result = await getGroupListData()
       if (result.code == 200) {
-        console.log(result.data, '分类列表')
+        // console.log(result.data, '分类列表')
         // 过滤已删除元素
         let groupList = result.data.filter((group) => {
           return group.is_delete !== 1
@@ -72,6 +72,7 @@ export const useArticleStore = defineStore('article', {
           return list
         }
         this.groupList = getTree(groupList, 0, [])
+        // console.log('article grouplist',this.groupList)
       }
     },
 
