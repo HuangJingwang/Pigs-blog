@@ -1,3 +1,6 @@
 /server/target/
 /.gitignore
 /server/.idea
+/server/src/main/resources/**.yml
+/server/src/main/resources/**.xml
+/server/src/main/resources/**.jks

@@ -1,5 +1,7 @@
 package com.pigs.blog.service.impl;
 
+import com.pigs.blog.exception.ErrorCodeEnum;
+import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.request.ArticlesGroupCreateRequest;
 import com.pigs.blog.contract.request.ArticlesGroupListRequest;
 import com.pigs.blog.contract.request.ArticlesGroupUpdateRequest;
@@ -31,8 +33,8 @@ public class ArticlesGroupInterfaceImpl implements ArticlesGroupInterface {
 
         ArticlesGroupExample example = new ArticlesGroupExample();
         ArticlesGroupExample.Criteria criteria = example.createCriteria();
-        if (Strings.isNotBlank(request.getAuthor())) {
-            criteria.andAuthorEqualTo(request.getAuthor());
+        if (Strings.isNotBlank(request.getAccount())) {
+            criteria.andAccountEqualTo(request.getAccount());
         }
         example.setOrderByClause("id desc");
         List<ArticlesGroup> articlesGroups = groupMapper.selectByExample(example);
@@ -41,16 +43,41 @@ public class ArticlesGroupInterfaceImpl implements ArticlesGroupInterface {
     }
 
     @Override
-    public void create(ArticlesGroupCreateRequest request) {
+    public ResultResponse create(ArticlesGroupCreateRequest request) {
         ArticlesGroup group = new ArticlesGroup();
         BeanUtils.copyProperties(request, group);
+
+        //检测parentId是否存在
+        if (request.getParentId() != null) {
+            ArticlesGroup articlesGroup = groupMapper.selectByPrimaryKey(request.getParentId());
+            if (articlesGroup == null) {
+                return ResultResponse.fail(ErrorCodeEnum.PARENT_ID_IS_NOT_EXIST.getCode(), ErrorCodeEnum.PARENT_ID_IS_NOT_EXIST.getMsg());
+            }
+        }
+
         groupMapper.insertSelective(group);
+        return ResultResponse.success(null);
     }
 
-    public void update(ArticlesGroupUpdateRequest request) {
+    public ResultResponse update(ArticlesGroupUpdateRequest request, Long id) {
         ArticlesGroup group = new ArticlesGroup();
         BeanUtils.copyProperties(request, group);
+
+        //1. 检测parentId是否存在
+        if (request.getParentId() != null) {
+            ArticlesGroup articlesGroup = groupMapper.selectByPrimaryKey(request.getParentId());
+            if (articlesGroup == null) {
+                return ResultResponse.fail(ErrorCodeEnum.PARENT_ID_IS_NOT_EXIST.getCode(), ErrorCodeEnum.PARENT_ID_IS_NOT_EXIST.getMsg());
+            }
+        }
+
+        //2. 检测是否id和parentId一样
+        if (request.getParentId() != null && id.equals(request.getParentId())) {
+            return ResultResponse.fail(ErrorCodeEnum.PARENT_ID_IS_CONFLICT_TO_CURRENT_ID.getCode(), ErrorCodeEnum.PARENT_ID_IS_CONFLICT_TO_CURRENT_ID.getMsg());
+        }
+
         groupMapper.updateByPrimaryKeySelective(group);
+        return ResultResponse.success(null);
     }
 
     /**
@@ -104,5 +131,6 @@ public class ArticlesGroupInterfaceImpl implements ArticlesGroupInterface {
         });
         return responses;
     }
+
 }
 

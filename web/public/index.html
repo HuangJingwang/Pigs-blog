@@ -4,13 +4,24 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-  <link rel="stylesheet" href="//at.alicdn.com/t/c/font_3810599_pjbav7gzfz.css">
+  <link rel="stylesheet" href="//at.alicdn.com/t/c/font_3810599_q68xaokil8k.css">
   <link rel="stylesheet" href="./css/default.css">
-  <title>
+
+  <link rel="stylesheet" href="//at.alicdn.com/t/c/font_3917060_ila55vtnqvq.css">
+
+  <!-- <title>
     <%= htmlWebpackPlugin.options.title %>
-  </title>
+    pigs_blog
+  </title> -->
+
+  
+<title>
+  pigs_blog
+</title>
+<link rel="stylesheet" type="text/css" href="./css/backTotop.css" />
 
 </head>
 
@@ -20,7 +31,12 @@
         Please enable it to continue.</strong>
   </noscript>
   <div id="app"></div>
-  <!-- built files will be auto injected -->
+  <div class="back-to-top cd-top faa-float animated cd-is-visible" style="top: -900px;"></div>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+  <!-- <script src="http://zhouql.vip/cdn/szgotop.js"></script>  -->
+  <script src="./js//backToTop.js"></script>
+  <!-- <script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script> -->
+  
 </body>
 
 </html>

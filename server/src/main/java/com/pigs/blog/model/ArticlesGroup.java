@@ -15,7 +15,7 @@ public class ArticlesGroup {
 
     private Short isDelete;
 
-    private String author;
+    private String account;
 
     public Long getId() {
         return id;
@@ -65,11 +65,11 @@ public class ArticlesGroup {
         this.isDelete = isDelete;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getAccount() {
+        return account;
     }
 
-    public void setAuthor(String author) {
-        this.author = author == null ? null : author.trim();
+    public void setAccount(String account) {
+        this.account = account == null ? null : account.trim();
     }
 }

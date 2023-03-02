@@ -11,14 +11,11 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Api(value = "pigs-blog/user", tags = "用户接口")
+@Api(value = "pigs-blog/user", tags = "用户管理接口")
 @RestController
 @RequestMapping("pigs-blog/user")
 public class UserManagementController {
@@ -51,5 +48,11 @@ public class UserManagementController {
     @RequestMapping(value = "/registry", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse registry(@RequestBody @Valid RegistryRequest request) {
         return loginService.registry(request);
+    }
+
+    @RequestMapping(value = "getGithubUserInfo",method = RequestMethod.GET, produces = "application/json")
+    public ResultResponse getUserInfo(@RequestParam("key") String key){
+        ResultResponse result = loginService.getGitHubUserInfo(key);
+        return result;
     }
 }

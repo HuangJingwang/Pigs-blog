@@ -1,0 +1,13 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pigs.blog.mapper.ext.LogionMapperExt">
+    <select id="listAll" resultMap="com.pigs.blog.mapper.LogionMapper.BaseResultMap">
+        select
+        <include refid="com.pigs.blog.mapper.LogionMapper.Base_Column_List"/>
+        from logion
+        limit #{start}, #{offset}
+    </select>
+
+    <select id="selectRandom" resultMap="com.pigs.blog.mapper.LogionMapper.BaseResultMap">
+     SELECT * FROM `logion` ORDER BY RAND() LIMIT 1
+    </select>
+</mapper>

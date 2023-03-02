@@ -2,9 +2,10 @@ package com.pigs.blog.service;
 
 import com.pigs.blog.common.PageData;
 
+import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.request.ArticlesCreateRequest;
-import com.pigs.blog.contract.request.ArticlesListPageRequest;
 import com.pigs.blog.contract.request.ArticlesListRequest;
+import com.pigs.blog.contract.request.ArticlesPageDataRequest;
 import com.pigs.blog.contract.request.ArticlesUpdateRequest;
 import com.pigs.blog.contract.response.ArticlesDetailResponse;
 import com.pigs.blog.contract.response.ArticlesListResponse;
@@ -15,9 +16,9 @@ import java.util.List;
 
 @Service
 public interface ArticlesInterface {
-    PageData<ArticlesListResponse> getPageData(ArticlesListPageRequest request);
+    PageData<ArticlesListResponse> getPageData(ArticlesPageDataRequest request);
 
-    void saveArticles(ArticlesCreateRequest request);
+    ResultResponse saveArticles(ArticlesCreateRequest request);
 
     void updateArticles(Long id, ArticlesUpdateRequest request);
 
@@ -32,4 +33,6 @@ public interface ArticlesInterface {
     ArticlesPreOrNextResponse findPreArticle(Long curId);
 
     ArticlesPreOrNextResponse findNextArticle(Long id);
+
+    void deleteForever(Long id);
 }

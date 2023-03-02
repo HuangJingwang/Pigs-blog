@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.pigs.blog.common.CommonValue;
+import com.pigs.blog.common.Constants;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import com.alibaba.fastjson.parser.ParserConfig;
@@ -36,7 +36,7 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T>
         {
             return new byte[0];
         }
-        return JSON.toJSONString(t, SerializerFeature.WriteClassName).getBytes(CommonValue.DEFAULT_CHARSET);
+        return JSON.toJSONString(t, SerializerFeature.WriteClassName).getBytes(Constants.DEFAULT_CHARSET);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T>
         {
             return null;
         }
-        String str = new String(bytes, CommonValue.DEFAULT_CHARSET);
+        String str = new String(bytes, Constants.DEFAULT_CHARSET);
 
         return JSON.parseObject(str, clazz);
     }

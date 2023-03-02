@@ -1,6 +1,6 @@
 package com.pigs.blog.utils;
 
-import com.pigs.blog.common.CommonValue;
+import com.pigs.blog.common.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -62,7 +62,7 @@ public class JwtUtil {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         if(ttlMillis==null){
-            ttlMillis= CommonValue.JWT_TTL;
+            ttlMillis= Constants.JWT_TTL;
         }
         long expMillis = nowMillis + ttlMillis;
         Date expDate = new Date(expMillis);
@@ -81,7 +81,7 @@ public class JwtUtil {
      * @return
      */
     public static SecretKey generalKey() {
-        byte[] encodedKey = Base64.getDecoder().decode(CommonValue.JWT_KEY);
+        byte[] encodedKey = Base64.getDecoder().decode(Constants.JWT_KEY);
         SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length, "AES");
         return key;
     }

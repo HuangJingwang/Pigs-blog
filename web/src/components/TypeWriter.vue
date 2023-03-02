@@ -1,42 +1,102 @@
 <template>
-  <div class="saying">
-    {{ typeOptions.output }}
-    <span class="typed-cursor">|</span>
+  <div class="container">
+    <div class="saying">
+      {{ typeOptions.output }}
+      <span class="typed-cursor" v-show="sayingCursor">|</span>
+    </div>
+    <div class="author">
+      {{ typeOptions2.output }}
+      <span class="typed-cursor" v-show="authorCursor">|</span>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue'
-import EasyTyper from 'easy-typer-js'
+import { reactive, onMounted, ref } from "vue"
+import { getSayings } from "@/api"
+import EasyTyper from "easy-typer-js"
+let sayingCursor = ref(true)
+let authorCursor = ref(false)
 let typeOptions = reactive({
-  output: '',
+  output: "",
   isEnd: false,
   speed: 200,
   singleBack: false,
   sleep: 20,
-  type: 'rollback',
+  type: "rollback",
   backSpeed: 500,
   sentencePause: true,
   // 其他参数省略
 })
+let typeOptions2 = reactive({
+  output: "",
+  isEnd: false,
+  speed: 200,
+  singleBack: false,
+  sleep: 3000,
+  type: "rollback",
+  backSpeed: 500,
+  sentencePause: true,
+  // 其他参数省略
+})
+// 进入页面请求saying
 onMounted(() => {
-  const typed = new EasyTyper(typeOptions, `zzy你什么时候把分类页面写出来?!O.o`)
+  getSayings()
+    .then((res) => {
+      console.log("res", res.data.logion)
+      console.log("res author", res.data.author)
+      new EasyTyper(typeOptions, res.data.logion, () => {
+        new EasyTyper(typeOptions2,  '————'+ res.data.author,()=>{authorCursor.value = false})
+        sayingCursor.value = false
+        authorCursor.value = true
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 })
 </script>
 
 <style scoped>
-.saying {
-  /* font-family: monospace; */
-  color: rgb(200, 192, 192);
-  font-size: 18px;
-  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
-  height: 20px;
-  line-height: 20px;
+.container {
+  width: 1350px;
+  min-height: 200px;
+  margin-top: 15px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+justify-content: space-around;
 }
-
+.saying {
+  margin-top: 20px;
+  font-size: 24px;
+  line-height: 40px;
+  display: block;
+  text-align: center;
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(200, 192, 192);
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+  margin-bottom: 30px;
+}
+.author {
+  margin-top: 30px;
+  width: 100%;
+  text-align: start;
+  font-size: 24px;
+  line-height: 40px;
+  color: rgb(200, 192, 192);
+  padding-left: 900px;
+  position: absolute;  
+  top: 140px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .typed-cursor {
   opacity: 1;
-  animation: blink 1s infinite ;
+  animation: blink 1s infinite;
 }
 @keyframes blink {
   0% {

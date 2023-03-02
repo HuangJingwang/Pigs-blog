@@ -9,9 +9,13 @@ public class User {
 
     private String password;
 
-    private String nickname;
-
     private String role;
+
+    private Long githubId;
+
+    private String questionAnswer1;
+
+    private String questionAnswer2;
 
     private Date createAt;
 
@@ -41,20 +45,36 @@ public class User {
         this.password = password == null ? null : password.trim();
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname == null ? null : nickname.trim();
-    }
-
     public String getRole() {
         return role;
     }
 
     public void setRole(String role) {
         this.role = role == null ? null : role.trim();
+    }
+
+    public Long getGithubId() {
+        return githubId;
+    }
+
+    public void setGithubId(Long githubId) {
+        this.githubId = githubId;
+    }
+
+    public String getQuestionAnswer1() {
+        return questionAnswer1;
+    }
+
+    public void setQuestionAnswer1(String questionAnswer1) {
+        this.questionAnswer1 = questionAnswer1 == null ? null : questionAnswer1.trim();
+    }
+
+    public String getQuestionAnswer2() {
+        return questionAnswer2;
+    }
+
+    public void setQuestionAnswer2(String questionAnswer2) {
+        this.questionAnswer2 = questionAnswer2 == null ? null : questionAnswer2.trim();
     }
 
     public Date getCreateAt() {
