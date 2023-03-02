@@ -13,5 +13,5 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArticlesGroupListRequest {
     @ApiModelProperty("作者")
-    private String account;//作者
+    private String author;//作者
 }

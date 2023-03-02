@@ -5,10 +5,8 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="account" jdbcType="VARCHAR" property="account" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="role" jdbcType="VARCHAR" property="role" />
-    <result column="github_id" jdbcType="BIGINT" property="githubId" />
-    <result column="question_answer1" jdbcType="VARCHAR" property="questionAnswer1" />
-    <result column="question_answer2" jdbcType="VARCHAR" property="questionAnswer2" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
   </resultMap>
@@ -71,8 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, account, password, role, github_id, question_answer1, question_answer2, create_at, 
-    update_at
+    id, account, password, nickname, role, create_at, update_at
   </sql>
   <select id="selectByExample" parameterType="com.pigs.blog.model.UserExample" resultMap="BaseResultMap">
     select
@@ -106,15 +103,13 @@
   </delete>
   <insert id="insert" parameterType="com.pigs.blog.model.User">
     insert into user (id, account, password, 
-      role, github_id, question_answer1, 
-      question_answer2, create_at, update_at
-      )
+      nickname, role, create_at, 
+      update_at)
     values (#{id,jdbcType=BIGINT}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{role,jdbcType=VARCHAR}, #{githubId,jdbcType=BIGINT}, #{questionAnswer1,jdbcType=VARCHAR}, 
-      #{questionAnswer2,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}
-      )
+      #{nickname,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
+      #{updateAt,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.pigs.blog.model.User" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.pigs.blog.model.User">
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -126,17 +121,11 @@
       <if test="password != null">
         password,
       </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
       <if test="role != null">
         role,
-      </if>
-      <if test="githubId != null">
-        github_id,
-      </if>
-      <if test="questionAnswer1 != null">
-        question_answer1,
-      </if>
-      <if test="questionAnswer2 != null">
-        question_answer2,
       </if>
       <if test="createAt != null">
         create_at,
@@ -155,17 +144,11 @@
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
       </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
       <if test="role != null">
         #{role,jdbcType=VARCHAR},
-      </if>
-      <if test="githubId != null">
-        #{githubId,jdbcType=BIGINT},
-      </if>
-      <if test="questionAnswer1 != null">
-        #{questionAnswer1,jdbcType=VARCHAR},
-      </if>
-      <if test="questionAnswer2 != null">
-        #{questionAnswer2,jdbcType=VARCHAR},
       </if>
       <if test="createAt != null">
         #{createAt,jdbcType=TIMESTAMP},
@@ -193,17 +176,11 @@
       <if test="row.password != null">
         password = #{row.password,jdbcType=VARCHAR},
       </if>
+      <if test="row.nickname != null">
+        nickname = #{row.nickname,jdbcType=VARCHAR},
+      </if>
       <if test="row.role != null">
         role = #{row.role,jdbcType=VARCHAR},
-      </if>
-      <if test="row.githubId != null">
-        github_id = #{row.githubId,jdbcType=BIGINT},
-      </if>
-      <if test="row.questionAnswer1 != null">
-        question_answer1 = #{row.questionAnswer1,jdbcType=VARCHAR},
-      </if>
-      <if test="row.questionAnswer2 != null">
-        question_answer2 = #{row.questionAnswer2,jdbcType=VARCHAR},
       </if>
       <if test="row.createAt != null">
         create_at = #{row.createAt,jdbcType=TIMESTAMP},
@@ -221,10 +198,8 @@
     set id = #{row.id,jdbcType=BIGINT},
       account = #{row.account,jdbcType=VARCHAR},
       password = #{row.password,jdbcType=VARCHAR},
+      nickname = #{row.nickname,jdbcType=VARCHAR},
       role = #{row.role,jdbcType=VARCHAR},
-      github_id = #{row.githubId,jdbcType=BIGINT},
-      question_answer1 = #{row.questionAnswer1,jdbcType=VARCHAR},
-      question_answer2 = #{row.questionAnswer2,jdbcType=VARCHAR},
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
       update_at = #{row.updateAt,jdbcType=TIMESTAMP}
     <if test="example != null">
@@ -240,17 +215,11 @@
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
       </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
       <if test="role != null">
         role = #{role,jdbcType=VARCHAR},
-      </if>
-      <if test="githubId != null">
-        github_id = #{githubId,jdbcType=BIGINT},
-      </if>
-      <if test="questionAnswer1 != null">
-        question_answer1 = #{questionAnswer1,jdbcType=VARCHAR},
-      </if>
-      <if test="questionAnswer2 != null">
-        question_answer2 = #{questionAnswer2,jdbcType=VARCHAR},
       </if>
       <if test="createAt != null">
         create_at = #{createAt,jdbcType=TIMESTAMP},
@@ -265,10 +234,8 @@
     update user
     set account = #{account,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
       role = #{role,jdbcType=VARCHAR},
-      github_id = #{githubId,jdbcType=BIGINT},
-      question_answer1 = #{questionAnswer1,jdbcType=VARCHAR},
-      question_answer2 = #{questionAnswer2,jdbcType=VARCHAR},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}

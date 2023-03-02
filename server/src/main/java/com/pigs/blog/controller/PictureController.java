@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
-@Api(value = "pigs-blog/picture", tags = "图片接口")
+@Api(value = "pigs-blog/picture",tags = "图片接口")
 @RestController
 @RequestMapping("pigs-blog/picture")
 public class PictureController {
@@ -49,7 +49,7 @@ public class PictureController {
     @ApiOperation(value = "删除云上的图片", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse deletePicture(@RequestBody PictureDeleteRequest request){
-        qiniuService.deleteImage(request.getPicturesUrl());
+        qiniuService.deleteImage(request);
         return ResultResponse.success(null);
     }
 

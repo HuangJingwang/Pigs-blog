@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 @ApiModel
 @Data
@@ -16,12 +15,12 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArticlesUpdateRequest {
     @ApiModelProperty("作者")
-    private String account;//作者
+    private String author;//作者
 
     @ApiModelProperty("标题")
     private String title;//标题
 
-    @ApiModelProperty("分类")
+    @ApiModelProperty("分类Id")
     private Integer groupId;//分类
 
     @ApiModelProperty("状态 状态 draft-草稿, published-已发布, deleted-被删除")
@@ -31,14 +30,9 @@ public class ArticlesUpdateRequest {
     private String tags;//多个tag,逗号分割
 
     @ApiModelProperty("文章内容")
-    private String articleText;//文章内容
+    private String articlesText;//文章内容
 
-    @ApiModelProperty("封面图片")//@NotBlank(message = "imgUrl cannot be blank")
+    @ApiModelProperty("封面图片路径")
+    //@NotBlank(message = "imgUrl cannot be blank")
     private String imgUrl;
-
-    @ApiModelProperty("文章简介")
-    private String introduction;//文章简介
-
-    @ApiModelProperty("文章图片路径")
-    private List<String> articlePictureUrl;//文章图片路径
 }

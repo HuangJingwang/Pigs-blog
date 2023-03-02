@@ -15,8 +15,8 @@ import javax.validation.constraints.NotBlank;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ArticlesCreateRequest {
     @ApiModelProperty("作者")
-    @NotBlank(message = "account cannot be blank")
-    private String account;//作者
+    @NotBlank(message = "author cannot be blank")
+    private String author;//作者
 
     @ApiModelProperty("标题")
     @NotBlank(message = "title cannot be blank")
@@ -34,13 +34,10 @@ public class ArticlesCreateRequest {
     private String tags;//多个tag,逗号分割
 
     @ApiModelProperty("文章内容")
-    @NotBlank(message = "articleText cannot be blank")
-    private String articleText;//文章内容
+    @NotBlank(message = "articlesText cannot be blank")
+    private String articlesText;//文章内容
 
-    @ApiModelProperty("封面图片路径")
+    @ApiModelProperty(hidden = true)
+    //@NotBlank(message = "imgUrl cannot be blank")
     private String imgUrl;
-
-    @ApiModelProperty("简介")
-    @NotBlank(message = "introduction cannot be blank")
-    private String introduction;//文章内容
 }

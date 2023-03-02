@@ -1,27 +1,14 @@
-function debounce(fn, delay) {
-  let timer = null
-  return function () {
-    if (timer !== null) {
-      clearTimeout(timer)
+function debounce(func, wait) {
+    let timeout
+
+    return function () {
+      let context = this // 保存this指向
+      let args = arguments // 拿到event对象
+      console.log(context, args)
+      clearTimeout(timeout)
+      timeout = setTimeout(function () {
+        func.apply(context, args)
+      }, wait)
     }
-    timer = setTimeout(() => {
-      fn()
-    }, delay)
-  }
 }
-
-export default debounce
-
-// function debounce(fn, delay) {
-//   // 空定时器
-//   let timeout = null
-//   return function () {
-//     let context = this
-//     let args = arguments
-//     clearTimeout(timeout)
-//     timeout = setTimeout(() => {
-//       fn.apply(context, args)
-//     }, delay)
-//   }
-// }
-// export default debounce
+  export default debounce

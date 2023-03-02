@@ -2,7 +2,6 @@ package com.pigs.blog.mapper;
 
 import com.pigs.blog.model.Articles;
 import com.pigs.blog.model.ArticlesExample;
-import com.pigs.blog.model.ArticlesWithBLOBs;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,25 +12,25 @@ public interface ArticlesMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(ArticlesWithBLOBs row);
+    int insert(Articles row);
 
-    int insertSelective(ArticlesWithBLOBs row);
+    int insertSelective(Articles row);
 
-    List<ArticlesWithBLOBs> selectByExampleWithBLOBs(ArticlesExample example);
+    List<Articles> selectByExampleWithBLOBs(ArticlesExample example);
 
     List<Articles> selectByExample(ArticlesExample example);
 
-    ArticlesWithBLOBs selectByPrimaryKey(Long id);
+    Articles selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("row") ArticlesWithBLOBs row, @Param("example") ArticlesExample example);
+    int updateByExampleSelective(@Param("row") Articles row, @Param("example") ArticlesExample example);
 
-    int updateByExampleWithBLOBs(@Param("row") ArticlesWithBLOBs row, @Param("example") ArticlesExample example);
+    int updateByExampleWithBLOBs(@Param("row") Articles row, @Param("example") ArticlesExample example);
 
     int updateByExample(@Param("row") Articles row, @Param("example") ArticlesExample example);
 
-    int updateByPrimaryKeySelective(ArticlesWithBLOBs row);
+    int updateByPrimaryKeySelective(Articles row);
 
-    int updateByPrimaryKeyWithBLOBs(ArticlesWithBLOBs row);
+    int updateByPrimaryKeyWithBLOBs(Articles row);
 
     int updateByPrimaryKey(Articles row);
 }

@@ -25,14 +25,14 @@ public class ArticlesGroupController {
     @Autowired
     private ArticlesGroupInterface groupInterface;
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", dataType = "string", name = "account", value = "")
+            @ApiImplicitParam(paramType = "query", dataType = "string", name = "author", value = "")
     })
     @ApiOperation(value = "分类列表", notes = "", httpMethod = "GET")
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
     public ResultResponse<List<ArticlesGroupListResponse>> getArticlesGroupList(
-            @RequestParam(value = "account", required = false) String account){
+            @RequestParam(value = "author", required = false) String author){
         ArticlesGroupListRequest request = new ArticlesGroupListRequest();
-        request.setAccount(account);
+        request.setAuthor(author);
         List<ArticlesGroupListResponse> result = groupInterface.list(request);
         return ResultResponse.success(result);
     }
@@ -52,8 +52,8 @@ public class ArticlesGroupController {
     })
     @ApiOperation(value = "编辑", notes = "", httpMethod = "POST")
     @RequestMapping(value = "update/{id}", method = RequestMethod.POST, produces = "application/json")
-    public ResultResponse updateArticlesGroup(@RequestBody @Valid ArticlesGroupUpdateRequest request, @PathVariable Long id){
-        groupInterface.update(request, id);
+    public ResultResponse updateArticlesGroup(@RequestBody @Valid ArticlesGroupUpdateRequest request){
+        groupInterface.update(request);
         return ResultResponse.success(null);
     }
 

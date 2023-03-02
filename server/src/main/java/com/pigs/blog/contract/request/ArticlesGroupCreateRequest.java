@@ -25,9 +25,9 @@ public class ArticlesGroupCreateRequest {
 
     @ApiModelProperty("父组id，没有父组就是0")
     @NotNull
-    private Long parentId;//父组id，没有父组就是0
+    private Integer parentId;//父组id，没有父组就是0
 
     @ApiModelProperty("创作者")
-    @NotBlank(message = "account cannot be blank")
-    private String account;//创作者
+    @NotBlank(message = "author cannot be blank")
+    private String author;//创作者
 }

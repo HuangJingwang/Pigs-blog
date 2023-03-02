@@ -9,11 +9,11 @@ public class Articles {
 
     private String title;
 
-    private String account;
+    private String author;
 
     private String tags;
 
-    private String introduction;
+    private String detail;
 
     private String imgUrl;
 
@@ -23,7 +23,7 @@ public class Articles {
 
     private Date updateAt;
 
-    private Long pageView;
+    private String articlesText;
 
     public Long getId() {
         return id;
@@ -49,12 +49,12 @@ public class Articles {
         this.title = title == null ? null : title.trim();
     }
 
-    public String getAccount() {
-        return account;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAccount(String account) {
-        this.account = account == null ? null : account.trim();
+    public void setAuthor(String author) {
+        this.author = author == null ? null : author.trim();
     }
 
     public String getTags() {
@@ -65,12 +65,12 @@ public class Articles {
         this.tags = tags == null ? null : tags.trim();
     }
 
-    public String getIntroduction() {
-        return introduction;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction == null ? null : introduction.trim();
+    public void setDetail(String detail) {
+        this.detail = detail == null ? null : detail.trim();
     }
 
     public String getImgUrl() {
@@ -105,11 +105,11 @@ public class Articles {
         this.updateAt = updateAt;
     }
 
-    public Long getPageView() {
-        return pageView;
+    public String getArticlesText() {
+        return articlesText;
     }
 
-    public void setPageView(Long pageView) {
-        this.pageView = pageView;
+    public void setArticlesText(String articlesText) {
+        this.articlesText = articlesText == null ? null : articlesText.trim();
     }
 }

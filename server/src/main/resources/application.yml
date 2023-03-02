@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/pigs_blog?useUnicode=true&characterEncoding=UTF-8&serverTimeZone=UTC&useSSL=false
+    username:
+    password:
+  #  redis:
+  #    host: 49.233.45.84
+  #    port: 6379
+  #  cache:
+  #    redis:
+  #      time-to-live: 1800000  # 失效时间——毫秒（30分钟）
+
+  redis:
+    host: 49.233.45.84
+    password:
+    port: 6379
+    timeout: 5000
+    ssl: false
+
+server:
+  port: 8081
+mybatis:
+  mapper-locations: classpath:mapper/*.xml,classpath:mapper/*/*.xml
+
+
+logging:
+  config: classpath:logback-spring.xml

@@ -1,302 +1,160 @@
 <template>
-  <div :class="['header', { 'header-active': header_active }]">
-    <!-- logo区 -->
-    <div class="pig-left" @click="$router.push('/index')">
-      <div class="logo"></div>
-      <div class="title">Pigs-blog</div>
-    </div>
-    <!-- 搜索区 -->
-    <div class="pig-middle">
-      <!-- 搜索框及图标 -->
-      <input type="text" class="search" placeholder="javascript" />
-      <span class="iconfont icon-sousuo"></span>
-    </div>
-    <!-- 导航区 -->
-    <div class="pig-right">
-      <!-- 主页 -->
-      <div class="home navigation" @click="$router.push('/index')">
-        <span class="iconfont icon-zhuye1"></span>
-        <p>主页</p>
-      </div>
-      <!-- 写文章 -->
-      <div class="write navigation" @click="toWrite" v-show="showWrite">
-        <span class="iconfont icon-yongyan"></span>
-        <p>撰写</p>
-      </div>
-      <!-- 文章分类 -->
-      <div class="categories navigation" @click="$router.push('/category')">
-        <span class="iconfont icon-yingyong"></span>
-        <p>分类</p>
-      </div>
-      <!-- 文章归档 -->
-      <div class="archives navigation" @click="$router.push('/archives')">
-        <span class="iconfont icon-a-Frame174"></span>
-        <p>归档</p>
-      </div>
-      <!-- 关于本站 -->
-      <div class="about navigation" @click="$router.push('/about')">
-        <span class="iconfont icon-guanyu2"></span>
-        <p>关于</p>
-      </div>
-      <!-- 用户 -->
-      <div class="user navigation" @click="login_register" v-show="!userStore.isLogin">
-        <span class="iconfont icon-denglu"></span>
-        <p>登录</p>
-      </div>
-      <div class="user_login" v-show="userStore.isLogin">
-        <el-dropdown>
-          <div
-            class="avatar"
-            :style="{
-              backgroundImage:
-                `url(${avatarImg})`,
-            }"
-          ></div>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="testBind">绑定Github</el-dropdown-item>
-              <el-dropdown-item disabled>个人主页</el-dropdown-item>
-              <el-dropdown-item disabled >消息中心</el-dropdown-item>
-              <el-dropdown-item @click="showArticleModal">我的文章</el-dropdown-item>
-              <el-dropdown-item divided @click="reqLogout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+  <div :class="headerStyle" >
+    <div class="container">
+      <!-- logo图标及标题 -->
+      <h1 class="logo">
+        <span class="logoImg iconfont icon-Bad-Pig"></span>
+        <div class="text">Pigs blog</div>
+      </h1>
+      <!-- 导航按键 -->
+
+      <div class="navigation">
+        <div class="search">
+          <span class="icon iconfont icon-sousuo"></span>
+          <span>Search</span>
+        </div>
+        <div class="home" @click="$router.push('/index')">
+          <span class="icon iconfont icon-zhuye1"></span>
+          <span>Home</span>
+        </div>
+        <div class="write" @click="toWrite">
+          <span class="icon iconfont icon-yongyan"></span>
+          <span>Write</span>
+        </div>
+        <div class="archives" @click="$router.push('/archives')">
+          <span class="icon iconfont icon-a-Frame174"></span>
+          <span>Archives</span>
+        </div>
+        <div class="category" @click="$router.push('/category')">
+          <span class="icon iconfont icon-yingyong"></span>
+          <span>Category</span>
+        </div>
+        <div class="about"  @click="$router.push('/about')">
+          <span class="icon iconfont icon-guanyu"></span>
+          <span>About</span>
+        </div>
+        <div class="singIn">
+          <span class="icon iconfont icon-yonghufill"></span>
+          <span>Sign in</span>
+        </div>
+      
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref,computed } from "vue"
-import {useUserStore}from '@/store/user'
-import { useRouter, useRoute } from "vue-router"
-import {logout} from '@/api'
-
-const userStore = useUserStore()
-const router = useRouter()
+import { useRouter, useRoute } from 'vue-router'
+// import debounce from '@/utils/debounce'
+import { ref, onMounted, reactive } from 'vue'
+// export default {
+  // name: 'Header',
+  // setup() {
+    // 绑定页面滚动事件
+    
+    let headerStyle = reactive(['nav'])
+    window.addEventListener('scroll', () => {
+      if (document.documentElement.scrollTop > 150) {
+        if (headerStyle.indexOf('nav-active') == -1) {
+          headerStyle.push('nav-active')
+        }
+      } else {
+        if (headerStyle.indexOf('nav-active') !== -1) {
+          headerStyle.pop()
+        }
+      }
+    })
+    const router = useRouter()
+    // 导航到write 页面
+    const toWrite = () => {
+      const writePath = router.resolve({
+        path: '/write',
+      })
+      window.open(writePath.href, '_blank')
+    }
 const route = useRoute()
-// 监听页面滚动事件,改变header样式
-let header_active = ref(false)
-window.addEventListener("scroll", () => {
-  if (document.documentElement.scrollTop > 200) {
-    header_active.value = true
-  } else {
-    header_active.value = false
-  }
-})
-
-// 导航到write 页面
-const toWrite = () => {
-  const writePath = router.resolve({
-    path: "/write",
-  })
-  window.open(writePath.href, "_blank")
-}
-// 控制write 是否显示
-
-let showWrite = computed(() => {
-  return userStore.isLogin
-})
 
 
-// 点击弹出登录框
-const login_register = () => {
-  userStore.showUserModal = true
-  console.log(userStore.showUserModal)
-}
-
-//显示头像x`
-let avatarImg = computed(() => {
-  console.log(userStore.userInfo.imgUrl)
-  return userStore.userInfo.imgUrl!==undefined && userStore.userInfo.imgUrl == '' ?
-  'https://moon.starrysummer.com/3686fd078f7649528d5b5ba31de2a9d7.jpg' : userStore.userInfo.imgUrl
-  // return userStore.userInfo.imgUrl
-})
-// 登录状态下拉栏
-// 管理文章
-const showArticleModal = () => {
-  userStore.showArticleModal = true
-}
-
-// 对于未通过三方登录注册的用户，提供绑定github功能
-const testBind = () => {
-  console.log(userStore.userInfo.githubId)
-}
-// 退出登录
-const reqLogout = async () => {
-  // 删除token
-  // 1.发出退出登录请求
-  let result = await logout()
-  sessionStorage.removeItem('token')
-  console.log(result,'退出登录')
-  // 2.清空登陆数据
-  userStore.$patch(state => {
-  state.isLogin = false
-  state.userInfo = {}
-  state.token = ''
-  })
-}
+    // return { toTop, headerStyle, toWrite }
+  // },
+// }
 </script>
 
+scope
 <style scoped>
-/* 整体布局 */
-.header {
-  height: 65px;
+/* 导航栏基础样式 */
+.nav {
+  z-index: 1;
   width: 100%;
-  padding: 0 20px;
+  height: 80px;
+  color: #fff;
   position: fixed;
   top: 0;
-  transition: all 0.5s;
-  display: flex;
-  justify-content: space-between;
   box-shadow: 0 10px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.5s;
+}
+.nav-active {
+  height: 60px;
+  background-color: rgb(127, 127, 127);
+}
+.nav::after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
   background: rgba(0, 0, 0, 0.2);
 }
-.header-active {
-  height: 55px;
-  background-color: rgb(124, 131, 151);
-}
-
-.header .pig-left,
-.header .pig-right {
-padding-right: 30px;
-  width: 450px;
-}
-
-.header .pig-middle {
-  min-width: 400px;
-}
-
-/* logo区 */
-.pig-left {
+.nav .container {
+  padding: 0 100px;
+  height: 100%;
+  margin: auto;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
+  position: relative;
+  z-index: 1;
+  transition: all 0.5s;
 }
-.pig-left .logo {
-  background-image: url(@/assets/img/logo.png);
-  background-repeat: no-repeat;
-  background-size: contain;
-  width: 40px;
-  height: 40px;
-  margin-left: 50px;
+
+/* 导航栏添加半透明遮罩 */
+
+/* 左边logo及标题样式 */
+.nav .logo {
+  font-size: 35px;
+  line-height: 75px;
 }
-.pig-left .title {
-  font-size: 24px;
+.nav .text {
+  float: left;
+}
+.nav .logoImg {
+  float: left;
+  margin-right: 20px;
   font-weight: 900;
-  color: rgb(200, 200, 200);
-  margin-left: 10px;
+  font-size: 45px;
 }
-
-/* 搜索区 */
-.pig-middle {
-  position: relative;
+/* 右侧导航按钮样式 */
+.nav .navigation {
   display: flex;
-  align-items: center;
-  padding: 0 30px;
 }
-.search {
-  padding-left: 20px;
-  padding-right: 30px;
-  border-radius: 13px;
-  background-color: rgba(200, 200, 200, 0.5);
-  border: none;
-  height: 26px;
-  width: 100%;
-  min-width: 100px;
-  outline: rgb(44, 44, 44);
-  color: rgb(39, 38, 38);
-}
-.search::-webkit-input-placeholder {
-  color: rgb(97, 95, 95);
-}
-
-.pig-middle .iconfont {
-  position: absolute;
-  top: 60%;
-  transform: translateY(-50%);
-  right: 30px;
-  width: 26px;
-  height: 26px;
-  font-size: 16px;
-}
-
-/* 导航区 */
-.pig-right {
+.nav .navigation div {
+  padding: 10px;
+  margin-left: 2px;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-.pig-right .home,
-.pig-right .write,
-.pig-right .categories,
-.pig-right .archives,
-.pig-right .about,
-.pig-right .user,
-.pig-right .avatar {
-  padding-top: 3px;
-  border-radius: 5px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 50px;
-  height: 30px;
-  margin: 0 10px;
-  text-align: center;
-  font-size: 12px;
-}
-
-.pig-right .home p,
-.pig-right .write p,
-.pig-right .categories p,
-.pig-right .archives p,
-.pig-right .about p,
-.pig-right .user p {
-  position: absolute;
-  top: 32px;
-  transition: all 0.3s;
-  color: rgb(200, 200, 200);
-  zoom: 0.9;
-}
-.navigation .iconfont {
-  color: rgb(200, 200, 200);
-  font-size: 24px;
+  border-radius: 8px;
   transition: all 0.3s;
 }
-/* .navigation:hover {
-  background:rgb(120, 120, 120);
-  } */
-.navigation:hover .iconfont {
-  color: #eee;
-  font-size: 15px;
-}
-.navigation:hover p {
-  color: #eee;
-  top: 18px;
-}
-.user_login .avatar {
-  width: 37px;
-  height: 37px;
-  margin-left: 25px;
-  background-position: center center;
-  background-size: contain;
-  border-radius: 50%;
-  transition: all .2s;
-}
-.user_login .avatar:hover {
-  transform: scale(1.25);
-  border: 1px solid #fff;
-}
 
-/* 調整指針 */
-.pig-left>.logo,.pig-left>.title,.pig-middle .iconfont,.pig-right .home,.pig-right .write, .pig-right .categories , .pig-right .archives, .pig-right .about ,.pig-right .user,.pig-right .user_login{
-  cursor:pointer 
+.nav .navigation div:hover {
+  color: #4b9696;
+  background: rgba(0, 0, 0, 0.5);
 }
-.pig-right .iconfont{
-  cursor: pointer;
+.nav .navigation div span {
+  display: block;
+  font-size: 18px;
+}
+.nav .navigation .icon {
+  margin-right: 12px;
 }
 </style>

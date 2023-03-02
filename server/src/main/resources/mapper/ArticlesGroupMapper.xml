@@ -8,7 +8,7 @@
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
     <result column="is_delete" jdbcType="SMALLINT" property="isDelete" />
-    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, group_name, parent_id, create_at, update_at, is_delete, account
+    id, group_name, parent_id, create_at, update_at, is_delete, author
   </sql>
   <select id="selectByExample" parameterType="com.pigs.blog.model.ArticlesGroupExample" resultMap="BaseResultMap">
     select
@@ -104,10 +104,10 @@
   <insert id="insert" parameterType="com.pigs.blog.model.ArticlesGroup">
     insert into articles_group (id, group_name, parent_id, 
       create_at, update_at, is_delete, 
-      account)
+      author)
     values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
       #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=SMALLINT}, 
-      #{account,jdbcType=VARCHAR})
+      #{author,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.pigs.blog.model.ArticlesGroup">
     insert into articles_group
@@ -130,8 +130,8 @@
       <if test="isDelete != null">
         is_delete,
       </if>
-      <if test="account != null">
-        account,
+      <if test="author != null">
+        author,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -153,8 +153,8 @@
       <if test="isDelete != null">
         #{isDelete,jdbcType=SMALLINT},
       </if>
-      <if test="account != null">
-        #{account,jdbcType=VARCHAR},
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -185,8 +185,8 @@
       <if test="row.isDelete != null">
         is_delete = #{row.isDelete,jdbcType=SMALLINT},
       </if>
-      <if test="row.account != null">
-        account = #{row.account,jdbcType=VARCHAR},
+      <if test="row.author != null">
+        author = #{row.author,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="example != null">
@@ -201,7 +201,7 @@
       create_at = #{row.createAt,jdbcType=TIMESTAMP},
       update_at = #{row.updateAt,jdbcType=TIMESTAMP},
       is_delete = #{row.isDelete,jdbcType=SMALLINT},
-      account = #{row.account,jdbcType=VARCHAR}
+      author = #{row.author,jdbcType=VARCHAR}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -224,8 +224,8 @@
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=SMALLINT},
       </if>
-      <if test="account != null">
-        account = #{account,jdbcType=VARCHAR},
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -237,7 +237,7 @@
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=SMALLINT},
-      account = #{account,jdbcType=VARCHAR}
+      author = #{author,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

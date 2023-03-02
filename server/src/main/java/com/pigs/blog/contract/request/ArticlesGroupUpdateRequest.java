@@ -24,5 +24,5 @@ public class ArticlesGroupUpdateRequest {
 
     @ApiModelProperty("创作者")
     @NotBlank(message = "author cannot be blank")
-    private String account;//创作者
+    private String author;//创作者
 }

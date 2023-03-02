@@ -10,7 +10,7 @@ const routes = [
     meta: {
       showComponent: true,
     },
-    component: () => import('@/pages/Home'),
+    component: () => import('@/pages/Index'),
   },
   {
     path: '/article',
@@ -53,7 +53,6 @@ const routes = [
     component: () => import('@/pages/About'),
   },
 ]
-
 
 const router = createRouter({
   history: createWebHashHistory(),
