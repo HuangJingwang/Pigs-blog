@@ -11,6 +11,7 @@ import java.util.List;
 
 @Mapper
 public interface ArticlesMapperExt {
+
     List<Articles> selectArticlesList(@Param("criteria") ArticlesPageCriteria criteria);
 
     Long countArticlesList(@Param("criteria") ArticlesPageCriteria criteria);
@@ -25,4 +26,6 @@ public interface ArticlesMapperExt {
 
     @Select("select sum(page_view) from articles where status = 'published'")
     Long selectAllPageViewCount();
+
+    Long getPublishedPageView(@Param("account") String account);
 }

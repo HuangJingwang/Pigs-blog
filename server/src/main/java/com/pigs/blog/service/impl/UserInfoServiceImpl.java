@@ -20,6 +20,7 @@ import com.pigs.blog.model.criteria.UserInfoPageCriteria;
 import com.pigs.blog.model.vo.HomepageUserInfo;
 import com.pigs.blog.service.UserInfoService;
 import com.pigs.blog.utils.RedisCache;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -60,7 +61,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public HomepageUserInfoResponse getHomepageUserInfo(HomepageUserInfoRequest request) {
         String account = request.getAccount();
-        if(StringUtils.isEmpty(account)){
+        if(Strings.isBlank(account)) {
             return getWebsiteInfo();
         }
         HomepageUserInfo info = userInfoMapperExt.selectHomepageUserInfoByAccount(account);
@@ -71,7 +72,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         response.setGithubUrl(info.getGithubUrl());
         response.setNickname(info.getNickname());
         response.setImgUrl(info.getImgUrl());
-        response.setPageView(info.getPageView());
+
+        Long pageView = articlesMapperExt.getPublishedPageView(account);
+        response.setPageView(pageView == null ? 0 : pageView);
 
         return response;
     }

@@ -58,4 +58,16 @@ public class UserInfoController {
 
         return ResultResponse.success(response);
     }
+
+//    @RequestMapping(value = "getUserList", method = RequestMethod.GET, produces = "application/json")
+//    public ResultResponse<HomepageUserInfoResponse> getUserList(){
+//
+//        return ResultResponse.success();
+//    }
+//
+//    @RequestMapping(value = "getUserDetail", method = RequestMethod.GET, produces = "application/json")
+//    public ResultResponse<HomepageUserInfoResponse> getUserDetail(){
+////        文章数。。
+//        return ResultResponse.success();
+//    }
 }

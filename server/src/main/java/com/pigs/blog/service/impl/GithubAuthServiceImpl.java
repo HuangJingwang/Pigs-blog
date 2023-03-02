@@ -82,7 +82,6 @@ public class GithubAuthServiceImpl implements GithubAuthService {
         } else {
             throw new RuntimeException(resp);
         }
-
     }
 
     public void getOpenId(String accessToken, HttpServletResponse response) {

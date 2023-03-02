@@ -14,6 +14,5 @@ public class HomepageUserInfo {
     private Integer articlesCount;
     //用户githuburl
     private String githubUrl;
-    //用户文章访问量
-    private Long pageView;
+
 }

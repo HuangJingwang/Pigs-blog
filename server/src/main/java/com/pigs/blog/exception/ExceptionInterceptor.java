@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.nio.file.AccessDeniedException;
+
 @ControllerAdvice
 public class ExceptionInterceptor {
 
@@ -28,5 +30,11 @@ public class ExceptionInterceptor {
     @ResponseBody
     public ResultResponse doValidationException(MethodArgumentNotValidException e){
         return ResultResponse.fail(ErrorCodeEnum.PARAMETER_IS_ILLEGAL.getCode(),e.getBindingResult().getFieldError().getDefaultMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseBody
+    public ResultResponse accessException(AccessDeniedException e){
+        return ResultResponse.fail(ErrorCodeEnum.ACCESSS_DENIED.getCode(),ErrorCodeEnum.ACCESSS_DENIED.getMsg());
     }
 }

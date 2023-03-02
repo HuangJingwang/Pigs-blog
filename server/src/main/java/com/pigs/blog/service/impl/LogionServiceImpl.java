@@ -22,17 +22,9 @@ public class LogionServiceImpl implements LogionService {
     @Autowired
     private LogionMapper logionMapper;
 
-    private List<Integer> getIdList() {
-        return logionMapperExt.selectAllIds();
-    }
-
     @Override
     public Logion getLogion() {
-        List<Integer> idList = getIdList();
-        Random random = new Random();
-        int index = random.nextInt(idList.size() + 1);//random.nextInt(max)表示生成[0,max）之间的随机数
-        Integer id = idList.get(index);
-        Logion logion = logionMapper.selectByPrimaryKey(id);
+        Logion logion = logionMapperExt.selectRandom();
         return logion;
     }
 

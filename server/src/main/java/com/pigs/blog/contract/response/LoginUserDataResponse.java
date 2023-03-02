@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @ApiModel
 @Data
@@ -28,4 +29,6 @@ public class LoginUserDataResponse {
     private Integer articlesCount;//文章数
 
     private Long githubId;
+
+    private List<String> role;
 }

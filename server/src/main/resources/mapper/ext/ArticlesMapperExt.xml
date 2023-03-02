@@ -78,4 +78,12 @@
     <select id="getMaxId" resultType="java.lang.Long">
         select max(id) from articles
     </select>
+
+    <select id="getPublishedPageView" resultType="java.lang.Long">
+        SELECT
+	SUM( page_view )
+	FROM `articles`
+    WHERE
+    `status` = 'published' AND `account` = #{account}
+    </select>
 </mapper>

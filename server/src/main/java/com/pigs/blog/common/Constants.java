@@ -10,7 +10,7 @@ public class Constants {
      * redis相关
      */
     //jwt有效期为
-    public static final Long JWT_TTL = 24 * 60 * 60 *1000L;// 24 * 60 * 60 *1000  24小时
+    public static final Long JWT_TTL = 24 * 60 * 60 * 1000L * 7;// 24 * 60 * 60 *1000 *7  7天
     //jwt设置秘钥明文
     public static final String JWT_KEY = "hjw";
 

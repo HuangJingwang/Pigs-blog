@@ -2,6 +2,7 @@ package com.pigs.blog.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pigs.blog.common.Constants;
+import com.pigs.blog.common.RoleEnum;
 import com.pigs.blog.exception.ErrorCodeEnum;
 import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.entity.LoginUser;
@@ -31,10 +32,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 public class LoginServiceImpl implements LoginService {
@@ -111,6 +109,7 @@ public class LoginServiceImpl implements LoginService {
         User user = new User();
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         BeanUtils.copyProperties(request, user);
+        user.setRole(RoleEnum.VISITOR.getRole());
         userMapper.insertSelective(user);
 
         UserInfo userInfo = new UserInfo();
@@ -184,6 +183,8 @@ public class LoginServiceImpl implements LoginService {
 
         LoginUserDataResponse userData = new LoginUserDataResponse();
         BeanUtils.copyProperties(user,userData);
+
+        userData.setRole(Arrays.asList(user.getRole().split(",")));
 
         if(!CollectionUtils.isEmpty(userInfos)){
             BeanUtils.copyProperties(CollectionUtils.firstElement(userInfos),userData);

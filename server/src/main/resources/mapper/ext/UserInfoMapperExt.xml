@@ -36,13 +36,10 @@ SELECT
     user_info.nickname as nickname,
 	user_info.img_url as imgUrl,
 	user_info.articles_count as articlesCount,
-	user_info.github_url as githubUrl,
-	sum( articles.page_view ) as pageView
+	user_info.github_url as githubUrl
 FROM
-	`user_info`,
-	`articles`
+	`user_info`
 WHERE
-	user_info.account = #{account} AND
-	articles.account = #{account}
+	user_info.account = #{account}
 </select>
 </mapper>

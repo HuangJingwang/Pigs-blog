@@ -9,8 +9,8 @@ import java.util.List;
 
 @Mapper
 public interface LogionMapperExt {
-    @Select("SELECT id FROM `logion`")
-    List<Integer> selectAllIds();
 
     List<Logion> listAll(@Param("start") Integer start, @Param("offset") Integer offset);
+
+    Logion selectRandom();
 }
