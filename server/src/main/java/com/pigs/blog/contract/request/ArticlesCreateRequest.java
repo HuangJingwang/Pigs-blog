@@ -3,6 +3,8 @@ package com.pigs.blog.contract.request;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.pigs.blog.common.ArticlesStatusEnum;
+import com.pigs.blog.common.ValueOfEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class ArticlesCreateRequest {
 
     @ApiModelProperty("状态 默认draft-草稿, published-已发布, deleted-被删除")
     @NotBlank(message = "status cannot be blank")
+    @ValueOfEnum(enumClass = ArticlesStatusEnum.class)
     private String status;//状态 状态 draft-草稿, published-已发布, deleted-被删除
 
     @ApiModelProperty("多个tag,逗号分割")

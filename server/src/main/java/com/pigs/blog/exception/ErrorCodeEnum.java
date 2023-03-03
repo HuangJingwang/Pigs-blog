@@ -1,7 +1,7 @@
 package com.pigs.blog.exception;
 
 public enum ErrorCodeEnum {
-    ACCESSS_DENIED(403, "No access rights"),
+    ACCESS_DENIED(403, "No access rights"),
     SERVER_ERROR(500, "there is a error in server"),
     PARAMETER_IS_ILLEGAL(10001, "parameter is illegal"),
     PARENT_ID_IS_NOT_EXIST(10002, "parent id is not exist"),
