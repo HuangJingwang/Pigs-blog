@@ -22,7 +22,7 @@ public class ArticlesUpdateRequest {
     private String title;//标题
 
     @ApiModelProperty("分类")
-    private Integer groupId;//分类
+    private Long groupId;//分类
 
     @ApiModelProperty("状态 状态 draft-草稿, published-已发布, deleted-被删除")
     private String status;//状态 状态 draft-草稿, published-已发布, deleted-被删除

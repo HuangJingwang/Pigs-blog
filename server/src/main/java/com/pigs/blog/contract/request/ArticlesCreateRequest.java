@@ -25,7 +25,7 @@ public class ArticlesCreateRequest {
     private String title;//标题
 
     @ApiModelProperty("分类Id")
-    private Integer groupId;//分类
+    private Long groupId;//分类
 
     @ApiModelProperty("状态 默认draft-草稿, published-已发布, deleted-被删除")
     @NotBlank(message = "status cannot be blank")
