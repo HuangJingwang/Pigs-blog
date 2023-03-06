@@ -15,6 +15,7 @@ import com.pigs.blog.exception.PigsBlogException;
 import com.pigs.blog.mapper.ArticlesGroupMapper;
 import com.pigs.blog.mapper.ArticlesMapper;
 import com.pigs.blog.mapper.UserInfoMapper;
+import com.pigs.blog.mapper.ext.ArticlesGroupMapperExt;
 import com.pigs.blog.model.*;
 import com.pigs.blog.model.criteria.ArticlesListCriteria;
 import com.pigs.blog.contract.response.ArticlesListResponse;
@@ -29,11 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Component
 @Service
@@ -49,6 +48,8 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     private QiniuService qiniuService;
     @Autowired
     private ArticlesGroupMapper articlesGroupMapper;
+    @Autowired
+    private ArticlesGroupMapperExt articlesGroupMapperExt;
 
     @Override
     public PageData<ArticlesListResponse> getPageData(ArticlesPageDataRequest request) {
@@ -64,11 +65,29 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
 
         List<Articles> list = mapperExt.selectArticlesList(criteria);
         List<ArticlesListResponse> resultList = copyList(list);
+
+        //通过group_id查询对应的group_name
+        Set<Long> groupIdsSet = new LinkedHashSet<>();
+        for (Articles articles : list) {
+            groupIdsSet.add(articles.getGroupId());
+        }
+        List<Long> groupIds = new ArrayList<>(groupIdsSet);
+
+        List<String> groupNameList = articlesGroupMapperExt.selectGroupNameById(groupIds);
+        HashMap<Long, String> groupIdAndNameMap = new HashMap<>();
+        //group_id 和 group_name的对应关系
+        for (int i = 0; i < groupIds.size(); ++i) {
+            groupIdAndNameMap.put(groupIds.get(i),groupNameList.get(i));
+        }
+        for (ArticlesListResponse a : resultList) {
+            a.setGroupName(groupIdAndNameMap.get(a.getGroupId()));
+        }
         result.setTotalResult(count);
         result.setResultList(resultList);
         result.setHasNext(((count + request.getPageSize() - 1) / request.getPageSize()) > request.getPageNo());
         return result;
     }
+
 
     /**
      * 更新文章
@@ -203,7 +222,12 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
      */
     public void deleteForever(Long id) {
         ArticlesWithBLOBs articles = mapper.selectByPrimaryKey(id);
-        String[] split = articles.getArticlePictureUrl().split(",");
+        String articlePictureUrl = articles.getArticlePictureUrl();
+        if(StringUtils.isEmpty(articlePictureUrl) || articlePictureUrl.length()==0){
+            mapper.deleteByPrimaryKey(id);
+            return;
+        }
+        String[] split = articlePictureUrl.split(",");
         qiniuService.deleteImage(Arrays.asList(split));
         mapper.deleteByPrimaryKey(id);
     }

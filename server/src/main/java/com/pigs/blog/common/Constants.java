@@ -50,4 +50,8 @@ public class Constants {
     public final static String WEBSITE_IMG_URL = "https://moon.starrysummer.com/3686fd078f7649528d5b5ba31de2a9d7.jpg";
     public final static String WEBSITE_GITHUB_URL = "https://github.com/HuangJingwang/Pigs-blog";
     public final static String WEBSITE_NICKNAME = "StarrySummer";
+
+    //网站默认图像
+    //public final static String DEFAULT_AVATAR = ""; //默认头像
+    public final static String DEFAULT_ARTICLE_IMG = "https://moon.starrysummer.com/05650df26e4b49ae86f459bfdfa0e293.jpg"; //默认文章封面
 }

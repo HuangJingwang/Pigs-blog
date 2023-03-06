@@ -79,11 +79,14 @@ public class QiniuService {
 
         for (String s : list) {
             try {
-                // 若传来的url直接是文件名 则无须用replace去除前面的域名了
-                bucketManager.delete(Constants.bucketName, s.replaceAll(Constants.QINIU_IMAGE_DOMAIN,""));
+                if(!s.equals(Constants.DEFAULT_ARTICLE_IMG)) { //文章默认图片删除路径验证
+                    
+                    // 若传来的url直接是文件名 则无须用replace去除前面的域名了
+                    bucketManager.delete(Constants.bucketName, s.replaceAll(Constants.QINIU_IMAGE_DOMAIN,""));
 
-                // 每次删除就刷新一下
-                refresh(s);
+                    // 每次删除就刷新一下
+                    refresh(s);
+                }
             } catch (QiniuException e) {
                 logger.error("delete picture which url:{" + s + "} fail");
                 e.printStackTrace();

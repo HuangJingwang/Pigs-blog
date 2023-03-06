@@ -1,5 +1,6 @@
 package com.pigs.blog.controller;
 
+import com.pigs.blog.common.Constants;
 import com.pigs.blog.common.PageData;
 import com.pigs.blog.common.ResultResponse;
 import com.pigs.blog.contract.request.ArticlesCreateRequest;
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -60,6 +62,9 @@ public class ArticlesController {
     @ApiOperation(value = "保存", notes = "", httpMethod = "POST")
     @RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse saveArticles(@RequestBody @Valid ArticlesCreateRequest request) {
+        if(StringUtils.isEmpty(request.getImgUrl()) || request.getImgUrl().length() == 0) { //保存文章时，若文章封面图片为空就给constans中的默认路径
+            request.setImgUrl(Constants.DEFAULT_ARTICLE_IMG);
+        }
         return articlesInterface.saveArticles(request);
     }
 
@@ -72,6 +77,9 @@ public class ArticlesController {
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST, produces = "application/json")
     public ResultResponse updateArticles(@PathVariable("id") Long id,
                                          @RequestBody @Valid ArticlesUpdateRequest request) {
+        if(StringUtils.isEmpty(request.getImgUrl()) || request.getImgUrl().length() == 0) { //保存更新时，若文章封面图片为空就给constans中的默认路径
+            request.setImgUrl(Constants.DEFAULT_ARTICLE_IMG);
+        }
         articlesInterface.updateArticles(id, request);
         return ResultResponse.success(null);
     }
