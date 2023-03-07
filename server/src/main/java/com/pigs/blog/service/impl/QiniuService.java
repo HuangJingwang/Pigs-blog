@@ -2,6 +2,7 @@ package com.pigs.blog.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pigs.blog.common.Constants;
+import com.pigs.blog.exception.PigsBlogException;
 import com.pigs.blog.utils.FileUtil;
 import com.qiniu.cdn.CdnManager;
 import com.qiniu.common.QiniuException;
@@ -79,14 +80,14 @@ public class QiniuService {
 
         for (String s : list) {
             try {
-                if(!s.equals(Constants.DEFAULT_ARTICLE_IMG)) { //文章默认图片删除路径验证
-                    
-                    // 若传来的url直接是文件名 则无须用replace去除前面的域名了
-                    bucketManager.delete(Constants.bucketName, s.replaceAll(Constants.QINIU_IMAGE_DOMAIN,""));
+                validImgDelete(s);//验证一下图片是否可以被删除
 
-                    // 每次删除就刷新一下
-                    refresh(s);
-                }
+                // 若传来的url直接是文件名 则无须用replace去除前面的域名了
+                bucketManager.delete(Constants.bucketName, s.replaceAll(Constants.QINIU_IMAGE_DOMAIN, ""));
+
+                // 每次删除就刷新一下
+                refresh(s);
+
             } catch (QiniuException e) {
                 logger.error("delete picture which url:{" + s + "} fail");
                 e.printStackTrace();
@@ -103,6 +104,16 @@ public class QiniuService {
         } catch (QiniuException e) {
             logger.error("refresh picture fail");
             e.printStackTrace();
+        }
+    }
+
+    //验证图片是否可以被删除
+    private void validImgDelete(String s) {
+        String[] defaultImg = Constants.DEFAULT_IMG;
+        for (String s1 : defaultImg) {
+            if (s1.equals(s)) {
+                throw new PigsBlogException(500, "the picture cannot be deleted which picture_url:{" + s + "}");
+            }
         }
     }
 }

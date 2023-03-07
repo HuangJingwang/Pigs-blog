@@ -54,4 +54,8 @@ public class Constants {
     //网站默认图像
     //public final static String DEFAULT_AVATAR = ""; //默认头像
     public final static String DEFAULT_ARTICLE_IMG = "https://moon.starrysummer.com/05650df26e4b49ae86f459bfdfa0e293.jpg"; //默认文章封面
+
+    public final static String[] DEFAULT_IMG = {
+            "https://moon.starrysummer.com/05650df26e4b49ae86f459bfdfa0e293.jpg"//默认文章封面
+    };
 }
