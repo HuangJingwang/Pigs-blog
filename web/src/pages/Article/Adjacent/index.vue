@@ -1,25 +1,32 @@
 <template>
   <!-- 上一篇 -->
-  <div class="pre" @click="toPreArticle">
+  <div
+    :class="['pre', { pre_forbidden: true }]"
+    @click="toPreArticle(preArticle.id)"
+    :style="{ cursor: `${pre_cursor}`}"
+  >
     <div
       class="coverImg_pre"
       :style="{ backgroundImage: `url(${preArticle.img_url})` }"
     ></div>
-    <div class="articleCard_pre">
-      <span class="btn_pre iconfont icon-qiehuanqizuo" :data-id="preArticle.id"></span>
-      <div class="title" :data-id="preArticle.id">{{ preArticle.title }}</div>
+    <div class="articleCard_pre" :style="{ cursor: `${pre_cursor}`}">
+      <span
+        class="btn_pre iconfont icon-qiehuanqizuo"
+        :style="{ cursor: `${pre_cursor}`}"
+      ></span>
+      <div class="title" :style="{ cursor: `${pre_cursor}`}">{{ preArticle.title }}</div>
     </div>
   </div>
 
   <!-- 下一篇 -->
-  <div class="next" @click="toNextArticle">
+  <div class="next" @click="toNextArticle(nextArticle.id)"  :style="{ cursor: `${next_cursor}`}">
     <div
       class="coverImg_next"
       :style="{ backgroundImage: `url(${nextArticle.img_url})` }"
     ></div>
-    <div class="articleCard_next">
-      <span class="btn_next iconfont icon-qiehuanqiyou" :data-id="nextArticle.id"></span>
-      <div class="title" :data-id="nextArticle.id">{{ nextArticle.title }}</div>
+    <div class="articleCard_next"  :style="{ cursor: `${next_cursor}`}">
+      <span class="btn_next iconfont icon-qiehuanqiyou"  :style="{ cursor: `${next_cursor}`}"></span>
+      <div class="title"  :style="{ cursor: `${next_cursor}`}">{{ nextArticle.title }}</div>
     </div>
   </div>
 </template>
@@ -31,7 +38,6 @@ import { getPreArticle, getNextArticle } from "@/api"
 
 const router = useRouter()
 const props = defineProps(["id"])
-let imgUrl = ""
 let preArticle = ref({
   id: -100,
   title: "untitled",
@@ -40,37 +46,40 @@ let preArticle = ref({
 let nextArticle = ref({
   id: -100,
   title: "untitled",
-  img_url: "https://moon.starrysummer.com/05650df26e4b49ae86f459bfdfa0e293.jpg",
+  img_url: "",
 })
 
+let pre_cursor = ref('pointer')
+let next_cursor = ref('pointer')
 watch(
   props,
   async () => {
     let preResult = await getPreArticle(props.id)
-    console.log("pre", preResult)
     if (JSON.stringify(preResult.data) !== "{}") {
       preArticle.value = preResult.data
+      pre_cursor.value = 'pointer'
     } else {
-      console.log('没有数据,使用默认数据')
+      // 没有数据
+      console.log("没有数据,使用默认数据")
+      pre_cursor.value = 'not-allowed'
       preArticle.value = {
         id: -100,
-        title: "untitled",
+        title: "没有了捏!",
         img_url: "https://moon.starrysummer.com/05650df26e4b49ae86f459bfdfa0e293.jpg",
       }
     }
     let nextResult = await getNextArticle(props.id)
-    console.log("next", nextResult)
     if (JSON.stringify(nextResult.data) !== "{}") {
-      console.log("有数据")
-      console.log(nextResult.data)
       nextArticle.value = nextResult.data
+      next_cursor.value = 'pointer'
     } else {
       // 为nextArticle 赋默认值
       console.log("没有数据,使用默认数据")
+      next_cursor.value = 'not-allowed'
       // console.log(nextResult == {})
       nextArticle.value = {
         id: -100,
-        title: "untitled",
+        title: "没有了捏!",
         img_url: "https://moon.starrysummer.com/05650df26e4b49ae86f459bfdfa0e293.jpg",
       }
     }
@@ -82,19 +91,13 @@ watch(
 
 // 点击事件
 
-const toPreArticle = (e) => {
-  console.log(props.id)
-  console.log(props)
-  let id = e.target.dataset.id
+const toPreArticle = (id) => {
   jumpArticle(id)
 }
-const toNextArticle = (e) => {
-  console.log(props.id)
-  let id = e.target.dataset.id
+const toNextArticle = (id) => {
   jumpArticle(id)
 }
-
-//跳转路由
+//跳转路由方法
 function jumpArticle(id) {
   //携带文章id 跳转到article页面
   if (id >= 0) {
@@ -154,13 +157,16 @@ function jumpArticle(id) {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
+
 .pre .articleCard_pre,
 .next .articleCard_next {
+  /* cursor: pointer; */
   position: relative;
   height: 100%;
 }
 
 .title {
+  /* cursor: pointer; */
   width: 300px;
   text-align: center;
   color: #fff;
@@ -174,6 +180,7 @@ function jumpArticle(id) {
 }
 .pre .btn_pre,
 .next .btn_next {
+  /* cursor: pointer; */
   color: rgb(221, 221, 221);
   font-size: 50px;
   position: absolute;

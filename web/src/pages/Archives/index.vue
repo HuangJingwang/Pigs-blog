@@ -25,7 +25,7 @@
         <div class="title">Archives</div>
       </div>
       <div class="body" @click="toArticle">
-        <div class="articles" v-for="item in archivesList" :key="item.id" >
+        <div class="articles" v-for="item in archivesList" :key="item.id">
           <div class="box">
             <div class="list">
               {{ item.year }}年{{ item.month }} 月
@@ -52,26 +52,26 @@
       </div>
       <div class="foot">{{ total }} articles in total</div>
     </div>
-  </div><Waifu/>
+  </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, toRefs, computed } from "vue"
-import { useRouter } from "vue-router";
-import Background from "@/components/Background.vue"
-import { getArchives } from "@/api"
+import { ref, reactive, onMounted, toRefs, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import Background from '@/components/Background.vue'
+import { getArchives } from '@/api'
 const router = useRouter()
 let archivesList = ref([])
 let total = ref(0)
 // 页面中展示归档数据
 onMounted(async () => {
   let result = await getArchives()
-  console.log("歸檔數據", result)
+  console.log('歸檔數據', result)
   let arr = []
   let obj = {}
   if (result.success) {
     total.value = result.data.length
-    result.data.forEach((el1,index) => {
+    result.data.forEach((el1, index) => {
       const date = el1.create_at
       el1.year = date.substring(0, 4)
       el1.month = date.substring(5, 7)
@@ -107,7 +107,7 @@ const toArticle = (e) => {
   if (id) {
     // state.user.key = '1234'
     router.push({
-      path: "/article",
+      path: '/article',
       query: {
         id: id,
       },

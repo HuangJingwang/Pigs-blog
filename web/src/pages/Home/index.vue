@@ -50,7 +50,6 @@
       <p v-show="!hasNext">没有了捏!</p>
     </div>
   </div>
-  <Waifu/>
 </template>
 
 <script setup>

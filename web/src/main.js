@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from './router/index.js'
 // 引入全局组件
 import Background from './components/Background.vue'
-import Waifu from './components/Waifu'
 // 引入pinia倉庫
 import { createPinia } from 'pinia'
 // 引入持久化工具
@@ -18,7 +17,7 @@ pinia.use(piniaPluginPersistedstate)
 const app = createApp(App)
 app
   .component('Background', Background)
-  .component('Waifu', Waifu)
+
   .use(ElementPlus)
   .use(pinia)
   .use(router)

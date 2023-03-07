@@ -19,7 +19,7 @@
         <p>主页</p>
       </div>
       <!-- 写文章 -->
-      <div class="write navigation" @click="toWrite" v-show="showWrite">
+      <div class="write navigation" @click="toWrite" >
         <span class="iconfont icon-yongyan"></span>
         <p>撰写</p>
       </div>
@@ -44,7 +44,7 @@
         <p>登录</p>
       </div>
       <div class="user_login" v-show="userStore.isLogin">
-        <el-dropdown>
+        <el-dropdown v-show="userStore.isLogin">
           <div
             class="avatar"
             :style="{
@@ -53,7 +53,7 @@
             }"
           ></div>
           <template #dropdown>
-            <el-dropdown-menu>
+            <el-dropdown-menu v-show="userStore.isLogin">
               <el-dropdown-item @click="testBind">绑定Github</el-dropdown-item>
               <el-dropdown-item disabled>个人主页</el-dropdown-item>
               <el-dropdown-item disabled >消息中心</el-dropdown-item>
@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { ref,computed } from "vue"
+import { ref,computed,onMounted } from "vue"
 import {useUserStore}from '@/store/user'
 import { useRouter, useRoute } from "vue-router"
 import {logout} from '@/api'
@@ -78,12 +78,15 @@ const router = useRouter()
 const route = useRoute()
 // 监听页面滚动事件,改变header样式
 let header_active = ref(false)
-window.addEventListener("scroll", () => {
+console.log(123)
+onMounted(() => {
+  window.addEventListener("scroll", () => {
   if (document.documentElement.scrollTop > 200) {
     header_active.value = true
   } else {
     header_active.value = false
   }
+})
 })
 
 // 导航到write 页面
@@ -95,9 +98,6 @@ const toWrite = () => {
 }
 // 控制write 是否显示
 
-let showWrite = computed(() => {
-  return userStore.isLogin
-})
 
 
 // 点击弹出登录框
@@ -128,6 +128,7 @@ const reqLogout = async () => {
   // 删除token
   // 1.发出退出登录请求
   let result = await logout()
+  // 删除token
   sessionStorage.removeItem('token')
   console.log(result,'退出登录')
   // 2.清空登陆数据
@@ -147,17 +148,40 @@ const reqLogout = async () => {
   padding: 0 20px;
   position: fixed;
   top: 0;
-  transition: all 0.5s;
+  transition: all .3s;
   display: flex;
   justify-content: space-between;
   box-shadow: 0 10px 8px rgba(0, 0, 0, 0.3);
   background: rgba(0, 0, 0, 0.2);
 }
+.header::before{
+  content: '';
+  z-index: -1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  opacity: 0;
+}
 .header-active {
   height: 55px;
-  background-color: rgb(124, 131, 151);
 }
-
+.header-active::before{
+  content: '';
+  z-index: -1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  transition: all.5s;
+  opacity: 1;
+}
 .header .pig-left,
 .header .pig-right {
 padding-right: 30px;
