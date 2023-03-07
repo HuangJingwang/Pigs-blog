@@ -1,15 +1,12 @@
 <template>
-  <!-- <el-button text @click="dialogVisible = true"> click to open the Dialog </el-button> -->
   <el-dialog
     v-model="userStore.showArticleModal"
-    title="文章管理"
-    width="50%"
-    :before-close="handleClose"
     :lock-scroll="false"
+    :append-to-body="true"
+    title="文章管理"
+    :width="1000"
+    :before-close="handleClose"
   >
-    <!-- <span>This is a message</span> -->
-    <!-- 子组件 -->
-
     <!-- 头部导航 -->
     <div class="header">
       <div
@@ -25,24 +22,43 @@
         草稿箱
       </div>
       <div
-        :class="['btn_dustbin', { active: btn_active == 'dustbin' ? true : false }]"
+        :class="['btn_recycleBin', { active: btn_active == 'recycleBin' ? true : false }]"
         @click="showRecycleBin"
       >
         垃圾箱
       </div>
+      <div class="byAuthor">
+        <input type="checkbox" v-model="byAuthor" id="checkbox" />
+        <label for="checkbox">
+          <span class="text">只看我</span>
+        </label>
+      </div>
     </div>
     <hr class="line" />
-    <!-- <div v-show="btn_active == 'published' ? true : false" >
-      <Published  :publishedList="publishedList"/>
-    </div> -->
-    <div v-show="btn_active == 'draft' ? true : false">
-      <Draft :draftData="draftData" @getDraftPage="getDraftPage" />
+    <div v-show="btn_active == 'published' ? true : false">
+      <Published
+        :publishedData="publishedData"
+        @getPublishedPage="getPublishedPage"
+        @getPublishedArticles="getPublishedArticles"
+      />
     </div>
-    <!-- <div v-show="btn_active == 'dustbin' ? true : false" >
-      <RecycleBin  :dustbinList="dustbinList"/>
-    </div> -->
+    <div v-show="btn_active == 'draft' ? true : false">
+      <Draft
+        :draftData="draftData"
+        @getDraftPage="getDraftPage"
+        @getDraftArticles="getDraftArticles"
+      />
+    </div>
+    <div v-show="btn_active == 'recycleBin' ? true : false">
+      <RecycleBin
+        :recycleData="recycleData"
+        @getRecyclePage="getRecyclePage"
+        @getRecycleArticles="getRecycleArticles"
+      />
+    </div>
     <template #footer>
       <span class="dialog-footer">
+        <el-button>批量删除</el-button>
         <el-button @click="userStore.showArticleModal = false">Cancel</el-button>
         <el-button type="primary" @click="userStore.showArticleModal = false">
           Confirm
@@ -54,9 +70,9 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue"
-// import Published from "./Published"
+import Published from "./Published"
 import Draft from "./Draft"
-// import RecycleBin from "./RecycleBin"
+import RecycleBin from "./RecycleBin"
 import { getArticleHandleList } from "@/api"
 import { useUserStore } from "@/store/user"
 const userStore = useUserStore()
@@ -75,60 +91,106 @@ const showDraft = () => {
   btn_active.value = "draft"
 }
 const showRecycleBin = () => {
-  btn_active.value = "dustbin"
+  btn_active.value = "recycleBin"
 }
-
+let byAuthor = ref(false)
 //请求获取三种数据
+
+//#region
 let draftParams = ref({
-  account: "test",
+  account: userStore.userInfo.account,
   pageNo: 1,
   status: "draft",
 })
+
+// 获取
+async function getDraftArticles() {
+  let result = await getArticleHandleList(draftParams.value, byAuthor.value)
+  if (result.code == 200) draftData.value = result.data
+  else if (result.code == 500) draftParams.value.pageNo -= 1
+}
+// 传给draft组件的数据
 let draftData = ref(null)
 // 获取新的页码
 const getDraftPage = (val) => {
-  // console.log(123,val)
   // 更改页码
+  // pageNo 始终小于等于最大页码
   draftParams.value.pageNo = val
 }
 watch(
-  draftParams,
-  async (val) => {
-    console.log(val)
-    let result = await getArticleHandleList(val)
-    console.log(result)
-    if (result.code == 200) draftData.value = result.data
+  [draftParams, byAuthor],
+  () => {
+    getDraftArticles()
+    console.log("watch success")
   },
   { immediate: true, deep: true }
 )
 
-// onMounted(async () => {
-//   // 获取已发布文章数据
-//   params.status = "published"
-//   let publishedResult = await reqArticles(params)
-//   if (publishedResult.code == 200) publishedList = publishedResult.data
-//   else console.log("error")
-//   // console.log(publishedList)
-//   params.status = "draft"
-//   let draftResult = await reqArticles(params)
-//   if (draftResult.code == 200) draftData = draftResult.data
-//   else console.log("error")
+//#endregion
 
-//   params.status = "deleted"
-//   let dustbinResult = await reqArticles(params)
-//   if (dustbinResult.code == 200) dustbinList = dustbinResult.data
-//   else console.log("error")
-
-//   console.log("已发布", publishedList)
-//   console.log("草稿", draftData)
-//   console.log("已删除", dustbinList)
-//   // 获取草稿箱数据
-// })
-
-function reqArticles(params) {
-  let result = getArticleHandleList(params)
-  return result
+//#region
+// 回收站文章数据
+let recycleData = ref(null)
+// 回收站参数
+let recycleParams = ref({
+  account: userStore.userInfo.account,
+  pageNo: 1,
+  status: "deleted",
+})
+async function getRecycleArticles() {
+  let result = await getArticleHandleList(recycleParams.value, byAuthor.value)
+  if (result.code == 200) recycleData.value = result.data
+  if (result.code == 500) recycleParams.value.pageNo -= 1
 }
+
+const getRecyclePage = (val) => {
+  console.log(val)
+  // 更改页码
+  // pageNo 始终小于等于最大页码
+  recycleParams.value.pageNo = val
+  console.log(recycleParams.value.pageNo,'pageno')
+}
+watch(
+  [recycleParams, byAuthor],
+  () => {
+    getRecycleArticles()
+    console.log('watch success')
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+)
+//#endregion
+
+//#region
+
+// 已發佈文章數據
+let publishedData = ref(null)
+let publishedPrams = ref({
+  account: userStore.userInfo.account,
+  pageNo: 1,
+  status: "published",
+})
+async function getPublishedArticles() {
+  let result = await getArticleHandleList(publishedPrams.value, byAuthor.value)
+  if (result.code == 200) publishedData.value = result.data
+  else if (result.code == 500) recycleParams.value.pageNo -= 1
+}
+const getPublishedPage = (val) => {
+  // 更改页码
+  // pageNo 始终小于等于最大页码
+  recycleParams.value.pageNo = val
+}
+watch(
+  [publishedPrams, byAuthor],
+  () => {
+    console.log('watch published page')
+    getPublishedArticles()
+  },
+  { immediate: true, deep: true }
+)
+//#endregion
 </script>
 <style scoped>
 .dialog-footer button:first-child {
@@ -136,7 +198,7 @@ function reqArticles(params) {
 }
 .header {
   display: flex;
-  width: 280px;
+  width: 320px;
   justify-content: space-between;
   padding-left: 20px;
   margin-bottom: 10px;
@@ -147,7 +209,7 @@ function reqArticles(params) {
 /* 导航按钮 */
 .btn_published,
 .btn_draft,
-.btn_dustbin {
+.btn_recycleBin {
   position: relative;
   width: 80px;
   font-size: 16px;
@@ -155,9 +217,19 @@ function reqArticles(params) {
   line-height: 30px;
   text-align: center;
 }
+.byAuthor {
+  margin-left: 10px;
+  width: 80px;
+  line-height: 30px;
+  text-align: center;
+}
+.byAuthor .text {
+  font-size: 16px;
+  margin-left: 5px;
+}
 .btn_published::after,
 .btn_draft::after,
-.btn_dustbin::after {
+.btn_recycleBin::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -171,7 +243,7 @@ function reqArticles(params) {
 }
 .btn_published:hover::after,
 .btn_draft:hover:after,
-.btn_dustbin:hover:after {
+.btn_recycleBin:hover:after {
   width: 100%;
 }
 .active {

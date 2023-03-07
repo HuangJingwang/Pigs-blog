@@ -1,6 +1,9 @@
 import requests from './requests'
 // 获取首页文章列表数据
-export const getArticleList = (pageNo = 0, author) => {
+export const getArticleList = (data) => {
+  let { pageNo, page_view, account } = data
+
+  console.log(pageNo, 'pageNo')
   return requests({
     method: 'GET',
     url: `/articles/getArticlesPageData?pageNo=${pageNo}`,
@@ -55,14 +58,31 @@ export const getGroupListData = () => {
 }
 // 文章管理模块
 // 获取已发布文章列表
-export const getArticleHandleList = (params) => {
+export const getArticleHandleList = (params, byAuthor) => {
   let { account, pageNo, status } = params
+  let url = byAuthor
+    ? `/articles/getArticlesPageData?account=${account}&pageNo=${pageNo}&pageSize=5&status=${status}`
+    : `/articles/getArticlesPageData?pageNo=${pageNo}&pageSize=5&status=${status}`
   return requests({
     method: 'GET',
-    url: `/articles/getArticlesPageData?pageNo=${pageNo}&pageSize=5&status=${status}`,
+    url: url,
+  })
+}
+// 删除文章
+export const getArticleDelete = (id) => {
+  return requests({
+    method: 'POST',
+    url: `/articles/delete/${id}`,
   })
 }
 
+// 彻底删除文章
+export const getArticleDeleteCompletely = (id) => {
+  return requests({
+    method: 'POST',
+    url: `/articles/delete-forever/${id}`,
+  })
+}
 // 获取标签数据
 export const getTagList = () => {
   return requests({
@@ -107,15 +127,17 @@ export const deletePictures = (data) => {
 
 // 保存文章
 export const saveArticle = (data) => {
-  console.log(data)
+  console.log(data, 'data')
   return requests({
     method: 'POST',
     url: '/articles/save',
     data: data,
   })
 }
+
 // 更新文章
 export const updateArticle = (data, id) => {
+  console.log(data)
   return requests({
     method: 'POST',
     url: `/articles/update/${id}`,

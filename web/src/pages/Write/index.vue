@@ -1,5 +1,5 @@
 <template>
-  <div class="container" @click="hideConfig" >
+  <div class="container" @click="hideConfig">
     <div class="pubConfig">
       <input
         type="text"
@@ -9,7 +9,7 @@
       />
       <div class="right">
         <div class="saveInfo">{{ saveInfo }}</div>
-        <button class="draft">草稿箱</button>
+        <button class="draft" @click="showArticleModel">我的文章</button>
         <button class="public" @click="showConfigBox" ref="pubBtn">发布</button>
         <div class="user">头像</div>
       </div>
@@ -37,6 +37,7 @@
               <el-cascader
                 size="default"
                 v-model="group_id"
+                :show-all-levels="false"
                 :options="groupOptions"
                 :props="selectorOptions"
                 @change="addGroupId"
@@ -107,7 +108,7 @@
         </div>
       </div>
       <div class="sub">
-        <div class="save" @click="handleSaveArticle">保存</div>
+        <div class="save" @click="handleSaveArticle">发布</div>
         <div class="cancel" @click="cancelPub">取消</div>
       </div>
     </div>
@@ -117,9 +118,10 @@
 <script setup>
 // 引入消息提示框组件
 import { ElMessage } from "element-plus"
-import { useArticleThemeStore } from "@/store/articleTheme"
-import {useArticleStore} from '@/store/article'
-import { reactive, onMounted, ref, computed } from "vue"
+import { useArticleThemeStore } from "@/store/articleTheme" //主题仓库
+import { useArticleStore } from "@/store/article" //文章仓库
+import { useUserStore } from "@/store/user" //用户信息仓库
+import { reactive, onMounted, ref, computed, watch } from "vue"
 import axios from "axios"
 import {
   createNewTag,
@@ -127,46 +129,130 @@ import {
   saveArticle,
   updateArticle,
   deletePictures,
-} from "@/api"
+  getArticleDetail,
+} from "@/api" //请求方法
 import MdEditor from "md-editor-v3"
 import "md-editor-v3/lib/style.css"
 import UploadImg from "@/pages/Write/UploadImage"
 import { ElMessageBox } from "element-plus"
+import { useRoute } from "vue-router"
+
+const route = useRoute()
 const articleThemeStore = useArticleThemeStore()
 const articleStore = useArticleStore()
+const userStore = useUserStore()
 
+// 1,获取account
+// 2,获取query参数,判断是编辑/新建文章
+// 获取初始文章id
+let articleId = ref(null)
+if (route.query.id) {
+  console.log("从query获取id")
+
+  articleId.value = route.query.id
+} else if (!route.query.id && sessionStorage.getItem("articleId")) {
+  articleId.value = sessionStorage.getItem("articleId")
+  console.log("从sessionstorage获取id", articleId.value)
+}
+// let articleId = computed(() => {
+//   return route.query.id
+// })
+// onMounted(() => {
+//   console.log(articleId,'id')
+// })
+// 在write页面中不需要为account 设置响应式
+let userAccount = userStore.userInfo.account
 // 创建初始文章及数据
-
-let coverImg = ''//封面路径
-let saveInfo = ref("文章将保存至草稿箱")//说明信息
-let articleId = 0//文章id
-let articleTitle = ref("")//文章标题
+let coverImg = "" //封面路径
+let saveInfo = ref("文章将保存至草稿箱") //说明信息
+let articleTitle = ref("") //文章标题
 let articleIntroduction = ref("") //文章摘要
-let articleText = ref("")//文章内容
+let articleText = ref("") //文章内容
+let article_picture_url = [] //文章内图片
+// 选择group_id
+let group_id = ref([])
+let tags = [] // 标签数组
 
+let editorArticleImg = ref("")
 //从upLoadImg组件获取封面图片。
-
-
 const acceptUrl = (url) => {
   coverImg = url
-  console.log('获取到url',url)
 }
-// 主题
-let theme = computed(() => {
-  return articleThemeStore.preview_themeList[articleThemeStore.preview_themeIndex]
-})
-// 文章数据
-let data = reactive({
-  account: '123',
+// 更新文章数据
+let updateParams = {
+  account: userAccount,
   article_text: "Unspecified",
-  // author: "test",
-  group_id: 0,
-  // img_url: "",
+  group_id: 1,
   introduction: "Unspecified",
   status: "draft",
-  tags: "Unspecified",
+  tags: "no tag",
   title: "Unspecified",
-})
+}
+// 定义创建草稿文章默认数据
+let createParams = {
+  account: userAccount, //账户
+  article_text: "Unspecified", //文章内容
+  group_id: 1, //分类，默认在"未分类"中1
+  img_url: "", //封面图片
+  introduction: "introduction", //文章摘要
+  status: "draft", //创建草稿
+  tags: "no tag", //空标签
+  title: "title", //标题
+}
+// 监视query(articleId),判断创建/编辑文章
+watch(
+  articleId,
+  async () => {
+    // 1,article 存在，请求对应文章数据，修改data
+    if (articleId.value) {
+      let result = await getArticleDetail(articleId.value)
+      if (result.code === 200) {
+        // 编辑文章，获取文章详情
+        coverImg = result.data.img_url //封面
+        article_picture_url = result.data.article_picture_url //文章内图片
+        articleTitle.value = result.data.title //标题
+        articleText.value = result.data.article_text //内容
+        group_id.value[0] = result.data.group_id
+        tags = result.data.tags.split(",") //标签
+        console.log(result.data, "editor data")
+      } else {
+        // console.log("创建失败")
+        if (sessionStorage.getItem('articleId')) {
+          console.log("文章未更新,正常操作")
+        } else {
+          console.log("创建失败")
+        }
+      }
+      // 将id存入sessionStorage,方便继续编辑   ，发布完成时，删除此id/创建新文章时重设id
+    } else if (articleId.value == undefined) {
+      //2,article 不存在，则创建文章，并将此文章存入sessionStorage，以便下次进入write时继续编辑
+      let result = await saveArticle(createParams)
+      console.log(result)
+
+      if (result.code == 200) {
+        articleId.value = result.data.id
+        // 将文章存入缓存空间
+        sessionStorage.setItem("articleId", result.data.id)
+      } else if (result.code == 10006) {
+        ElMessageBox.confirm("草稿箱已满,请及时清理", "Warning", {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        })
+          .then(() => {
+            userStore.showArticleModal = true
+          })
+          .catch(() => {
+            console.log("close")
+          })
+      }
+
+      // 創建新文章成功
+    }
+  },
+  { immediate: true }
+)
+//#region
 // 控制文章模块显示与隐藏
 let configBox = ref(null)
 let pubBtn = ref(null)
@@ -184,11 +270,13 @@ const hideConfig = (e) => {
 const cancelPub = () => {
   isShowConfig.value = false
 }
-// 选择group_id
-const group_id = ref([])
+// #endregion
+
+//#region
+
 // 配置联级选择器
 const selectorOptions = {
-  expandTrigger: "hover",
+  expandTrigger: "click",
 }
 // 分类数据
 const groupOptions = computed(() => {
@@ -196,15 +284,17 @@ const groupOptions = computed(() => {
 })
 // 添加分类
 const addGroupId = () => {
-  data.group_id = group_id.value[group_id.value.length - 1]
+  updateParams.group_id = group_id.value[group_id.value.length - 1]
 }
 
+//#endregion
+
+//#region
 // 判断是否选中此tag
 // 选择tags
 let tagList = computed(() => {
   return articleStore.tagList
 })
-let tags = [] // 标签数组
 const addTags = (e) => {
   // 若未选中，则更改为选中状态
   if (e.target.dataset.selected == "unselected") {
@@ -216,7 +306,6 @@ const addTags = (e) => {
 }
 // 移除已选中tag
 const removeTags = (e) => {
-  // console.log()
   if (e.target.dataset.selected == "selected") {
     // 在tags中移除目标tag
     tags = tags.filter((item) => item != e.target.dataset.tag)
@@ -244,7 +333,6 @@ const createTag = async () => {
     newTag.tag_name = ""
     // dispatch("reqTagList")
     articleStore.reqTagList()
-
   }
 }
 // 删除tag
@@ -264,28 +352,8 @@ const editorTags = () => {
   tagDisabled.value = !tagDisabled.value
 }
 
-// 初始化页面
-onMounted(async () => {
-articleId = 428
-  // let result = await saveArticle(data)
-  // console.log(result)
-  // if (result.code == 10006) {
-  //   ElMessageBox.confirm("草稿箱已满,请清理草稿箱", "warning", {
-  //     confirmButtonText: "确定",
-  //     type: "warning",
-  //     center: true,
-  //     showClose: false,
-  //     lockScroll: false,
-  //     showCancelButton: false,
-  //   }).then(() => {
-  //     window.close()
-  //   })
-  // } else if (result.code == 200) {
-  //   articleId.value = result.data.id
-  // }
-})
+//#endregion
 
-let article_picture_url = []
 // 上传文章内图片
 const onUploadImg = async (files) => {
   files.forEach(async (file) => {
@@ -303,20 +371,20 @@ const onUploadImg = async (files) => {
     if (result.data.code == 200) {
       let picUrl = result.data.data
       // 储存图片路径
-      article_picture_url.push(picUrl)
+      if (picUrl) article_picture_url.push(picUrl)
       articleText.value = `${articleText.value}\n![图片](${picUrl})`
     } else {
-      console.log('error')
+      console.log("error")
     }
   })
 }
 // 删除未使用的图片
 async function delete_pictures(article_picture_url) {
   // 遍历图片路径 过滤未使用图片
-  let  deletePicturesUrl = article_picture_url.filter((url) => {
+  let deletePicturesUrl = article_picture_url.filter((url) => {
     return articleText.value.indexOf(url) == -1
   })
-  article_picture_url =  article_picture_url.filter((url) => {
+  article_picture_url = article_picture_url.filter((url) => {
     return articleText.value.indexOf(url) !== -1
   })
   // 整合已使用图片
@@ -330,20 +398,20 @@ async function delete_pictures(article_picture_url) {
 // 保存至草稿箱
 async function saveDraft() {
   saveInfo.value = "保存中..."
-  data.article_text = articleText.value ? articleText.value : "Unspecified"
-  data.introduction = articleIntroduction.value ? articleIntroduction.value : "Unspecified"
-  data.title = articleTitle.value ? articleTitle.value : "Unspecified"
-  data.tags = tags.join(",") ? tags.join(",") : "Unspecified"
-  data.article_picture_url = article_picture_url
-  data.img_url = coverImg
-  console.log(articleId)
-  console.log(data)
-  let result = await updateArticle(data, articleId)
-  console.log(result)
+  updateParams.article_text = articleText.value ? articleText.value : "no data"
+  updateParams.introduction = articleIntroduction.value
+    ? articleIntroduction.value
+    : "no data"
+  updateParams.title = articleTitle.value ? articleTitle.value : "untitled"
+  updateParams.tags = tags.join(",") ? tags.join(",") : "no tag"
+  updateParams.article_picture_url = article_picture_url
+  updateParams.img_url = coverImg
+  let result = await updateArticle(updateParams, articleId.value)
+
   if (result.success) {
     saveInfo.value = "文章已保存"
   }
-  delete_pictures(article_picture_url)
+  let picResult = await delete_pictures(article_picture_url)
 }
 // 更新草稿数据
 let t = null
@@ -360,7 +428,7 @@ const updateDraft = () => {
 const handleSave = () => {
   t = setTimeout(() => {
     t = null
-  }, 8000);
+  }, 8000)
   saveDraft()
 }
 // 自动保存//延迟8s
@@ -369,19 +437,27 @@ const autosave = () => {
 }
 // 保存文章
 const handleSaveArticle = async () => {
+  sessionStorage.removeItem("articleId")
+
   // 更新数据
-  data.status = "published"
-  data.article_text = articleText.value
-  data.introduction = articleIntroduction.value
-  data.title = articleTitle.value
-  data.img_url = coverImg==''? 'http://moon.starrysummer.com/713f5c9559ae4213afdcf51397171894.jpg':coverImg
-  data.tags = tags.join(",")
-  data.article_picture_url = article_picture_url
-  console.log(data)
-  if (data.article_text && data.group_id && data.title && data.introduction) {
-    let result = await updateArticle(data, articleId)
+  updateParams.status = "published"
+  updateParams.article_text = articleText.value
+  updateParams.introduction = articleIntroduction.value
+  updateParams.title = articleTitle.value
+  updateParams.img_url = coverImg
+  updateParams.tags = tags.join(",")
+  updateParams.article_picture_url = article_picture_url
+  if (
+    updateParams.article_text &&
+    updateParams.group_id &&
+    updateParams.title &&
+    updateParams.introduction
+  ) {
+    console.log(updateParams.group_id, "groupId")
+    let result = await updateArticle(updateParams, articleId.value)
     console.log(result)
     if (result.success) {
+      // sessionStorage.removeItem('articleId')
       ElMessageBox.confirm("文章已发布,您将离开此页面", "发布成功", {
         confirmButtonText: "确定",
         type: "success",
@@ -394,11 +470,11 @@ const handleSaveArticle = async () => {
         window.close()
       })
       // 初始化页面数据
-      data.article_text = ""
-      data.group_id = ""
-      data.title = ""
-      data.tags = ""
-      data.introduction = ""
+      updateParams.article_text = ""
+      updateParams.group_id = ""
+      updateParams.title = ""
+      updateParams.tags = ""
+      updateParams.introduction = ""
       // 删除未使用到的图片
     } else {
       ElMessage({
@@ -406,27 +482,37 @@ const handleSaveArticle = async () => {
         type: "error",
       })
     }
-  } else if (!data.article_text) {
+  } else if (!updateParams.article_text) {
     ElMessage({
       message: "请输入内容.",
       type: "warning",
     })
-  } else if (!data.title) {
+  } else if (!updateParams.title) {
     ElMessage({
       message: "请输入标题.",
       type: "warning",
     })
-  } else if (!data.group_id) {
+  } else if (!updateParams.group_id) {
     ElMessage({
       message: "请添加分类.",
       type: "warning",
     })
-  } else if (!data.introduction) {
+  } else if (!updateParams.introduction) {
     ElMessage({
       message: "请添输入摘要.",
       type: "warning",
     })
   }
+}
+
+// 主题
+let theme = computed(() => {
+  return articleThemeStore.preview_themeList[articleThemeStore.preview_themeIndex]
+})
+
+// 显示文章管理模块
+const showArticleModel = () => {
+  userStore.showArticleModal = true
 }
 </script>
 
@@ -434,7 +520,7 @@ const handleSaveArticle = async () => {
 .container {
   /* position: relative; */
   position: fixed;
-  top:0;
+  top: 0;
   bottom: 0;
   min-height: 100%;
   height: auto;
@@ -709,14 +795,18 @@ const handleSaveArticle = async () => {
   font-size: 12px;
 }
 
-.md-editor:deep(h1>a),.md-editor:deep(h2>a),.md-editor:deep(h3>a),.md-editor:deep(h4>a),.md-editor:deep(h5>a),
-.md-editor:deep(h6>a){
+.md-editor:deep(h1 > a),
+.md-editor:deep(h2 > a),
+.md-editor:deep(h3 > a),
+.md-editor:deep(h4 > a),
+.md-editor:deep(h5 > a),
+.md-editor:deep(h6 > a) {
   pointer-events: none;
 }
-.md-editor:deep(p>strong){
+.md-editor:deep(p > strong) {
   font-weight: 900;
 }
-.md-editor:deep(em){
+.md-editor:deep(em) {
   font-style: italic;
 }
 </style>

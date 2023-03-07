@@ -15,12 +15,11 @@ let requests = axios.create({
 requests.interceptors.request.use((config) => {
   nprogress.start()
   config.headers['Content-Type'] = 'application/json'
-  config.data = JSON.stringify(config.data)
-  console.log(sessionStorage.getItem('token'), 'token')
   let token = sessionStorage.getItem('token')
   if (token !== null) {
     config.headers.token = token
   }
+  // console.log(config.headers)
   return config
 })
 requests.interceptors.response.use(
