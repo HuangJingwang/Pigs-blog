@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router/index.js'
+import { router } from './router/index.js'
 // 引入全局组件
 import Background from './components/Background.vue'
 // 引入pinia倉庫

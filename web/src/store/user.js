@@ -10,7 +10,11 @@ export const useUserStore = defineStore('user', {
       showArticleModal: false, //显示文章管理模块
     }
   },
-  getters: {},
+  getters: {
+    role: (state) => {
+      return state.userInfo.role
+    },
+  },
   actions: {},
   persist: {
     storage: sessionStorage,

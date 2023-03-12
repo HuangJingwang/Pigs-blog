@@ -135,7 +135,7 @@ function compressFile(file, quality, url_ref,callback) {
       }
       // 创建file 实例
       newFile = new File([u8Arr.buffer], fileName, options)
-      console.log(newFile)
+      // console.log(newFile)
       // 上传压缩后图片
       let form = new FormData()
       form.append("file", newFile)

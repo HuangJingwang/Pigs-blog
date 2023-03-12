@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { onMounted, defineAsyncComponent,watch } from "vue"
+import { onMounted, defineAsyncComponent,watch ,computed} from "vue"
 import { useUserStore } from "./store/user"
 import { useArticleStore } from "./store/article"
 import { useRouter,useRoute } from "vue-router"
@@ -25,16 +25,14 @@ import Header from "./components/Header.vue"
 import Footer from "./components/Footer.vue"
 import UserModal from "./components/UserModal"
 // 引入pinia
+// import DevicePixelRatio from './utils/devicePixelRatio';
+import DevicePixelRatio from '@/utils/DevicePixelRatio'
+new DevicePixelRatio().init();
+
 const userStore = useUserStore()
+
+
 const articleStore = useArticleStore()
-
-onMounted(() => {
-  // console.log(userStore.showUserModal)
-  console.log('testdata',userStore.token)
-})
-
-
-console.log('piniastore',userStore.isLogin)
  // import BackToTop from "./components/BackToTop.vue"
 const router = useRouter()
 const route = useRoute()
@@ -48,13 +46,16 @@ const ArticleModal = defineAsyncComponent({
   loader: () => import("./components/ArticleModal"),
   delay: 200,
 })
-const showModal = () => {
-  console.log(userStore.showArticleModal)
-  userStore.showArticleModal = !userStore.showArticleModal
-}
+// const showModal = () => {
+//   console.log(userStore.showArticleModal)
+//   userStore.showArticleModal = !userStore.showArticleModal
+// }
 // 请求分类列表数据
   // dispatch("reqGroupList")
   articleStore.reqGroupList()
+
+
+
 
 // #region 
 // 点击特效
@@ -218,11 +219,11 @@ active = true
   }
 }
 // 在特定頁面中不開啓特效
-watch(route, () => {
-  if (route.path !== '/write'&&active == false) {
-    clickEffect()
-  }
-})
+// watch(route, () => {
+//   if (route.path !== '/write'&&active == false) {
+//     clickEffect()
+//   }
+// })
 //#endregion
 </script>
 <style>
@@ -241,13 +242,10 @@ watch(route, () => {
   display: block;
   width: 100%;
   height: 100%;
-  background-image: url(./assets/img/starrryriver.jpg);
+  /* background-image: url(./assets/img/starrryriver.jpg); */
+  /* background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%); */
+  background-image: linear-gradient(120deg, #30cfd0 0%, #330867 100%);
   background-attachment: fixed;
-  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/background.jpg', sizingMethod='scale');
-  -moz-background-size: cover;
-  -webkit-background-size: cover;
-  filter: blur(30px);
-  transform: scale(1.1);
 }
 .background::after {
   content: "";

@@ -245,8 +245,6 @@ watch(key, async () => {
         state.userInfo = userInfo
         state.token = result.data.token
       })
-      console.log("登录信息", userStore.userInfo)
-      console.log("token", userStore.token)
       ElMessage({
         message: "登录成功",
         type: "success",
@@ -268,11 +266,7 @@ watch(key, async () => {
     sessionStorage.removeItem("status")
   }
 })
-onMounted(() => {
-  console.log(route)
-  console.log(router)
-  console.log("----------------------------")
-})
+
 // 注册账号
 const registerAccount = async () => {
   let data = {}
@@ -302,7 +296,6 @@ const registerAccount = async () => {
     registerData.confirmPassword == data.password
   ) {
     let result = await register(data)
-    console.log(result.code)
     if (result.code === 200) {
       //自动填写登录数据
       loginData.account = registerData.account
@@ -350,27 +343,19 @@ let loginData = reactive({
 const userLogin = async () => {
   if (loginData.account && loginData.password) {
     let result = await login(loginData)
-    console.log(result)
     if (!result.success) {
       ElMessageBox.alert("账号或密码错误", "ERROR", {
         confirmButtonText: "确定",
         lockScroll: false,
       })
     } else {
-      console.log("loginData", result)
       let userData = JSON.parse(result.data.user_data)
       userStore.$patch((state) => {
         state.userInfo = userData
         state.isLogin = true
         state.token = result.data.token
       })
-      console.log('settoken',result.data)
-      sessionStorage.setItem('token',result.data.token)
-      console.log(sessionStorage.getItem('token'),'gettoken')
-      // state.user.userInfo = JSON.parse(result.data.user_data)
-      // state.user.isLogin = true
-      // state.user.token = result.data.token
-      // console.log(result)
+      // sessionStorage.setItem('token',result.data.token)
       // 清空登录数据
       loginData.account = ""
       loginData.password = ""
@@ -415,7 +400,7 @@ const changePlaceholder = (e, value) => {
 
 // 找回密码
 const recoverPassword = () => {
-  console.log(123)
+
 }
 
 // 显示/隐藏密码
@@ -443,7 +428,6 @@ const toRegister = () => {
   maskStyle.value = "mask-register"
   registering.value = false
   logining.value = true
-  console.log(maskStyle.value)
   // 隐藏登录面板,显示注册面板
   // showRegister.value = true
   // setTimeout(() => {
@@ -455,7 +439,6 @@ const toLogin = () => {
   maskStyle.value = "mask-login"
   registering.value = true
   logining.value = false
-  console.log(maskStyle.value)
 }
 
 // })
@@ -625,14 +608,14 @@ const toLogin = () => {
 }
 .mask-login {
   left: 20px;
-  background-image: url(@/assets/img/qbg-login.jpg);
+  background-image: url(https://moon.starrysummer.com/40d93a7a12154ce4b5ba51ef5ec377c6.jpg);
   background-size: cover;
   background-position: -25px 0;
 }
 .mask-register {
   right: 25px;
   left: 335px;
-  background-image: url(@/assets/img/Qbg-register.jpg);
+  background-image: url(https://moon.starrysummer.com/8d7d7ebc884546e2b29f5725fc8f10bd.jpg);
   background-size: cover;
 }
 .background1,

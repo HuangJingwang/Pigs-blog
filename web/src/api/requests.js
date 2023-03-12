@@ -1,3 +1,4 @@
+import { useUserStore } from '@/store/user'
 import axios from 'axios'
 // 引入仓库，取出token
 // import { useUserStore } from '@/store/user'
@@ -13,9 +14,11 @@ let requests = axios.create({
 })
 
 requests.interceptors.request.use((config) => {
+  const userStore = useUserStore()
   nprogress.start()
   config.headers['Content-Type'] = 'application/json'
-  let token = sessionStorage.getItem('token')
+  // let token = sessionStorage.getItem('token')
+  let token = userStore.token
   if (token !== null) {
     config.headers.token = token
   }

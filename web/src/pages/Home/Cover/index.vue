@@ -60,7 +60,7 @@
 <script setup>
 import TypeWriter from "@/components/TypeWriter.vue"
 import { ref } from "vue"
-let imgUrl = require("@/assets/img/bgi1.jpg")
+let imgUrl = 'https://moon.starrysummer.com/916bbd3e23ac4dd1a9e7362ce2826b85.jpg'
 let innerHeight = window.innerHeight + "px"
 // 点击按钮滚动页面
 const distance = ref(0)

@@ -121,7 +121,6 @@ watch(
   [draftParams, byAuthor],
   () => {
     getDraftArticles()
-    console.log("watch success")
   },
   { immediate: true, deep: true }
 )
@@ -144,17 +143,14 @@ async function getRecycleArticles() {
 }
 
 const getRecyclePage = (val) => {
-  console.log(val)
   // 更改页码
   // pageNo 始终小于等于最大页码
   recycleParams.value.pageNo = val
-  console.log(recycleParams.value.pageNo,'pageno')
 }
 watch(
   [recycleParams, byAuthor],
   () => {
     getRecycleArticles()
-    console.log('watch success')
   },
   {
     immediate: true,
@@ -180,17 +176,17 @@ async function getPublishedArticles() {
 const getPublishedPage = (val) => {
   // 更改页码
   // pageNo 始终小于等于最大页码
-  recycleParams.value.pageNo = val
+  publishedPrams.value.pageNo = val
 }
 watch(
   [publishedPrams, byAuthor],
   () => {
-    console.log('watch published page')
     getPublishedArticles()
   },
   { immediate: true, deep: true }
 )
 //#endregion
+
 </script>
 <style scoped>
 .dialog-footer button:first-child {

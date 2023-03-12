@@ -17,12 +17,12 @@ export const useArticleStore = defineStore('article', {
   getters: {},
   actions: {
     // 请求获取首页文章列表
-    async reqArticleList() {
+    async reqArticleList(data) {
       try {
-        let pageNo = this.homeArticles.currentPage
+        // let pageNo = this.homeArticles.currentPage
         // 有下一页时，请求数据
         if (this.homeArticles.hasNext) {
-          let result = await getArticleList(pageNo)
+          let result = await getArticleList(data)
           if (result.code == 200) {
             let { totalResult, hasNext, resultList } = result.data
             // 修改仓库
@@ -41,16 +41,13 @@ export const useArticleStore = defineStore('article', {
         }
       } catch (error) {
         // 让表单组件显示错误
-        // console.log(error)
         return error
       }
-      console.log('homeArticles', this.homeArticles)
     },
     // 请求获取分类列表
     async reqGroupList() {
       let result = await getGroupListData()
       if (result.code == 200) {
-        // console.log(result.data, '分类列表')
         // 过滤已删除元素
         let groupList = result.data.filter((group) => {
           return group.is_delete !== 1
@@ -72,7 +69,6 @@ export const useArticleStore = defineStore('article', {
           return list
         }
         this.groupList = getTree(groupList, 0, [])
-        // console.log('article grouplist',this.groupList)
       }
     },
 
@@ -81,6 +77,6 @@ export const useArticleStore = defineStore('article', {
       if (result.code == 200) {
         this.tagList = result.data
       }
-      }
+    },
   },
 })

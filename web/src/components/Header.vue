@@ -19,7 +19,7 @@
         <p>主页</p>
       </div>
       <!-- 写文章 -->
-      <div class="write navigation" @click="toWrite" >
+      <div class="write navigation" @click="toWrite">
         <span class="iconfont icon-yongyan"></span>
         <p>撰写</p>
       </div>
@@ -39,26 +39,33 @@
         <p>关于</p>
       </div>
       <!-- 用户 -->
-      <div class="user navigation" @click="login_register" v-show="!userStore.isLogin">
+      <div
+        class="user navigation"
+        @click="login_register"
+        v-show="!userStore.isLogin"
+      >
         <span class="iconfont icon-denglu"></span>
         <p>登录</p>
       </div>
       <div class="user_login" v-show="userStore.isLogin">
-        <el-dropdown v-show="userStore.isLogin">
+        <el-dropdown v-show="userStore.isLogin" :popper-append-to-body="false">
           <div
             class="avatar"
             :style="{
-              backgroundImage:
-                `url(${avatarImg})`,
+              backgroundImage: `url(${avatarImg})`,
             }"
           ></div>
           <template #dropdown>
             <el-dropdown-menu v-show="userStore.isLogin">
               <el-dropdown-item @click="testBind">绑定Github</el-dropdown-item>
               <el-dropdown-item disabled>个人主页</el-dropdown-item>
-              <el-dropdown-item disabled >消息中心</el-dropdown-item>
-              <el-dropdown-item @click="showArticleModal">我的文章</el-dropdown-item>
-              <el-dropdown-item divided @click="reqLogout">退出登录</el-dropdown-item>
+              <el-dropdown-item disabled>消息中心</el-dropdown-item>
+              <el-dropdown-item @click="showArticleModal">
+                我的文章
+              </el-dropdown-item>
+              <el-dropdown-item divided @click="reqLogout">
+                退出登录
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -68,37 +75,69 @@
 </template>
 
 <script setup>
-import { ref,computed,onMounted } from "vue"
-import {useUserStore}from '@/store/user'
-import { useRouter, useRoute } from "vue-router"
-import {logout} from '@/api'
-
+import { ref, computed, onMounted } from 'vue'
+import { useUserStore } from '@/store/user'
+import { useRouter, useRoute } from 'vue-router'
+import { logout } from '@/api'
+import { ElMessageBox, ElMessage } from 'element-plus'
+// import { writePage } from '@/router'
 const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
 // 监听页面滚动事件,改变header样式
 let header_active = ref(false)
-console.log(123)
 onMounted(() => {
-  window.addEventListener("scroll", () => {
-  if (document.documentElement.scrollTop > 200) {
-    header_active.value = true
-  } else {
-    header_active.value = false
-  }
+  window.addEventListener('scroll', () => {
+    if (document.documentElement.scrollTop > 200) {
+      header_active.value = true
+    } else {
+      header_active.value = false
+    }
+  })
 })
-})
+// 權限驗證
 
 // 导航到write 页面
 const toWrite = () => {
-  const writePath = router.resolve({
-    path: "/write",
-  })
-  window.open(writePath.href, "_blank")
+  // 1.未登录状态提示登录
+  console.log(userStore.isLogin)
+  if (!userStore.isLogin) {
+    //未登录
+    ElMessageBox.alert('请先登录', '未登录', {
+      // if you want to disable its autofocus
+      // autofocus: false,
+      confirmButtonText: 'OK',
+      callback: () => {
+        userStore.showUserModal = true
+      },
+    })
+  } else {
+    // 已登录
+    // 1.有权限 跳转  
+    if (userStore.role.indexOf('root') !== -1) {
+      const writePath = router.resolve({
+        path: '/write',
+      })
+      window.open(writePath.href, '_blank')
+    } else {
+      // 2.无权限
+      ElMessageBox.alert('操作失败,请联系管理员申请权限', '权限不足', {
+        // if you want to disable its autofocus
+        // autofocus: false,
+        confirmButtonText: 'OK',
+        callback: () => {},
+      })
+    }
+  }
+
+  // 2.已登录状态验证权限
+
+  // const writePath = router.resolve({
+  //   path: "/write",
+  // })
+  // window.open(writePath.href, "_blank")
 }
 // 控制write 是否显示
-
-
 
 // 点击弹出登录框
 const login_register = () => {
@@ -106,11 +145,13 @@ const login_register = () => {
   console.log(userStore.showUserModal)
 }
 
-//显示头像x`
+//显示头像
 let avatarImg = computed(() => {
   console.log(userStore.userInfo.imgUrl)
-  return userStore.userInfo.imgUrl!==undefined && userStore.userInfo.imgUrl == '' ?
-  'https://moon.starrysummer.com/3686fd078f7649528d5b5ba31de2a9d7.jpg' : userStore.userInfo.imgUrl
+  return userStore.userInfo.imgUrl !== undefined &&
+    userStore.userInfo.imgUrl == ''
+    ? 'https://moon.starrysummer.com/3686fd078f7649528d5b5ba31de2a9d7.jpg'
+    : userStore.userInfo.imgUrl
   // return userStore.userInfo.imgUrl
 })
 // 登录状态下拉栏
@@ -130,12 +171,11 @@ const reqLogout = async () => {
   let result = await logout()
   // 删除token
   sessionStorage.removeItem('token')
-  console.log(result,'退出登录')
   // 2.清空登陆数据
-  userStore.$patch(state => {
-  state.isLogin = false
-  state.userInfo = {}
-  state.token = ''
+  userStore.$patch((state) => {
+    state.isLogin = false
+    state.userInfo = {}
+    state.token = ''
   })
 }
 </script>
@@ -148,13 +188,13 @@ const reqLogout = async () => {
   padding: 0 20px;
   position: fixed;
   top: 0;
-  transition: all .3s;
+  transition: all 0.3s;
   display: flex;
   justify-content: space-between;
   box-shadow: 0 10px 8px rgba(0, 0, 0, 0.3);
   background: rgba(0, 0, 0, 0.2);
 }
-.header::before{
+.header::before {
   content: '';
   z-index: -1;
   display: block;
@@ -169,7 +209,7 @@ const reqLogout = async () => {
 .header-active {
   height: 55px;
 }
-.header-active::before{
+.header-active::before {
   content: '';
   z-index: -1;
   display: block;
@@ -184,7 +224,7 @@ const reqLogout = async () => {
 }
 .header .pig-left,
 .header .pig-right {
-padding-right: 30px;
+  padding-right: 30px;
   width: 450px;
 }
 
@@ -309,7 +349,7 @@ padding-right: 30px;
   background-position: center center;
   background-size: contain;
   border-radius: 50%;
-  transition: all .2s;
+  transition: all 0.2s;
 }
 .user_login .avatar:hover {
   transform: scale(1.25);
@@ -317,10 +357,19 @@ padding-right: 30px;
 }
 
 /* 調整指針 */
-.pig-left>.logo,.pig-left>.title,.pig-middle .iconfont,.pig-right .home,.pig-right .write, .pig-right .categories , .pig-right .archives, .pig-right .about ,.pig-right .user,.pig-right .user_login{
-  cursor:pointer 
+.pig-left > .logo,
+.pig-left > .title,
+.pig-middle .iconfont,
+.pig-right .home,
+.pig-right .write,
+.pig-right .categories,
+.pig-right .archives,
+.pig-right .about,
+.pig-right .user,
+.pig-right .user_login {
+  cursor: pointer;
 }
-.pig-right .iconfont{
+.pig-right .iconfont {
   cursor: pointer;
 }
 </style>

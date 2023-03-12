@@ -32,29 +32,7 @@ const addShowFuc = (data) => {
   }
   )
 }
-//#region
-// 做一个映射 id:item
-// foreach 成功了 reduce不知道为甚不行
-// AllItem.reduce((memo,current)=>{
-// },{})
-
-// let Alldata = {}
-// AllItem.forEach(element => {
-//     Alldata[element["id"]] = element;
-// });
-// let Lastlist = []
-// AllItem.forEach((item) =>{
-//     let pid = item.pid
-//     let parant = Alldata[pid]
-//     if (pid == 0){
-//       Lastlist.push(item)
-//     } else if(parant){
-//       parant.children? parant.push(item) : parant.children = [item]
-//     }
-// })
-//#endregion
 </script>
-
 <style scoped>
 .container {
   width: 1200px;

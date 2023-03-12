@@ -3,7 +3,7 @@
   <Banner :articleData="articleData" />
   <div class="container">
     <div class="leftBox">
-      <div class="preview" >
+      <div class="preview">
         <md-editor
           class="md-editor basic-box"
           v-model="articleData.article_text"
@@ -15,6 +15,7 @@
         />
       </div>
       <div class="adjacent basic-box">
+        <!-- 上一篇/下一篇 -->
         <Adjacent :id="id"></Adjacent>
       </div>
     </div>
@@ -23,98 +24,113 @@
       <div class="theme basic-box" @click="changeTheme">
         <div class="title">
           <span class="iconfont icon-zhuti_tiaosepan"></span>
-          <span> 主题切换</span>
+          <span>主题切换</span>
         </div>
         <div class="themeWrapper">
-          <span class="arr_left iconfont icon-zuojiantou" data-method="reduce"></span>
-          <div class="themeName">{{theme }}</div>
-          <span class="arr_right iconfont icon-youjiantou" data-method="plus"></span>
+          <span
+            class="arr_left iconfont icon-zuojiantou"
+            data-method="reduce"
+          ></span>
+          <div class="themeName">{{ theme }}</div>
+          <span
+            class="arr_right iconfont icon-youjiantou"
+            data-method="plus"
+          ></span>
         </div>
       </div>
 
       <!-- 目录 -->
-      <div class="catalog basic-box" ref="catalog">
-        <div class="title"><span class="iconfont icon-danlieliebiao"></span> 目录</div>
-        <hr class="line">
-        <md-catalog
-          class="md-catalog"
-          :editor-id="md_editor_config.id"
-          :scroll-element="scrollElement"
-          :offsetTop="md_editor_config.distance"
-          :scrollElementOffsetTop="md_editor_config.offsetTop"
-        />
-      </div>
+      <el-affix :offset="catalogTop">
+        <div class="catalog basic-box">
+          <div class="title">
+            <span class="iconfont icon-danlieliebiao"></span>
+            目录
+          </div>
+          <hr class="line" />
+          <md-catalog
+            class="md-catalog"
+            :editor-id="md_editor_config.id"
+            :scroll-element="scrollElement"
+            :offsetTop="md_editor_config.distance"
+            :scrollElementOffsetTop="md_editor_config.offsetTop"
+          />
+        </div>
+      </el-affix>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, computed, watch } from "vue"
-import { useRoute } from "vue-router"
-import{useArticleThemeStore} from '@/store/articleTheme'
-import { getArticleDetail } from "@/api"
-import MdEditor from "md-editor-v3"
-import "md-editor-v3/lib/style.css"
-import Adjacent from "./Adjacent"
-import Banner from "./Banner"
+import { reactive, ref, onMounted, computed, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useArticleThemeStore } from '@/store/articleTheme'
+import { getArticleDetail } from '@/api'
+import MdEditor from 'md-editor-v3'
+import 'md-editor-v3/lib/style.css'
+import Adjacent from './Adjacent'
+import Banner from './Banner'
 const MdCatalog = MdEditor.MdCatalog
 const scrollElement = document.documentElement
 const route = useRoute()
 const articleThemeStore = useArticleThemeStore()
+
+let catalogTop = ref(80)
 // 切换文章预览主题
 let theme = computed(() => {
-  return articleThemeStore.preview_themeList[articleThemeStore.preview_themeIndex]
+  return articleThemeStore.preview_themeList[
+    articleThemeStore.preview_themeIndex
+  ]
 })
 
 // 更改预览主题
 const changeTheme = (e) => {
-  console.log(e.target.dataset.method)
-  if (e.target.dataset.method == "plus") {
+  if (e.target.dataset.method == 'plus') {
     articleThemeStore.preview_themeIndex++
     articleThemeStore.preview_themeIndex =
-    articleThemeStore.preview_themeIndex == 5 ? 0 : articleThemeStore.preview_themeIndex
-  } else if (e.target.dataset.method == "reduce") {
+      articleThemeStore.preview_themeIndex == 5
+        ? 0
+        : articleThemeStore.preview_themeIndex
+  } else if (e.target.dataset.method == 'reduce') {
     articleThemeStore.preview_themeIndex--
-    console.log(articleThemeStore.preview_themeIndex)
     articleThemeStore.preview_themeIndex =
-    articleThemeStore.preview_themeIndex == -1 ? 5 : articleThemeStore.preview_themeIndex
+      articleThemeStore.preview_themeIndex == -1
+        ? 5
+        : articleThemeStore.preview_themeIndex
   }
 }
 
 // let github = ref('github')
 let articleData = reactive({
   id: -1,
-  account: "", //作者
-  nick_name: "",
+  account: '', //作者
+  nick_name: '',
   article_text: ``, //内容
-  title: "", //标题
-  tags: "", //签
-  create_at: "", //创建时间
-  img_url: "", //封面
-  group_name: "", //文章分类
-  introduction: "", //简介
-  page_view: "", //浏览量
-  update_at: "", //最近更新
+  title: '', //标题
+  tags: '', //签
+  create_at: '', //创建时间
+  img_url: '', //封面
+  group_name: '', //文章分类
+  introduction: '', //简介
+  page_view: '', //浏览量
+  update_at: '', //最近更新
 })
 
 let id = route.query.id
+// id变化，重新请求文章
 watch(
   route,
   async () => {
     id = route.query.id
     let result = await getArticleDetail(id)
-    console.log("文章详情", result)
 
     // articleData.article_text = result.data.article_text
     Object.keys(articleData).forEach((key) => {
       articleData[key] =
         result.data[key] == undefined ? articleData[key] : result.data[key]
     })
-    console.log(articleData, "修改数值")
     articleData.update_at = articleData.update_at.slice(0, 10)
-    console.log(articleData, "修改数值")
   },
-  { immediate: true, dee: true }
+  { immediate: true, dee: true },
 )
 
 // 获取文章的具体数据
@@ -125,20 +141,22 @@ watch(
 //     articleData[key] = result.data[key] == undefined ? articleData[key] : result.data[key]
 //   })
 // })
+// 富文本配置
 let md_editor_config = reactive({
-  id: "my-editor",
+  id: 'my-editor',
   distance: 250,
   offsetTop: 200,
-  theme: "light",
+  theme: 'light',
 })
 
+// 修改目录样式
 let activeElement = ref(null)
 
-window.addEventListener("scroll", () => {
-  activeElement.value = document.querySelector(".md-editor-catalog-active")
+window.addEventListener('scroll', () => {
+  activeElement.value = document.querySelector('.md-editor-catalog-active')
 })
 watch(activeElement, () => {
-  let container = document.querySelector(".catalog")
+  let container = document.querySelector('.catalog')
   if (activeElement.value) setStyle(activeElement.value, container, 0)
 })
 function setStyle(element, container, height) {
@@ -147,7 +165,9 @@ function setStyle(element, container, height) {
   // 获取父级及兄弟级
   let parent = element.parentNode //--wrapper
   // 处理兄弟级组件数组,移除虚拟元素
-  let bros = Array.from(parent.childNodes).filter((node) => node.nodeName !== "#text") //--link
+  let bros = Array.from(parent.childNodes).filter(
+    (node) => node.nodeName !== '#text',
+  ) //--link
   // 先清除兄弟级别的样式 //排他思想
   bros.forEach((node) => {
     // 被排除的 wrapper 调整高度为0
@@ -160,24 +180,24 @@ function setStyle(element, container, height) {
   let childrenBox = element.childNodes[1]
 
   let childrenList = Array.from(childrenBox.childNodes).filter(
-    (node) => node.nodeType == 1
+    (node) => node.nodeType == 1,
   )
   // 计算height
   height = 38.24 * childrenList.length + height
-  childrenBox.style.height = height + "px"
+  childrenBox.style.height = height + 'px'
   // 由element 向上级递归，直到最后一层
   let wrapper = parent.parentNode //--link
   setStyle(wrapper, container, height)
 }
 // 目录浮动效果
-let catalog = ref(null)
-onMounted(() => {
-  window.addEventListener("scroll", () => {
-    if (catalog.value && window.scrollY > catalog.value.offsetTop - 30) {
-      catalog.value.style.top = 90 + "px"
-    }
-  })
-})
+// let catalog = ref(null)
+// onMounted(() => {
+//   window.addEventListener("scroll", () => {
+//     if (catalog.value && window.scrollY > catalog.value.offsetTop - 30) {
+//       catalog.value.style.top = 90 + "px"
+//     }
+//   })
+// })
 </script>
 
 <style scoped>
@@ -186,9 +206,7 @@ onMounted(() => {
   justify-content: space-between;
   margin: auto;
   width: 1200px;
-  /* height: 3000px; */
   margin-top: 30px;
-  /* height: 100%; */
 }
 .preview {
   width: 900px;
@@ -199,7 +217,7 @@ onMounted(() => {
 .preview .md-editor {
   min-height: 600px;
   /* padding: 15px; */
-  padding: 30px;
+  padding: 50px;
 }
 
 .adjacent {
@@ -234,7 +252,7 @@ onMounted(() => {
 .aside .theme .themeName {
   font-size: 24px;
   font-weight: 900;
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 .aside .theme .iconfont {
   font-size: 42px;
@@ -279,7 +297,7 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.catalog .md-editor-catalog >>> .md-editor-catalog-active > span {
+.catalog .md-editor-catalog:deep(.md-editor-catalog-active > span) {
   /* background-color: aqua; */
   color: rgb(121, 190, 216);
   transition: all 0.3s;
@@ -333,13 +351,13 @@ onMounted(() => {
 .preview:deep(em) {
   font-style: italic;
 }
-.line{
-border-color: rgb(255, 255, 255);
+.line {
+  border-color: rgb(255, 255, 255);
 }
-.md-catalog{
+.md-catalog {
   margin-top: 15px;
 }
-.title>.iconfont{
+.title > .iconfont {
   margin-bottom: 15px;
 }
 </style>

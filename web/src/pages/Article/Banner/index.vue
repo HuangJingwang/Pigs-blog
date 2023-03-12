@@ -1,5 +1,5 @@
 <template>
-  <div class="cover" :style="{ backgroundImage: `url(${articleData.img_url})` }">
+  <div class="cover" :style="{ backgroundImage: `url(${articleData.img_url})` }" @click="test">
     <div class="articleInfo">
       <div class="title">
         {{ articleData.title }}
@@ -32,7 +32,7 @@
           <span class="iconfont icon-liulan"></span>
           <span> 浏览量:{{ articleData.page_view }}</span>
         </div>
-        <el-button type="primary" :icon="Edit" size="small" @click="editorArticle(articleData.id)">
+        <el-button v-show="showEditorBtn" type="primary" :icon="Edit" size="small" @click="editorArticle(articleData.id)">
       编辑
     </el-button>
       </div>
@@ -41,13 +41,37 @@
 </template>
 
 <script setup>
-import {  Edit} from '@element-plus/icons-vue'
+import { ref ,computed} from 'vue';
+import { Edit } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/store/user';
+const userStore = useUserStore()
+const router = useRouter()
 const props = defineProps(["articleData"])
-console.log("文章数据", props.articleData.update_at)
-console.log("props传参", props.articleData)
+
+
+// 登录用户与文章一致，显示编辑
+const showEditorBtn = computed(()=>{
+  return props.articleData.account === userStore.userInfo.account
+})
+
+// ref(props.articleData.account === userStore.userInfo.account)
+
+const test = ()=>{
+  console.log(props.articleData.account === userStore.userInfo.account)
+}
+// 编辑文章
 const editorArticle = (id) => {
-  console.log(id)
-  console.log(props.articleData.id)
+console.log(props.articleData.account)
+console.log(userStore.userInfo.account)
+console.log(props.articleData.account===userStore.userInfo.account)
+  // const writePath = router.resolve({
+  //   path: "/write",
+  //   query: {
+  //     id:id
+  //   }
+  // })
+  // window.open(writePath.href, "_blank")
 }
 </script>
 
@@ -77,6 +101,7 @@ const editorArticle = (id) => {
   height: 150px;
 /* background-color: rgba(20, 80, 110, 0.5); */
 background: linear-gradient( rgba(20, 80, 110, 0), rgba(20, 80, 110, .6));
+pointer-events: none;
 }
 .cover .articleInfo {
   width: 750px;

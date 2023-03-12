@@ -54,8 +54,17 @@ const routes = [
   },
 ]
 
+// export const writePage = 
+//   {
+//     path: '/write',
+//     name: 'write',
+//     meta: {
+//       showComponent: false,
+//     },
+//     component: () => import('@/pages/Write'),
+//   }
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHashHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
@@ -63,4 +72,6 @@ const router = createRouter({
     return { top: 0 }
   },
 })
-export default router
+
+
+// export default router

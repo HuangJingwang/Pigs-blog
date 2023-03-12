@@ -40,6 +40,7 @@
                 :show-all-levels="false"
                 :options="groupOptions"
                 :props="selectorOptions"
+                popper-class="cascader"
                 @change="addGroupId"
               />
             </div>
@@ -213,6 +214,7 @@ watch(
         articleTitle.value = result.data.title //标题
         articleText.value = result.data.article_text //内容
         group_id.value[0] = result.data.group_id
+        articleIntroduction.value = result.data.introduction//摘要
         tags = result.data.tags.split(",") //标签
         console.log(result.data, "editor data")
       } else {
@@ -407,7 +409,7 @@ async function saveDraft() {
   updateParams.article_picture_url = article_picture_url
   updateParams.img_url = coverImg
   let result = await updateArticle(updateParams, articleId.value)
-
+console.log(result)
   if (result.success) {
     saveInfo.value = "文章已保存"
   }
@@ -542,7 +544,7 @@ const showArticleModel = () => {
   background: #eee;
   height: 100%;
   /* flex: 50%; */
-  width: 875px;
+  width:600px;
   border: 0px solid #000;
   font-weight: 900;
   font-size: 32px;
@@ -559,7 +561,6 @@ const showArticleModel = () => {
   line-height: 45px;
   text-align: center;
   border-radius: 50%;
-  /* background-color: pink; */
   background-color: #fff;
   margin-left: 20px;
 }
@@ -647,7 +648,6 @@ const showArticleModel = () => {
 }
 
 .addConfig .left {
-  background: pink;
   line-height: 30px;
   text-align: right;
   width: 90px;
@@ -698,10 +698,10 @@ const showArticleModel = () => {
   background-color: rgb(144, 147, 153);
 }
 .tagOptions .selectedTag {
-  background-color: rgb(229, 134, 134);
+  background-color: rgb(21, 152, 188);
 }
 .tagOptions .tag:hover {
-  background-color: rgb(107, 109, 113);
+  background-color: rgb(44, 68, 115);
 }
 .tagOptions .tag:active {
   background-color: rgb(166, 169, 173);
@@ -808,5 +808,16 @@ const showArticleModel = () => {
 }
 .md-editor:deep(em) {
   font-style: italic;
+}
+
+.group_name{
+  position: relative;
+}
+
+
+</style>
+<style>
+.cascader{
+  inset: 230px 280px auto auto !important;
 }
 </style>

@@ -44,6 +44,9 @@ watch(isLogin,async () => {
   if (result.code === 200) {
     for (let key in userData.value) {
       userData.value[key] = result.data[key]
+      if (userData.value.img_url == '') {
+        userData.value.img_url =  'https://moon.starrysummer.com/3686fd078f7649528d5b5ba31de2a9d7.jpg'
+      }
     }
   }
 },{immediate:true})

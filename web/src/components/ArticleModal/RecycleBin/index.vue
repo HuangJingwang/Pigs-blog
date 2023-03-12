@@ -9,17 +9,32 @@
     @selection-change="handleSelectionChange"
   >
     <!-- 多选框 -->
-    <el-table-column type="selection" :reserve-selection="true" width="30" fixed />
+    <el-table-column
+      type="selection"
+      :reserve-selection="true"
+      width="30"
+      fixed
+    />
     <!--  编辑按键-->
     <el-table-column fixed label="Operations" width="200" align="center">
       <template #default="scope">
-        <el-button link type="primary" size="small" @click="deleteArticle(scope)"
-          >Delete</el-button
+        <el-button
+          link
+          type="primary"
+          size="small"
+          @click="deleteArticle(scope)"
         >
-  
-        <el-button link type="primary" size="small" @click="editorArticle(scope)"
-          >Edit</el-button
+          Delete
+        </el-button>
+
+        <el-button
+          link
+          type="primary"
+          size="small"
+          @click="editorArticle(scope)"
         >
+          Edit
+        </el-button>
       </template>
     </el-table-column>
     <!-- 账号 -->
@@ -50,7 +65,6 @@
     <!-- 分类 -->
     <el-table-column align="center" prop="group_id" label="group" width="100" />
     <el-table-column prop="page_view" label="views" width="80" align="center" />
-
   </el-table>
   <!-- 分页器 -->
   <div class="pagination">
@@ -70,12 +84,16 @@
   </el-dialog>
 </template>
 <script setup>
-import { computed, ref, onMounted, watch } from "vue"
-import { getArticleDeleteCompletely } from "@/api"
-import { useRouter } from "vue-router"
+import { computed, ref, onMounted, watch } from 'vue'
+import { useDeleteCompletely } from '@/hooks/useDeleteCompletely'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/store/user'
+import {ElMessageBox } from 'element-plus'
+
+const userStore = useUserStore()
 const router = useRouter()
-const props = defineProps(["recycleData"])
-const emits = defineEmits(["getRecyclePage", "getRecycleArticles"])
+const props = defineProps(['recycleData'])
+const emits = defineEmits(['getRecyclePage', 'getRecycleArticles'])
 // list 中需要的数据 ：1、标题 2、时间 、3、封面 4、作者（仅管理员账户可见所有文章） 5、浏览量 6 、标签 7分类
 // 若数据值为默认值,则为空
 // 列表数据
@@ -85,11 +103,11 @@ const getRowKey = (row) => {
 let list = computed(() => {
   props.recycleData.resultList.forEach((item) => {
     // 处理标题数据
-    item.title = item.title == "Unspecified" ? "noData" : item.title
+    item.title = item.title == 'Unspecified' ? 'noData' : item.title
     // 处理时间数据
     item.date = item.update_at.slice(0, 10)
     // 处理tags
-    item.tags = item.tags == "Unspecified" ? [] : item.tags.split(",")
+    item.tags = item.tags == 'Unspecified' ? [] : item.tags.split(',')
   })
   return props.recycleData.resultList
 })
@@ -102,7 +120,7 @@ const changePage = (value) => {
   currentPage.value = value
   console.log(value)
   // 触发自定义事件,返回页面数据给父组件
-  emits("getRecyclePage", value)
+  emits('getRecyclePage', value)
 }
 // 多选框
 let selectedArticles = [] //已选中文章的id
@@ -115,14 +133,11 @@ const handleSelectionChange = (selections) => {
   // val为选中元素
   selections.forEach((item) => {
     selectedArticles.push(item)
-    console.log(item.id)
   })
-
-  console.log(selectedArticles)
 }
 
 // 点击预览封面
-let picture_url = ref("")
+let picture_url = ref('')
 let dialogVisible = ref(false)
 const showImg = (url) => {
   console.log(url)
@@ -132,29 +147,51 @@ const showImg = (url) => {
 
 // 处理文章
 //点击，删除文章按钮事件
+// const deleteArticle = async (scope) => {
+
+//   let result = await getArticleDeleteCompletely(scope.row.id)
+//   if (result.code === 200) {
+//     // 再次发送请求，获取最新文章，
+
+//   }
+// }
 const deleteArticle = async (scope) => {
-  console.log(scope.row.id)
-  let result = await getArticleDeleteCompletely(scope.row.id)
-  console.log(result,'deleted')
-  if (result.code === 200) {
-    // 再次发送请求，获取最新文章，
-    emits("getRecycleArticles")
-  }
+  let result = await useDeleteCompletely(
+    scope.row.account,
+    scope.row.id,
+    changeArticleList,
+  )
 }
 
-// const deleteArticleCompletely = (scope) => {
-//   console.log(scope.row.id)
-// }
 const editorArticle = (scope) => {
-  let id = scope.row.id
-  console.log(id)
+if(userStore.userInfo.role.indexOf('root')== -1){
+  ElMessageBox.alert('操作失败,请联系管理员申请权限', 'ERROR', {
+      confirmButtonText: 'OK',
+      callback: (action) => {},
+    })
+    return
+}
+    if (userStore.userInfo.account !== scope.row.account) {
+    ElMessageBox.alert('操作失败,这篇文章不是你的', 'ERROR', {
+      confirmButtonText: 'OK',
+      callback: (action) => {},
+    })
+    return
+  }
   const writePath = router.resolve({
-    path: "/write",
+    path: '/write',
     query: {
-      id: id,
+      id: scope.row.id,
     },
   })
-  window.open(writePath.href, "_blank")
+  window.open(writePath.href, '_blank')
+}
+// const editorArticle = (scope) => {
+//   useEditorArticle(scope.row.account, scope.row.id)
+// }
+
+function changeArticleList() {
+  emits('getRecycleArticles')
 }
 </script>
 
@@ -167,7 +204,7 @@ const editorArticle = (scope) => {
   position: relative;
 }
 .coverImg::after {
-  content: "";
+  content: '';
   width: 100%;
   height: 100%;
   top: 0;

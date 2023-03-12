@@ -76,6 +76,11 @@
 import { computed, ref, onMounted, watch } from "vue"
 import { getArticleDelete } from "@/api"
 import { useRouter } from "vue-router"
+import {useDeleteArticle} from '@/hooks/useDeleteArticle'
+import {useUserStore}from '@/store/user'
+import {ElMessageBox } from 'element-plus'
+const userStore = useUserStore()
+
 const router = useRouter()
 const props = defineProps(["publishedData"])
 const emits = defineEmits(["getPublishedPage", "getPublishedArticles"])
@@ -105,6 +110,7 @@ const changePage = (value) => {
     console.log(value)
   currentPage.value = value
   // 触发自定义事件,返回页面数据给父组件
+  console.log('change page')
   emits("getPublishedPage", value)
 }
 // 多选框
@@ -134,29 +140,56 @@ const showImg = (url) => {
 
 // 处理文章
 //点击，删除文章按钮事件
+
 const deleteArticle = async (scope) => {
-  console.log(scope.row.id)
-  let result = await getArticleDelete(scope.row.id)
-  console.log(result)
-  if (result.code === 200) {
-    // 再次发送请求，获取最新文章，
-    emits("getPublishedArticles")
-  }
+ let result = await  useDeleteArticle(scope.row.account,scope.row.id,changeArticleList)
 }
 
+const editorArticle = (scope) => {
+if(userStore.userInfo.role.indexOf('root')== -1){
+  ElMessageBox.alert('操作失败,请联系管理员申请权限', 'ERROR', {
+      confirmButtonText: 'OK',
+      callback: (action) => {},
+    })
+    return
+}
+    if (userStore.userInfo.account !== scope.row.account) {
+    ElMessageBox.alert('操作失败,这篇文章不是你的', 'ERROR', {
+      confirmButtonText: 'OK',
+      callback: (action) => {},
+    })
+    return
+  }
+  const writePath = router.resolve({
+    path: '/write',
+    query: {
+      id: scope.row.id,
+    },
+  })
+  window.open(writePath.href, '_blank')
+}
 // const deleteArticleCompletely = (scope) => {
 //   console.log(scope.row.id)
 // }
-const editorArticle = (scope) => {
-  let id = scope.row.id
-  console.log(id)
-  const writePath = router.resolve({
-    path: "/write",
-    query: {
-      id: id,
-    },
-  })
-  window.open(writePath.href, "_blank")
+
+// const editorArticle = (scope) => {
+//   useEditorArticle(scope.row.account, scope.row.id)
+// }
+
+// const editorArticle = (scope) => {
+//   let id = scope.row.id
+//   console.log(id)
+//   const writePath = router.resolve({
+//     path: "/write",
+//     query: {
+//       id: id,
+//     },
+//   })
+//   window.open(writePath.href, "_blank")
+// }
+// 修改文章列表
+function changeArticleList(){
+  emits("getPublishedArticles")
 }
 </script>
 
