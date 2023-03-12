@@ -12,4 +12,6 @@ public interface PictureService {
     List<PicturesListResponse> listPictures(PicturesListRequest request);
 
     void addToPictureWareHouse(AddPictureToWarehouseRequest request);
+
+    String getRandomPicture(String position);
 }

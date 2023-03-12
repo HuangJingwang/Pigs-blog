@@ -68,6 +68,12 @@ public class PictureController {
         return ResultResponse.success(response);
     }
 
+    @RequestMapping(value = "/getRandomPicture")
+    public ResultResponse<String> getRandomPicture(@RequestParam("position") String position){
+        String url = pictureService.getRandomPicture(position);
+        return ResultResponse.success(url);
+    }
+
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "body", dataType = "AddPictureToWarehouseRequest", name = "request", value = "", required = true)
     })

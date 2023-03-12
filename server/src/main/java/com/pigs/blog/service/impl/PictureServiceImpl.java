@@ -14,11 +14,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Component
 public class PictureServiceImpl implements PictureService {
     @Autowired
-    private PicturesMapper warehouseMapper;
+    private PicturesMapper picturesMapper;
     @Override
     public List<PicturesListResponse> listPictures(PicturesListRequest request) {
         PicturesExample example = new PicturesExample();
@@ -29,7 +30,7 @@ public class PictureServiceImpl implements PictureService {
         if(Strings.isNotBlank(request.getUploadBy())){
             criteria.andUploadByEqualTo(request.getUploadBy());
         }
-        List<Pictures> Picturess = warehouseMapper.selectByExample(example);
+        List<Pictures> Picturess = picturesMapper.selectByExample(example);
         return copyList(Picturess);
     }
 
@@ -37,7 +38,23 @@ public class PictureServiceImpl implements PictureService {
     public void addToPictureWareHouse(AddPictureToWarehouseRequest request) {
         Pictures pictures = new Pictures();
         BeanUtils.copyProperties(request,pictures);
-        warehouseMapper.insertSelective(pictures);
+        picturesMapper.insertSelective(pictures);
+    }
+
+    @Override
+    public String getRandomPicture(String position) {
+        PicturesExample example = new PicturesExample();
+        PicturesExample.Criteria criteria = example.createCriteria();
+        criteria.andPositionEqualTo(position);
+        List<Pictures> pictures = picturesMapper.selectByExample(example);
+        Random random = new Random();
+        int i = random.nextInt(pictures.size());
+
+        String result = pictures.get(i).getPath();
+        if(Strings.isBlank(result)){
+            result = "";
+        }
+        return result;
     }
 
     private List<PicturesListResponse> copyList(List<Pictures> list) {
