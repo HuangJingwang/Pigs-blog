@@ -55,12 +55,12 @@ public class PictureController {
 
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "string", name = "position", value = "", required = true),
-            @ApiImplicitParam(paramType = "query", dataType = "string", name = "uploadBy", value = "", required = true)
+            @ApiImplicitParam(paramType = "query", dataType = "string", name = "upload_by", value = "", required = true)
     })
     @ApiOperation(value = "列出图库图片", notes = "", httpMethod = "GET")
     @RequestMapping(value = "/listPictureWarehouse", method = RequestMethod.GET, produces = "application/json")
-    public ResultResponse<List<PicturesListResponse>> listPictureWarehouse(@RequestParam("position") String position,
-                                                                           @RequestParam("upload_by") String uploadBy){
+    public ResultResponse<List<PicturesListResponse>> listPictureWarehouse(@RequestParam(value = "position", required = false) String position,
+                                                                           @RequestParam(value = "upload_by", required = false) String uploadBy){
         PicturesListRequest request = new PicturesListRequest();
         request.setPosition(position);
         request.setUploadBy(uploadBy);
@@ -68,7 +68,11 @@ public class PictureController {
         return ResultResponse.success(response);
     }
 
-    @RequestMapping(value = "/getRandomPicture")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "string", name = "position", value = "", required = true)
+    })
+    @ApiOperation(value = "随便给一张图片", notes = "")
+    @RequestMapping(value = "/getRandomPicture", method = RequestMethod.GET, produces = "application/json")
     public ResultResponse<String> getRandomPicture(@RequestParam("position") String position){
         String url = pictureService.getRandomPicture(position);
         return ResultResponse.success(url);
