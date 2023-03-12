@@ -4,7 +4,7 @@
                 "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <!-- 数据库的驱动包路径 -->
-    <classPathEntry location="D:\maven\repository\mysql\mysql-connector-java\5.1.41\mysql-connector-java-5.1.41.jar" />
+    <classPathEntry location="C:\Users\Cookie\.m2\repository\mysql\mysql-connector-java\5.1.41\mysql-connector-java-5.1.41.jar" />
         <context id="DB2Tables" targetRuntime="MyBatis3">
             <!-- 去掉生成文件中的注释 -->
             <commentGenerator>
@@ -14,7 +14,7 @@
             <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                     connectionURL="jdbc:mysql://localhost:3306/pigs_blog?characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=false"
                     userId="root"
-                    password="dw1234">
+                    password="123456">
                 <property name="nullCatalogMeansCurrent" value="true" />
             </jdbcConnection>
     <!-- <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver"
@@ -84,7 +84,7 @@
 <!--                   enableDeleteByPrimaryKey="true"-->
 <!--                   enableSelectByPrimaryKey="true"-->
 <!--                   enableUpdateByPrimaryKey="true"/>-->
-            <table tableName="logion" domainObjectName="Logion"
+            <table tableName="pictures" domainObjectName="Pictures"
                                enableCountByExample="true"
                                enableDeleteByExample="true"
                                enableSelectByExample="true"
