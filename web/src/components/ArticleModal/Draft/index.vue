@@ -131,21 +131,16 @@ const multipleSelection = ref([])
 // 检测多选变化
 const handleSelectionChange = (selections) => {
   multipleSelection.value = selections
-  console.log(selections)
   // val为选中元素
   selections.forEach((item) => {
     selectedArticles.push(item)
-    console.log(item.id)
   })
-
-  console.log(selectedArticles)
 }
 
 // 点击预览封面
 let picture_url = ref('')
 let dialogVisible = ref(false)
 const showImg = (url) => {
-  console.log(url)
   picture_url.value = url
   dialogVisible.value = true
 }

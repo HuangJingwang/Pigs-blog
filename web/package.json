@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "animate.css": "^4.1.1",
     "axios": "^1.2.1",
     "core-js": "^3.8.3",
     "easy-typer-js": "^2.1.0",

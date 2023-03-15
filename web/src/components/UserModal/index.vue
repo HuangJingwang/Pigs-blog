@@ -315,7 +315,6 @@ const registerAccount = async () => {
       }, 500)
       // 填上登录数据
     } else if (result.code === 10005) {
-      // console.log(result.msg)
       ElMessage({
         message: "注册失败",
         type: "error",

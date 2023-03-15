@@ -59,8 +59,11 @@
 
 <script setup>
 import TypeWriter from "@/components/TypeWriter.vue"
-import { ref } from "vue"
-let imgUrl = 'https://moon.starrysummer.com/916bbd3e23ac4dd1a9e7362ce2826b85.jpg'
+import { ref ,computed} from "vue"
+import{useUserStore} from '@/store/user'
+const userStore = useUserStore()
+// let imgUrl = 'https://moon.starrysummer.com/916bbd3e23ac4dd1a9e7362ce2826b85.jpg'
+let imgUrl = computed(()=>userStore.coverImg)
 let innerHeight = window.innerHeight + "px"
 // 点击按钮滚动页面
 const distance = ref(0)
@@ -78,6 +81,7 @@ const scrollToMain = () => {
   width: 100%;
   position: relative;
   background-size: cover;
+  background-repeat: no-repeat;
   background-position: center center;
 }
 .cover::before {
@@ -87,14 +91,14 @@ const scrollToMain = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .coverImg {
   position: relative;
   width: 100%;
   height: 100%;
   background-position: center center;
-  background-size: cover;
+  background-size: contain;
 }
 .coverImg::after {
   content: "";

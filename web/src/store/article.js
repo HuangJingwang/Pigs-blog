@@ -18,8 +18,18 @@ export const useArticleStore = defineStore('article', {
   actions: {
     // 请求获取首页文章列表
     async reqArticleList(data) {
+      this.homeArticles.loadingList = true
       try {
-        // let pageNo = this.homeArticles.currentPage
+        let { pageNo } = data
+        if (pageNo == 1) {
+          // 若頁碼為1 則清空列表，重新獲取文章
+          this.$patch((state) => {
+            state.homeArticles.currentPage = 1
+            state.homeArticles.hasNext = true
+            state.homeArticles.totalArticles = 0
+            state.homeArticles.articlesList = []
+          })
+        }
         // 有下一页时，请求数据
         if (this.homeArticles.hasNext) {
           let result = await getArticleList(data)
@@ -44,6 +54,12 @@ export const useArticleStore = defineStore('article', {
         return error
       }
     },
+    // 初始化文章页码
+    initPageNo() {
+      console.log(this, 'this-----------')
+      this.homeArticles.currentPage = 1
+      console.log(this.homeArticles.currentPage)
+    },
     // 请求获取分类列表
     async reqGroupList() {
       let result = await getGroupListData()
@@ -55,6 +71,7 @@ export const useArticleStore = defineStore('article', {
         // 定义递归，生成树形结构
         function getTree(rootList, parent, list) {
           rootList.forEach((group) => {
+            group.show = false
             group.value = group.id
             group.label = group.group_name
             if (group.parent_id !== null && group.parent_id == parent) {
@@ -62,7 +79,7 @@ export const useArticleStore = defineStore('article', {
             }
           })
           list.forEach((group) => {
-            group.children = [] //c=储存子元素
+            group.children = [] //储存子元素
             getTree(rootList, group.id, group.children)
             if (group.children.length == 0) delete group.children
           })
@@ -71,7 +88,6 @@ export const useArticleStore = defineStore('article', {
         this.groupList = getTree(groupList, 0, [])
       }
     },
-
     async reqTagList() {
       let result = await getTagList()
       if (result.code == 200) {

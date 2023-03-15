@@ -22,7 +22,6 @@ requests.interceptors.request.use((config) => {
   if (token !== null) {
     config.headers.token = token
   }
-  // console.log(config.headers)
   return config
 })
 requests.interceptors.response.use(

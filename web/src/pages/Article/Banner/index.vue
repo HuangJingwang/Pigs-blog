@@ -15,13 +15,13 @@
             lineHeight: '50px',
             fontSize: '24px',
           }"
-          >\</span
+          >|</span
         >
         <div class="date">
           <span class="iconfont icon-shijian1"></span>
           <span>更新于: {{ articleData.update_at }}</span>
         </div>
-        <span :style="{ height: '50px', lineHeight: '50px', fontSize: '24px' }">\</span>
+        <span :style="{ height: '50px', lineHeight: '50px', fontSize: '24px' }">|</span>
         <div class="category">
           <span class="iconfont icon-icon-folder"></span>
           <span> 文章分类: {{ articleData.group_name }}</span>
@@ -57,21 +57,16 @@ const showEditorBtn = computed(()=>{
 
 // ref(props.articleData.account === userStore.userInfo.account)
 
-const test = ()=>{
-  console.log(props.articleData.account === userStore.userInfo.account)
-}
+
 // 编辑文章
 const editorArticle = (id) => {
-console.log(props.articleData.account)
-console.log(userStore.userInfo.account)
-console.log(props.articleData.account===userStore.userInfo.account)
-  // const writePath = router.resolve({
-  //   path: "/write",
-  //   query: {
-  //     id:id
-  //   }
-  // })
-  // window.open(writePath.href, "_blank")
+  const writePath = router.resolve({
+    path: "/write",
+    query: {
+      id:id
+    }
+  })
+  window.open(writePath.href, "_blank")
 }
 </script>
 

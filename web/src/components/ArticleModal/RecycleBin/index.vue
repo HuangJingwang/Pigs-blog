@@ -118,7 +118,6 @@ let currentPage = ref(1)
 // 页数变更时，向父组件传递数据，有父组件发起请求，更新列表
 const changePage = (value) => {
   currentPage.value = value
-  console.log(value)
   // 触发自定义事件,返回页面数据给父组件
   emits('getRecyclePage', value)
 }
@@ -129,7 +128,6 @@ const multipleSelection = ref([])
 // 检测多选变化
 const handleSelectionChange = (selections) => {
   multipleSelection.value = selections
-  console.log(selections)
   // val为选中元素
   selections.forEach((item) => {
     selectedArticles.push(item)
@@ -140,7 +138,6 @@ const handleSelectionChange = (selections) => {
 let picture_url = ref('')
 let dialogVisible = ref(false)
 const showImg = (url) => {
-  console.log(url)
   picture_url.value = url
   dialogVisible.value = true
 }

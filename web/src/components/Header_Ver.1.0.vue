@@ -82,7 +82,6 @@ const toManage = () => {
 // 点击弹出登录框
 const login_register = () => {
   state.user.showUserModal = true
-  console.log(state.user.showUserModal)
 }
 
 //#endregion

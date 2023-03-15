@@ -60,7 +60,6 @@ const handleUpload = async (e) => {
     if (result.code == 200) picture_url.value = ""
   }
   compressFile(picture, quality, picture_url,callback)
-console.log(picture_url.value)
 }
 // 是否可见预览图片
 let dialogVisible = ref(false)
@@ -90,7 +89,6 @@ watch(picture_url, () => {
   if (picture_url.value !== '') {
     sendUrl(picture_url.value)
   }
-
   // 当picture 有值，则向父组件传值
 })
 
@@ -122,7 +120,8 @@ function compressFile(file, quality, url_ref,callback) {
       let ctx = canvas.getContext("2d")
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
       // 获取压缩后base64格式数据
-      let imgBase64_compressed = canvas.toDataURL("image/jpeg", quality)
+      let imgBase64_compressed = canvas.toDataURL("image/jpeg",0.3)
+      console.log(imgBase64_compressed)
       // 将base 64 转换为file
       let arr = imgBase64_compressed.split(",")
       let byteString = atob(arr[1])

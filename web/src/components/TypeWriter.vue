@@ -12,29 +12,29 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, ref } from "vue"
-import { getSayings } from "@/api"
-import EasyTyper from "easy-typer-js"
+import { reactive, onMounted, ref } from 'vue'
+import { getSayings } from '@/api'
+import EasyTyper from 'easy-typer-js'
 let sayingCursor = ref(true)
 let authorCursor = ref(false)
 let typeOptions = reactive({
-  output: "",
+  output: '',
   isEnd: false,
   speed: 200,
   singleBack: false,
   sleep: 20,
-  type: "rollback",
+  type: 'rollback',
   backSpeed: 500,
   sentencePause: true,
   // 其他参数省略
 })
 let typeOptions2 = reactive({
-  output: "",
+  output: '',
   isEnd: false,
   speed: 200,
   singleBack: false,
   sleep: 3000,
-  type: "rollback",
+  type: 'rollback',
   backSpeed: 500,
   sentencePause: true,
   // 其他参数省略
@@ -43,10 +43,11 @@ let typeOptions2 = reactive({
 onMounted(() => {
   getSayings()
     .then((res) => {
-      console.log("res", res.data.logion)
-      console.log("res author", res.data.author)
+      if (!res.data.author) return
       new EasyTyper(typeOptions, res.data.logion, () => {
-        new EasyTyper(typeOptions2,  '————'+ res.data.author,()=>{authorCursor.value = false})
+        new EasyTyper(typeOptions2, '———' + res.data.author, () => {
+          authorCursor.value = false
+        })
         sayingCursor.value = false
         authorCursor.value = true
       })
@@ -65,7 +66,7 @@ onMounted(() => {
   position: relative;
   display: flex;
   flex-direction: column;
-justify-content: space-around;
+  justify-content: space-around;
 }
 .saying {
   margin-top: 20px;
@@ -77,7 +78,7 @@ justify-content: space-around;
   top: 60px;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: rgb(200, 192, 192);
+  color: #fff;
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
   margin-bottom: 30px;
 }
@@ -87,9 +88,9 @@ justify-content: space-around;
   text-align: start;
   font-size: 24px;
   line-height: 40px;
-  color: rgb(200, 192, 192);
+  color: #fff;
   padding-left: 900px;
-  position: absolute;  
+  position: absolute;
   top: 140px;
   left: 50%;
   transform: translate(-50%, -50%);

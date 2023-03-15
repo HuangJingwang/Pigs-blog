@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { getCoverImg } from '@/api'
 export const useUserStore = defineStore('user', {
   state: () => {
     return {
@@ -8,6 +9,7 @@ export const useUserStore = defineStore('user', {
       userInfo: {}, //登錄信息
       token: '', //token
       showArticleModal: false, //显示文章管理模块
+      coverImg: '', //封面图片路径
     }
   },
   getters: {
@@ -15,9 +17,17 @@ export const useUserStore = defineStore('user', {
       return state.userInfo.role
     },
   },
-  actions: {},
+  actions: {
+    async reqCoverImg() {
+      let result = await getCoverImg()
+      console.log(result, 'coverImg')
+      if (result.code == 200) {
+        this.coverImg = result.data
+      }
+    },
+  },
   persist: {
-    storage: sessionStorage,
+    storage: localStorage,
     key: 'user',
     paths: ['token', 'userInfo', 'isLogin'],
   },

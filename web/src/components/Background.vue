@@ -5,9 +5,11 @@
 </template>
 
 <script setup>
-let imgUrl = require("@/assets/img/bgi1.jpg")
+import { useUserStore } from '@/store/user';
+import{computed}from 'vue'
+const userStore= useUserStore()
+let imgUrl =computed(()=>userStore.coverImg)
 const props = defineProps(["title"])
-console.log(props.title)
 </script>
 
 <style scoped>
@@ -23,7 +25,7 @@ console.log(props.title)
   width: 100%;
   height: 100%;
   z-index: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
   position: absolute;
   top: 0;
   left: 0;

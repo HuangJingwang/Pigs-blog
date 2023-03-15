@@ -4,11 +4,34 @@
     <div class="mainBody">
       <!-- 展示文章卡片 -->
       <div class="articles" @click="toArticle">
-      <!-- ，消息/文章列表设置栏 -->
+        <!-- ，消息/文章列表设置栏 -->
         <div class="notice basic-box">
           <div class="left">
-            <div class="byView"><span class="icon_hot"></span> 热度排序</div>
-            <div class="byAuthor"><span class="icon_author"></span>作者: all</div>
+            <div
+              @click="changeRank_view"
+              class="byView"
+              :style="{ color: `${viewColor}` }"
+            >
+              <span class="icon_hot"></span>
+              热度排序
+            </div>
+            <div class="byAuthor">
+              <span class="icon_author"></span>
+              <!-- 作者: all -->
+              <el-switch
+                v-model="byAuthor"
+                class="ml-2"
+                width="80"
+                :disabled="useSwitch"
+                size="large"
+                active-value="self"
+                inactive-value="all"
+                inline-prompt
+                inactive-color="rgb(22,63,116)"
+                active-text="仅自己"
+                inactive-text="所有人"
+              />
+            </div>
           </div>
           <div class="right">
             <span class="iconfont icon-tongzhi"></span>
@@ -17,8 +40,9 @@
             </div>
           </div>
         </div>
+        <el-empty description="description" :style="{height:'600px'}" v-show="showEmpty"/>
         <div
-          class="articleCard basic-box"
+          class="articleCard basic-box animate__animated animate__fadeInUp"
           v-for="(article, index) in articleList"
           :key="article.id"
         >
@@ -46,18 +70,22 @@
               </div>
               |
               <div class="category">
-                <span class="iconfont icon-fenlei"></span>分类: {{ article.group_name }}
+                <span class="iconfont icon-fenlei"></span>
+                分类: {{ article.group_name }}
               </div>
               |
               <div class="preview">
-                <span class="iconfont icon-chakan1"></span>浏览量: {{ article.page_view }}
+                <span class="iconfont icon-chakan1"></span>
+                浏览量: {{ article.page_view }}
               </div>
             </div>
             <div class="introduction" :data-id="article.id">
               {{ article.introduction }}
             </div>
             <div class="tags">
-              <el-tag v-for="tag in article.tags" :key="index">{{ tag }}</el-tag>
+              <el-tag v-for="tag in article.tags" :key="index">
+                {{ tag }}
+              </el-tag>
             </div>
           </div>
         </div>
@@ -66,49 +94,83 @@
       <Aside />
     </div>
     <div class="loadMore">
-      <a v-show="hasNext" href="javascript:void(0)" @click="loadMore"> loadMore... </a>
+      <a v-show="hasNext" href="javascript:void(0)" @click="loadMore">
+        loadMore...
+      </a>
       <p v-show="!hasNext">没有了捏!</p>
     </div>
   </div>
 </template>
 
 <script setup>
-// import {storeToRefs} from 'pinia'
-import { useUserStore } from "@/store/user"
-import { useArticleStore } from "@/store/article"
-import { useRoute, useRouter } from "vue-router"
-import Cover from "./Cover"
-import Aside from "./Aside"
-import { ref, onMounted, computed, watch } from "vue"
+// import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/store/user'
+import { useArticleStore } from '@/store/article'
+import { useRoute, useRouter } from 'vue-router'
+import Cover from './Cover'
+import Aside from './Aside'
+import { ref, onMounted, computed, watch } from 'vue'
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
 const articleStore = useArticleStore()
-
+// 顯示空狀態
+let showEmpty = computed(()=>{
+console.log(articleStore.homeArticles.articlesList.length,'length')
+if(articleStore.homeArticles.articlesList.length == 0)return true
+else return false
+})
+// 改变热度排名
+let useSwitch = computed(() => {
+  if (userStore.isLogin) {
+    return false
+  } else {
+    return true
+  }
+})
 let byViews = ref(false)
-let byMine = ref(false)
-
+let viewColor = computed(() => {
+  if (byViews.value == false) return '#fff'
+  if (byViews.value == true) return 'rgb(233, 233, 0)'
+})
+const changeRank_view = () => {
+  console.log(byViews.value)
+  byViews.value = !byViews.value
+}
 // 渲染首页列表数据
 // 获取数据
 let articleList = computed(() => {
   return articleStore.homeArticles.articlesList
 })
+
 let pageNo = computed(() => {
   return articleStore.homeArticles.currentPage
 })
-
+// let {pageNo} =storeToRefs(articleStore)
+console.log(pageNo)
+let byAuthor = ref('all')
 watch(
-  pageNo,
-  () => {
+  [pageNo, byAuthor, byViews],
+  (newVal, oldVal) => {
+    console.log(oldVal[0],newVal[0],'value')
+    if (oldVal[0] == newVal[0]) {
+      articleStore.initPageNo()
+    }
+    // 獲取pageNo新舊值
+    let account = userStore.userInfo.account
     let data = {
       pageNo: pageNo.value,
+      account: account,
+      byViews: byViews.value,
+      byAuthor: byAuthor.value,
     }
     // 发起请求获取文章
     articleStore.reqArticleList(data)
-    console.log(articleStore.homeArticles, "articles")
+    
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: true },
 )
+
 // onMounted(() => {
 //   articleStore.reqArticleList()
 //   // 仅在第一次加载时发送获取初始数据的请求
@@ -135,7 +197,7 @@ const toArticle = (e) => {
   let id = e.target.dataset.id
   if (id) {
     router.push({
-      path: "/article",
+      path: '/article',
       query: {
         id: id,
       },
@@ -147,8 +209,8 @@ const toArticle = (e) => {
 onMounted(() => {
   // 获取key 并存储
   let key = route.query.key //获取key
-  let status = sessionStorage.getItem("status")
-  if (status === "active" && key) {
+  let status = sessionStorage.getItem('status')
+  if (status === 'active' && key) {
     // 存储key
     userStore.key = key
   }
@@ -187,7 +249,7 @@ onMounted(() => {
 }
 
 .notice .left::after {
-  content: "";
+  content: '';
   display: block;
   position: absolute;
   top: 0;
@@ -197,7 +259,8 @@ onMounted(() => {
   border-left: 20px solid transparent;
   border-bottom: 40px solid transparent;
 }
-.notice .left .byView,.notice .left .byAuthor {
+.notice .left .byView,
+.notice .left .byAuthor {
   margin-right: 15px;
   display: flex;
   align-items: center;
@@ -209,7 +272,6 @@ onMounted(() => {
   background-position: center center;
   background-size: contain;
   margin-right: 10px;
-
 }
 
 .byView .icon_hot {
@@ -287,7 +349,7 @@ onMounted(() => {
   width: 100px;
   height: 100%;
   top: 0;
-  content: "";
+  content: '';
   border-top: 240px solid #fff;
 }
 .articleImg-left::before {
@@ -327,7 +389,8 @@ onMounted(() => {
 
   -webkit-box-orient: vertical;
 
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
   font-weight: 900;
   font-size: 24px;
   color: #000;
@@ -384,5 +447,11 @@ onMounted(() => {
 .loadMore a {
   color: #eee;
   font-size: 16px;
+}
+
+.slot{
+  width: 100%;
+  height: 800px;
+  background-color: pink;
 }
 </style>

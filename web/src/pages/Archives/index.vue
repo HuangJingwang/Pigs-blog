@@ -66,7 +66,6 @@ let total = ref(0)
 // 页面中展示归档数据
 onMounted(async () => {
   let result = await getArchives()
-  console.log('歸檔數據', result)
   let arr = []
   let obj = {}
   if (result.success) {
@@ -102,7 +101,6 @@ onMounted(async () => {
 })
 //跳转至文章详情
 const toArticle = (e) => {
-  // console.log(123)
   let id = e.target.dataset.id
   if (id) {
     // state.user.key = '1234'
@@ -206,6 +204,12 @@ const toArticle = (e) => {
   padding-right: 10px;
 }
 .article .title {
+  display: -webkit-box;
+
+-webkit-box-orient: vertical;
+
+-webkit-line-clamp: 1;
+overflow: hidden;
   font-size: 22px;
   /* width: 500px; */
   flex: 1;

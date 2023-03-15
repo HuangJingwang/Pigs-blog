@@ -1,12 +1,21 @@
 import requests from './requests'
-// 获取首页文章列表数据
-export const getArticleList = (data) => {
-  let { pageNo, page_view, account } = data
 
-  console.log(pageNo, 'pageNo')
+// 获取首页封面
+export const getCoverImg = () => {
   return requests({
     method: 'GET',
-    url: `/articles/getArticlesPageData?pageNo=${pageNo}`,
+    url: '/picture/getRandomPicture?position=main',
+  })
+}
+// 获取首页文章列表数据
+export const getArticleList = (data) => {
+  let { pageNo, byViews, account, byAuthor } = data
+  let url = `/articles/getArticlesPageData?pageNo=${pageNo}`
+  byViews == true ? (url += `&orderByPV=true`) : (url += '&orderByPV=false')
+  byAuthor == 'self' ? (url += `&account=${account}`) : null
+  return requests({
+    method: 'GET',
+    url: url,
   })
 }
 // 获取首页用户数据
@@ -127,7 +136,6 @@ export const deletePictures = (data) => {
 
 // 保存文章
 export const saveArticle = (data) => {
-  console.log(data, 'data')
   return requests({
     method: 'POST',
     url: '/articles/save',
@@ -137,7 +145,6 @@ export const saveArticle = (data) => {
 
 // 更新文章
 export const updateArticle = (data, id) => {
-  console.log(data)
   return requests({
     method: 'POST',
     url: `/articles/update/${id}`,
@@ -187,7 +194,7 @@ export const getSayings = () => {
 // 分类获取当前分类文章
 export const getGroupArticles = (query) => {
   return requests({
-    method:'GET',
-    url:`/articles/listArticles?groupId=${query}`
+    method: 'GET',
+    url: `/articles/listArticles?groupId=${query}`,
   })
 }

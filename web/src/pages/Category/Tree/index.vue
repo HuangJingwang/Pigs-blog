@@ -1,111 +1,66 @@
 <template>
-  <!-- 查看一下传过来的data -->
-  <div class="TreeBox">
-    <!-- 点击打印data -->
-    <ul :style="{ maxHeight: show ? '1000px' : '0'}">
-      <!-- 遍历data目录 -->
-      <!-- mlgb 这里的show不知道为甚改不了 -->
-      <li
-        v-for="item in data"
-        :key="item"
-        @click.stop="item.show = !item.show ;" 
+  <div class="tree">
+    <div class="group_item" v-for="(group, index) in data" :key="group.id">
+      <div class="content">
+        <div
+          class="groupName"
+          :style="{ margin: `0 ${30 * group.level}px` }"
+          :data-id="group.children ? null : group.id"
+          @click="handleClick(group)"
+        >
+          {{ group.group_name }}
+        </div>
+      </div>
+      <!-- <div class="articleList"  :style="{ margin: `0 ${30 * group.level}px` }">123</div> -->
+      <template v-if="group.children !== []">
+        <Tree
+          :style="{
+            maxHeight: group.show ? `10000px` : '0',
+            overflow: 'hidden',
+          }"
+          :data="group.children"
+        />
+      </template>
+      <div
+        :style="{
+          maxHeight: group.show ? `10000px` : '0',
+          overflow: 'hidden',
+        }"
+        v-if="!group.children"
       >
-        <p>
-        {{ item.group_name }} <span class="icon-arror iconfont" :class=" item.show ? 'trunDown':'trunLeft'"></span>
-        </p>
-        
-        <!-- 使用递归组件 -->
-        <template v-if="item.children">
-          <Tree :data="item.children" :show="item.show" :style="{ 'paddingLeft' : `${listPadding*15}px`}" ></Tree>
-        </template>
-
-      </li>
-    </ul>
+        <List :id="group.id" :level="group.level" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import {ref,reactive,onMounted,toRaw} from 'vue'
+import { computed, ref, defineAsyncComponent } from 'vue'
 import Tree from './index.vue'
-import {getGroupArticles} from '@/api'
+const props = defineProps({ data: Array })
+const List = defineAsyncComponent(() => import('../List'))
+let showChildren = ref(false)
 
-const props = defineProps({
-  data: {
-    type: Array,
-    default: () => [],
-  },  
-  show: {
-    type: Boolean,
-    default: () => true,
-  },
-  articleList:{
-    type:Array,
-    default:() => []
-  },
-  listPadding:{
-    type:Number,
-    default:() => 1
-  },
-  // k控制箭头
-  // arrowFace:{
-  //   type:Boolean,
-  //   default:() => false
-  // }
-})
-
-// 列表padding数值
-const listPadding = ref(1)
-const arrowFace = ref(false)
-onMounted(() => {
-  // console.log(props.data ,'propschuancan','data id',props.data.id)
-  // let {id} = props.data
-  // console.log(id);
-
-  let data = JSON.parse(JSON.stringify(props.data))
-  console.log('props传过来json处理的data',data);
-  data.forEach(async(item) =>{
-    if(!item.children){
-    let articleList = await getGroupArticles(item.id)
-    console.log('itemid',item.id,'articleList.data',articleList);
-  }
-  })
-})
-
+// 调整央视，获取文章
+const handleClick = (group) => {
+  group.show = !group.show
+  showChildren.value = !showChildren.value
+}
 </script>
 
 <style scoped>
-.TreeBox {
-}
-li{
-    max-height: 1000px;
-    min-height: 40px;
-    font-size: 1.5rem;
-    font-weight: bold;
-
-}
-p:hover{
-    background-color: rgb(138, 157, 159);
-}
-p{
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-}
-.iconfont{
-  display: block;
-  line-height: 40px;
-  margin-left :10px;
-
-  translate: all 2s linear;
-}
-ul{
-  overflow: hidden;
-  transition: all 0.5s ease-in;
+.tree {
+  width: 100%;
 }
 
- /* 箭头转动 */
- .trunDown{
-   transform: rotate(90deg);
- }
-
+.groupName {
+  cursor: pointer;
+  height: 50px;
+  line-height: 50px;
+  font-size: 24px;
+  font-weight: 900;
+}
+.content:hover {
+  background-color: #eee;
+}
 </style>

@@ -60,6 +60,8 @@ const ArticleModal = defineAsyncComponent({
 // #region 
 // 点击特效
 
+
+
 let active = false
 function clickEffect() {
 active = true
@@ -225,6 +227,9 @@ active = true
 //   }
 // })
 //#endregion
+onMounted(()=>{
+userStore.reqCoverImg()
+})
 </script>
 <style>
 .background {

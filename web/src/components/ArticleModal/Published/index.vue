@@ -107,10 +107,8 @@ let totalArticle = computed(() => props.publishedData.totalResult)
 let currentPage = ref(1)
 // 页数变更时，向父组件传递数据，有父组件发起请求，更新列表
 const changePage = (value) => {
-    console.log(value)
   currentPage.value = value
   // 触发自定义事件,返回页面数据给父组件
-  console.log('change page')
   emits("getPublishedPage", value)
 }
 // 多选框
@@ -120,20 +118,15 @@ const multipleSelection = ref([])
 // 检测多选变化
 const handleSelectionChange = (selections) => {
   multipleSelection.value = selections
-  console.log(selections)
   // val为选中元素
   selections.forEach((item) => {
     selectedArticles.push(item)
-    console.log(item.id)
   })
-
-  console.log(selectedArticles)
 }
 // 点击预览封面
 let picture_url = ref("")
 let dialogVisible = ref(false)
 const showImg = (url) => {
-  console.log(url)
   picture_url.value = url
   dialogVisible.value = true
 }

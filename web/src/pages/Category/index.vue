@@ -1,51 +1,48 @@
 <template>
-  <Background :title="`Category`"></Background>
+  <Background :title="title"/>
   <div class="container basic-box" >
-    <div class="articleTitle">
-      <Tree :data="data"></Tree>
-    </div>
+    <Tree :data="groupList"/>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed , onMounted } from "vue"
-import { useArticleStore } from "@/store/article"
-import Tree from "./Tree"
+import {ref,computed} from 'vue'
+import { useArticleStore } from '@/store/article';
+import Tree from './Tree'
+const title = 'Category'
 const articleStore = useArticleStore()
+// 获取分类列表数据
+// let groupList = computed(()=>{
+//   return articleStore.groupList
+// })
 
-let data = computed(() => {
-  return addShowFuc(articleStore.groupList)
-})
-
-// 看一看d传过来的data
-// onMounted(() => console.log(data))
-
-// // 写一个addshow方法 把所有数据遍历一遍，都加上show属性
-const addShowFuc = (data) => {
-  return data.map((item) => {
-    item.show = false
-    if (item.children) {
-      addShowFuc(item.children)
+const arrayTreeAddLevel = (array, levelName = 'level', childrenName = 'children') => {
+    if (!Array.isArray(array)) return []
+    const recursive = (array, level = 0) => {
+        level++
+        return array.map(v => {
+            v[levelName] = level
+            const child = v[childrenName]
+            if (child && child.length) recursive(child, level)
+            return v
+        })
     }
-
-    return item
-  }
-  )
+    return recursive(array)
 }
+let groupList = computed(()=>{
+  return arrayTreeAddLevel(articleStore.groupList)
+})
+// 确保正确获取有文章的group
+
 </script>
+
 <style scoped>
-.container {
+.container{
+  overflow:hidden ;
   width: 1200px;
-  min-height: 400px;
-  background-color: #fff;
-
-  margin: 0 auto;
-  padding: 1px;
-  transform: translateY(-50px);
-
-  
-}
-.articleTitle {
-  margin: 48px 80px;
+  margin: 0 auto ;
+  position: relative;
+  top: -50px;
+  padding: 50px 20px;
 }
 </style>

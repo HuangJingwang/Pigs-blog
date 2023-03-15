@@ -12,6 +12,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import ElementPlus from 'element-plus'
 // 引入element-plus样式
 import 'element-plus/dist/index.css'
+import 'animate.css'
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 const app = createApp(App)

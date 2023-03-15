@@ -57,7 +57,7 @@
           ></div>
           <template #dropdown>
             <el-dropdown-menu v-show="userStore.isLogin">
-              <el-dropdown-item @click="testBind">绑定Github</el-dropdown-item>
+              <el-dropdown-item >绑定Github</el-dropdown-item>
               <el-dropdown-item disabled>个人主页</el-dropdown-item>
               <el-dropdown-item disabled>消息中心</el-dropdown-item>
               <el-dropdown-item @click="showArticleModal">
@@ -100,7 +100,6 @@ onMounted(() => {
 // 导航到write 页面
 const toWrite = () => {
   // 1.未登录状态提示登录
-  console.log(userStore.isLogin)
   if (!userStore.isLogin) {
     //未登录
     ElMessageBox.alert('请先登录', '未登录', {
@@ -142,12 +141,10 @@ const toWrite = () => {
 // 点击弹出登录框
 const login_register = () => {
   userStore.showUserModal = true
-  console.log(userStore.showUserModal)
 }
 
 //显示头像
 let avatarImg = computed(() => {
-  console.log(userStore.userInfo.imgUrl)
   return userStore.userInfo.imgUrl !== undefined &&
     userStore.userInfo.imgUrl == ''
     ? 'https://moon.starrysummer.com/3686fd078f7649528d5b5ba31de2a9d7.jpg'
@@ -161,9 +158,7 @@ const showArticleModal = () => {
 }
 
 // 对于未通过三方登录注册的用户，提供绑定github功能
-const testBind = () => {
-  console.log(userStore.userInfo.githubId)
-}
+
 // 退出登录
 const reqLogout = async () => {
   // 删除token
@@ -177,6 +172,7 @@ const reqLogout = async () => {
     state.userInfo = {}
     state.token = ''
   })
+  location.reload();
 }
 </script>
 
