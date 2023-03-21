@@ -77,7 +77,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         HashMap<Long, String> groupIdAndNameMap = new HashMap<>();
         //group_id 和 group_name的对应关系
         for (int i = 0; i < groupIds.size(); ++i) {
-            groupIdAndNameMap.put(groupIds.get(i),groupNameList.get(i));
+            groupIdAndNameMap.put(groupIds.get(i), groupNameList.get(i));
         }
         for (ArticlesListResponse a : resultList) {
             a.setGroupName(groupIdAndNameMap.get(a.getGroupId()));
@@ -103,6 +103,24 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         articles.setArticlePictureUrl(pictureUrls);
         BeanUtils.copyProperties(request, articles);
         mapper.updateByPrimaryKeySelective(articles);
+
+        //如果是发布文章
+        if (articles.getStatus().equals(ArticlesStatusEnum.PUBLISHED.getStatus())) {
+            //修改用户的文章数：文章数加1
+            UserInfoExample example = new UserInfoExample();
+            UserInfoExample.Criteria criteria = example.createCriteria();
+            criteria.andAccountEqualTo(request.getAccount());
+            List<UserInfo> userInfos = userInfoMapper.selectByExample(example);
+
+            if (CollectionUtils.isEmpty(userInfos)) {
+                logger.error("add articlesCount fail:because cannot find account: " + request.getAccount());
+                throw new PigsBlogException(10004, "account not exist");
+            }
+
+            UserInfo userInfo = CollectionUtils.firstElement(userInfos);
+            userInfo.setArticlesCount(userInfo.getArticlesCount() + 1);
+            userInfoMapper.updateByPrimaryKey(userInfo);
+        }
     }
 
     /**
@@ -122,6 +140,21 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
 
         articles.setStatus(ArticlesStatusEnum.DELETED.getStatus());
         mapper.updateByPrimaryKeySelective(articles);
+
+        //修改用户的文章数：文章数减1
+        UserInfoExample example = new UserInfoExample();
+        UserInfoExample.Criteria criteria1 = example.createCriteria();
+        criteria1.andAccountEqualTo(articles.getAccount());
+        List<UserInfo> userInfos = userInfoMapper.selectByExample(example);
+
+        if (CollectionUtils.isEmpty(userInfos)) {
+            logger.error("add articlesCount fail:because cannot find account: " + articles.getAccount());
+            throw new PigsBlogException(10004, "account not exist");
+        }
+
+        UserInfo userInfo = CollectionUtils.firstElement(userInfos);
+        userInfo.setArticlesCount(userInfo.getArticlesCount() - 1);
+        userInfoMapper.updateByPrimaryKey(userInfo);
     }
 
     /**
@@ -157,8 +190,8 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         criteria.andAccountEqualTo(articles.getAccount());
         List<UserInfo> userInfos = userInfoMapper.selectByExample(userInfoExample);
 
-        if(CollectionUtils.isEmpty(userInfos)){
-            throw new PigsBlogException(ErrorCodeEnum.NICKNAME_CANNOT_BE_FOUND_BY_ACCOUNT.getCode(),ErrorCodeEnum.NICKNAME_CANNOT_BE_FOUND_BY_ACCOUNT.getMsg());
+        if (CollectionUtils.isEmpty(userInfos)) {
+            throw new PigsBlogException(ErrorCodeEnum.NICKNAME_CANNOT_BE_FOUND_BY_ACCOUNT.getCode(), ErrorCodeEnum.NICKNAME_CANNOT_BE_FOUND_BY_ACCOUNT.getMsg());
         }
 
         UserInfo userInfo = CollectionUtils.firstElement(userInfos);
@@ -223,7 +256,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
     public void deleteForever(Long id) {
         ArticlesWithBLOBs articles = mapper.selectByPrimaryKey(id);
         String articlePictureUrl = articles.getArticlePictureUrl();
-        if(StringUtils.isEmpty(articlePictureUrl) || articlePictureUrl.length()==0){
+        if (StringUtils.isEmpty(articlePictureUrl) || articlePictureUrl.length() == 0) {
             mapper.deleteByPrimaryKey(id);
             return;
         }
@@ -266,22 +299,7 @@ public class ArticlesInterfaceImpl implements ArticlesInterface {
         BeanUtils.copyProperties(request, articles);
         mapper.insertSelective(articles);
 
-        //3.修改用户的文章数：文章数加1
-        UserInfoExample example = new UserInfoExample();
-        UserInfoExample.Criteria criteria = example.createCriteria();
-        criteria.andAccountEqualTo(request.getAccount());
-        List<UserInfo> userInfos = userInfoMapper.selectByExample(example);
-
-        if (CollectionUtils.isEmpty(userInfos)) {
-            logger.error("add articlesCount fail:because cannot find account: " + request.getAccount());
-            return ResultResponse.fail(10004, "account not exist");
-        }
-
-        UserInfo userInfo = CollectionUtils.firstElement(userInfos);
-        userInfo.setArticlesCount(userInfo.getArticlesCount() + 1);
-        userInfoMapper.updateByPrimaryKey(userInfo);
-
-        //4.返回当前的id
+        //3.返回当前的id
         Long id = mapperExt.getMaxId();
         articles.setId(id);
         ArticlesSaveResponse result = new ArticlesSaveResponse();
