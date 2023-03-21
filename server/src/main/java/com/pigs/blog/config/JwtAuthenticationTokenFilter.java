@@ -1,6 +1,8 @@
 package com.pigs.blog.config;
 
 import com.pigs.blog.contract.entity.LoginUser;
+import com.pigs.blog.exception.ErrorCodeEnum;
+import com.pigs.blog.exception.PigsBlogException;
 import com.pigs.blog.utils.JwtUtil;
 import com.pigs.blog.utils.RedisCache;
 import io.jsonwebtoken.Claims;
@@ -40,20 +42,20 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             userid = claims.getSubject();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("token非法");
+            throw new PigsBlogException(ErrorCodeEnum.ACCESS_DENIED.getCode(), "token非法");
         }
         //从redis中获取用户信息
         String redisKey = "login:" + userid;
         LoginUser loginUser = redisCache.getCacheObject(redisKey);
-        if(Objects.isNull(loginUser)){
-            throw new RuntimeException("用户未登录");
+        if (Objects.isNull(loginUser)) {
+            throw new PigsBlogException(ErrorCodeEnum.ACCESS_DENIED.getCode(), "用户未登录");
         }
 
         //封装Authentication对象存入SecurityContextHolder
         //TODO 获取权限信息封装到Authentication中
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginUser,null,loginUser.getAuthorities());
+                new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         //放行
