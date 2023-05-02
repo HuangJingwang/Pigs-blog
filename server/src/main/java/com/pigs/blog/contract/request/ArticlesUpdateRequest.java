@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @ApiModel
@@ -41,4 +42,10 @@ public class ArticlesUpdateRequest {
 
     @ApiModelProperty("文章图片路径")
     private List<String> articlePictureUrl;//文章图片路径
+
+    @ApiModelProperty("转载链接")
+    private String shareUrl;//文章转载url
+
+    @ApiModelProperty("类型")
+    private Short type;//文章类型
 }

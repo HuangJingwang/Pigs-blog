@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @ApiModel
@@ -51,4 +52,10 @@ public class ArticlesListResponse {
 
     @ApiModelProperty("文章浏览量")
     private Long pageView;
+
+    @ApiModelProperty("转载链接")
+    private String shareUrl;//文章转载url
+
+    @ApiModelProperty("类型")
+    private Short type;//文章类型
 }

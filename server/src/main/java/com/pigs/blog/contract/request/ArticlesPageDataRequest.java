@@ -24,4 +24,6 @@ public class ArticlesPageDataRequest {
     private Integer pageSize;
 
     private Boolean orderByPV;
+    @ApiModelProperty("类型")
+    private Short type;//文章类型
 }

@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @ApiModel
 @Data
@@ -46,4 +47,11 @@ public class ArticlesCreateRequest {
     @ApiModelProperty("简介")
     @NotBlank(message = "introduction cannot be blank")
     private String introduction;//文章内容
+
+    @ApiModelProperty("转载链接")
+    private String shareUrl;//文章转载url
+
+    @ApiModelProperty("类型")
+    @NotNull(message = "type cannot be Null")
+    private Short type;//文章类型
 }

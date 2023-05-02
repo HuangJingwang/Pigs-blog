@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 @ApiModel
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -20,4 +22,6 @@ public class ArticlesListRequest {
     private String account;//作者
     @ApiModelProperty("状态")
     private String status;//状态
+    @ApiModelProperty("类型")
+    private Short type;//文章类型
 }
